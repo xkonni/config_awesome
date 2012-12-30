@@ -125,7 +125,7 @@ function titlebar_enable(c)
 end
 
 function titlebar_disable(c)
-  awful.titlebar(c):set_widget(nil)
+  awful.titlebar(c, {size=0})
 end
 
 -- {{{ Tags
@@ -190,7 +190,7 @@ myload = wibox.widget.textbox()
 myload:set_text(awful.util.pread(home .. "/bin/tmux-mem-cpu-load 0 0"))
 mytimer = timer({ timeout = 5 })
 mytimer:connect_signal("timeout", function()
-                    myload.text = awful.util.pread(home .. "/bin/tmux-mem-cpu-load 0 0")
+                    myload:set_text(awful.util.pread(home .. "/bin/tmux-mem-cpu-load 0 0"))
                   end)
 mytimer:start()
 
@@ -349,7 +349,7 @@ globalkeys = awful.util.table.join(
 
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
-    awful.key({ modkey,           }, "b", function () awful.util.spawn(home .."/bin/chromium") end),
+    awful.key({ modkey,           }, "b", function () awful.util.spawn("chromium") end),
     awful.key({ modkey,           }, "v", function () awful.util.spawn("/usr/bin/thunar") end),
     awful.key({ modkey, "Control" }, "s", function () awful.util.spawn("/usr/bin/xscreensaver-command -lock") end),
     awful.key({ modkey, "Control" }, "r", awesome.restart),
@@ -404,7 +404,11 @@ globalkeys = awful.util.table.join(
 clientkeys = awful.util.table.join(
     awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),
     awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end),
-    awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ),
+    awful.key({ modkey, "Control" }, "space",
+              function (c)
+                  awful.client.floating.toggle()
+                  titlebar_disable(c)
+              end),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end),
     awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ),
     awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end),
@@ -427,9 +431,6 @@ clientkeys = awful.util.table.join(
         local g = c:geometry()
         local w = screen[c.screen].workarea
         local inc = 100
-        --if c.screen == 2 then
-        --  w.width = w.width + screen[1].workarea.width
-        --end
         inc_p = w.x + w.width - g.x - g.width
         if inc > inc_p then
           inc = inc_p
@@ -509,7 +510,7 @@ clientkeys = awful.util.table.join(
         c:geometry(g)
       end
     end),
-    awful.key({ modkey, "Control"   }, "Down",
+    awful.key({qmodkey, "Control"   }, "Down",
     function(c)
       if floats(c) then
         local g = c:geometry()
@@ -526,11 +527,7 @@ clientkeys = awful.util.table.join(
           end
         end),
     awful.key({ modkey, "Shift" }, "t", function (c)
-      if c.titlebar then
-        awful.titlebar.remove(c)
-      else
-        awful.titlebar.add(c, { modkey = modkey })
-      end
+      titlebar_disable(c)
     end)
 )
 
@@ -697,21 +694,21 @@ end)
 -- client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("focus", function(c)
   c.border_color = beautiful.border_focus
-  --if floats(c) then
-  --  if (not awful.rules.match(c, { class = "Pidgin" })) and (not awful.rules.match(c, { class = terminal_class })) then
-  --    titlebar_enable(c)
-  --  end
-  --end
+  if floats(c) then
+    if (not awful.rules.match(c, { class = "Pidgin" })) and (not awful.rules.match(c, { class = terminal_class })) then
+      titlebar_enable(c)
+    end
+  end
 end)
 
 -- client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 client.connect_signal("unfocus", function(c)
   c.border_color = beautiful.border_normal
-  --if floats(c) then
-  --  if (not awful.rules.match(c, { class = "Pidgin" })) and (not awful.rules.match(c, { class = terminal_class })) then
-  --    titlebar_disable(c)
-  --  end
-  --end
+  if floats(c) then
+    if (not awful.rules.match(c, { class = "Pidgin" })) and (not awful.rules.match(c, { class = terminal_class })) then
+      titlebar_disable(c)
+    end
+  end
 end)
 
 -- Autorun programs
