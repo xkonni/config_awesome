@@ -67,16 +67,11 @@ theme.tooltip_bg_color= "#00ff00"
 --theme.fg_end_widget    = "#FF5656"
 --theme.bg_widget        = "#494B4F"
 --theme.border_widget    = "#3F3F3F"
-theme.tasklist_left = widget({ type= "imagebox" })
-theme.tasklist_center_left = widget({ type= "imagebox" })
-theme.tasklist_center = widget({ type= "imagebox" })
-theme.tasklist_center_right = widget({ type= "imagebox" })
-theme.tasklist_right = widget({ type= "imagebox" })
-theme.tasklist_left.image = image(home .."/.config/awesome/themes/black-blue/tasklist/tasklist_left.png")
-theme.tasklist_center_left.image = image(home .."/.config/awesome/themes/black-blue/tasklist/tasklist_center_left.png")
-theme.tasklist_center.image = image(home .."/.config/awesome/themes/black-blue/tasklist/tasklist_center.png")
-theme.tasklist_center_right.image = image(home .."/.config/awesome/themes/black-blue/tasklist/tasklist_center_right.png")
-theme.tasklist_right.image = image(home .."/.config/awesome/themes/black-blue/tasklist/tasklist_right.png")
+theme.tasklist_left = home .."/.config/awesome/themes/black-blue/tasklist/tasklist_left.png"
+theme.tasklist_center_left = home .."/.config/awesome/themes/black-blue/tasklist/tasklist_center_left.png"
+theme.tasklist_center = home .."/.config/awesome/themes/black-blue/tasklist/tasklist_center.png"
+theme.tasklist_center_right = home .."/.config/awesome/themes/black-blue/tasklist/tasklist_center_right.png"
+theme.tasklist_right = home .."/.config/awesome/themes/black-blue/tasklist/tasklist_right.png"
 -- }}}
 
 -- {{{ Mouse finder
