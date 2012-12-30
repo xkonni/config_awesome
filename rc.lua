@@ -118,12 +118,12 @@ mytextclock = awful.widget.textclock({ align = "right" })
 mysystray = widget({ type = "systray" })
 
 -- create arrow widgets
-myright = widget({ type= "textbox" })
-myleft = widget({ type= "textbox" })
-mycenter = widget({ type= "textbox" })
-myright.text="<span color=\"#268bd2\">⮀</span>"
-myleft.text="<span color=\"#268bd2\">⮂ </span>"
-mycenter.text="<span color=\"#268bd2\"> ▎</span>"
+--status_right = widget({ type= "textbox" })
+--status_left = widget({ type= "textbox" })
+--status_center = widget({ type= "textbox" })
+--status_right.text="<span color=\"#268bd2\">⮀</span>"
+--status_left.text="<span color=\"#268bd2\">⮂ </span>"
+--status_center.text="<span color=\"#268bd2\"> ▎</span>"
 
 -- Create load widget
 myload = widget({ type= "textbox" })
@@ -212,21 +212,21 @@ for s = 1, screen.count() do
         {
             mylauncher,
             mytaglist[s],
-            myright,
+            theme.tasklist_right,
             mypromptbox[s],
             layout = awful.widget.layout.horizontal.leftright
         },
         mylayoutbox[s],
         mytextclock,
-        s == 1 and mycenter or nil,
+        s == 1 and theme.tasklist_center_left or nil,
         s == 1 and mysystray or nil,
-        mycenter,
+        theme.tasklist_center_left,
         myload,
-        s == 2 and myleft or nil,
-        s == 1 and batwidgeton == 0 and myleft or nil,
-        s == 1 and batwidgeton == 1 and mycenter or nil,
+        s == 2 and theme.tasklist_left or nil,
+        s == 1 and batwidgeton == 0 and theme.tasklist_left or nil,
+        s == 1 and batwidgeton == 1 and theme.tasklist_center_left or nil,
         s == 1 and batwidgeton == 1 and batwidget or nil,
-        s == 1 and batwidgeton == 1 and myleft or nil,
+        s == 1 and batwidgeton == 1 and theme.tasklist_left or nil,
         mytasklist[s],
         layout = awful.widget.layout.horizontal.rightleft
     }

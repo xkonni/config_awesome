@@ -14,7 +14,7 @@ theme.wallpaper_cmd = { "" }
 -- }}}
 
 -- {{{ Styles
-theme.font      = "Inconsolata-dz for Powerline 9"
+theme.font      = "Anonymous Pro for Powerline 11"
 
 -- {{{ Colors
 theme.fg_normal = "#DCDCCC"
@@ -45,7 +45,17 @@ theme.titlebar_bg_normal = "#3F3F3F"
 -- tooltip_[font|opacity|fg_color|bg_color|border_width|border_color]
 -- Example:
 --theme.taglist_bg_focus = "#CC9393"
+
+-- taglist
 theme.taglist_fg_focus = "#268bd2"
+
+-- tasklist
+theme.tasklist_fg_focus = "#268bd2"
+
+-- TODO seems unused
+-- tooltip
+theme.tooltip_fg_color= "#ff0000"
+theme.tooltip_bg_color= "#00ff00"
 -- }}}
 
 -- {{{ Widgets
@@ -57,6 +67,16 @@ theme.taglist_fg_focus = "#268bd2"
 --theme.fg_end_widget    = "#FF5656"
 --theme.bg_widget        = "#494B4F"
 --theme.border_widget    = "#3F3F3F"
+theme.tasklist_left = widget({ type= "imagebox" })
+theme.tasklist_center_left = widget({ type= "imagebox" })
+theme.tasklist_center = widget({ type= "imagebox" })
+theme.tasklist_center_right = widget({ type= "imagebox" })
+theme.tasklist_right = widget({ type= "imagebox" })
+theme.tasklist_left.image = image(home .."/.config/awesome/themes/black-blue/tasklist/tasklist_left.png")
+theme.tasklist_center_left.image = image(home .."/.config/awesome/themes/black-blue/tasklist/tasklist_center_left.png")
+theme.tasklist_center.image = image(home .."/.config/awesome/themes/black-blue/tasklist/tasklist_center.png")
+theme.tasklist_center_right.image = image(home .."/.config/awesome/themes/black-blue/tasklist/tasklist_center_right.png")
+theme.tasklist_right.image = image(home .."/.config/awesome/themes/black-blue/tasklist/tasklist_right.png")
 -- }}}
 
 -- {{{ Mouse finder
