@@ -487,7 +487,7 @@ clientkeys = awful.util.table.join(
       if floats(c) then
         local g = c:geometry()
         local w = screen[c.screen].workarea
-        g.x = w.x + w.width - g.width
+        g.x = w.x + w.width - g.width - 2
         c:geometry(g)
       end
     end),
@@ -514,7 +514,7 @@ clientkeys = awful.util.table.join(
       if floats(c) then
         local g = c:geometry()
         local w = screen[c.screen].workarea
-        g.y = w.y + w.height - g.height
+        g.y = w.y + w.height - g.height - 2
         c:geometry(g)
       end
     end),
@@ -697,11 +697,11 @@ end)
 -- client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("focus", function(c)
   c.border_color = beautiful.border_focus
-  if floats(c) then
-    if (not awful.rules.match(c, { class = "Pidgin" })) and (not awful.rules.match(c, { class = terminal_class })) then
-      titlebar_enable(c)
-    end
-  end
+  --if floats(c) then
+  --  if (not awful.rules.match(c, { class = "Pidgin" })) and (not awful.rules.match(c, { class = terminal_class })) then
+  --    titlebar_enable(c)
+  --  end
+  --end
 end)
 
 -- client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
