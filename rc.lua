@@ -52,7 +52,7 @@ editor_cmd = terminal .. " -e " .. editor
 
 
 if host == "silence" or host == "remembrance" then
-  local vicious = require("vicious")
+  vicious = require("vicious")
 end
 
 
@@ -196,15 +196,15 @@ mytimer:start()
 
 -- Create a batwidget
 batwidget = wibox.widget.textbox()
-batwidgeton = 0
+laptop = 0
 -- Register widget
 if host == "silence" then
   vicious.register(batwidget, vicious.widgets.bat, " $1$2% $3", 31, "BAT1")
-  batwidgeton = 1
+  laptop = 1
 end
 if host == "remembrance" then
   vicious.register(batwidget, vicious.widgets.bat, " $1$2% $3", 31, "BAT0")
-  batwidgeton = 1
+  laptop = 1
 end
 
 -- Create a wibox for each screen and add it
@@ -287,8 +287,14 @@ for s = 1, screen.count() do
     right_layout:add(tasklist_center_left)
     right_layout:add(myload)
     right_layout:add(tasklist_center_left)
-    if s == 1 then right_layout:add(wibox.widget.systray()) end
-    if s == 1 then right_layout:add(tasklist_center_left) end
+    if (s == 1 and laptop == 1) then
+      right_layout:add(batwidget)
+      right_layout:add(tasklist_center_left)
+    end
+    if s == 1 then
+      right_layout:add(wibox.widget.systray())
+      right_layout:add(tasklist_center_left)
+    end
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
 
@@ -299,10 +305,6 @@ for s = 1, screen.count() do
     layout:set_right(right_layout)
 
     mywibox[s]:set_widget(layout)
---        s == 1 and batwidgeton == 0 and theme.tasklist_left or nil,
---        s == 1 and batwidgeton == 1 and theme.tasklist_center_left or nil,
---        s == 1 and batwidgeton == 1 and batwidget or nil,
---        s == 1 and batwidgeton == 1 and theme.tasklist_left or nil,
 end
 -- }}}
 
