@@ -78,6 +78,33 @@ layouts =
 }
 -- }}}
 
+
+-- {{{ Functions
+-- create an arrow as transition between fg and bg color
+function arrow_widget(fg, bg, direction)
+  local widget_bg = wibox.widget.background()
+  local widget_fg = wibox.widget.textbox()
+
+  local arrow="|"
+  if direction == "left"   then arrow = " ⮂" end
+  if direction == "right"  then arrow = "⮀ " end
+
+  widget_fg:set_font("Anonymous Pro for Powerline 20")
+  widget_fg:set_markup("<span color=\"".. fg .. "\">".. arrow .."</span>")
+  widget_bg:set_bg(bg)
+
+  widget_bg:set_widget(widget_fg)
+  return widget_bg
+end
+
+-- color the background of a widget
+function bg_widget(bg, widget)
+  local widget_bg = wibox.widget.background()
+  widget_bg:set_bg(bg)
+  widget_bg:set_widget(widget)
+  return widget_bg
+end
+
 -- test if window floats
 function floats(c)
   local ret = false
@@ -128,6 +155,7 @@ end
 function titlebar_disable(c)
   awful.titlebar(c, {size=0})
 end
+-- }}} Functions
 
 -- {{{ Tags
 -- Define a tag table which hold all screen tags.
@@ -174,29 +202,19 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- 15:33 < psychon> sep = wibox.widget.base.empty_widget()
 -- 15:33 < psychon> sep.fit = function() return 20, 8 end
 
+-- Create a separator widget with a fixed width
+sep = wibox.widget.base.empty_widget()
+sep.fit = function() return 3, 8 end
+
 -- Create a textclock widget
 mytextclock = awful.widget.textclock()
 
--- create arrow widgets
-tasklist_left = wibox.widget.imagebox()
-tasklist_center_left = wibox.widget.imagebox()
-tasklist_center = wibox.widget.imagebox()
-tasklist_center_right = wibox.widget.imagebox()
-tasklist_right = wibox.widget.imagebox()
-
-tasklist_left:set_image(theme.tasklist_left)
-tasklist_center_left:set_image(theme.tasklist_center_left)
-tasklist_center:set_image(theme.tasklist_center)
-tasklist_center_right:set_image(theme.tasklist_center_right)
-tasklist_right:set_image(theme.tasklist_right)
-
 -- Create load widget
 myload = wibox.widget.textbox()
-myload.fit = function() return 400, 8 end
-myload:set_text(awful.util.pread(home .. "/bin/tmux-mem-cpu-load 0 0"))
+myload:set_markup("<span color=\"".. theme.bg_focus .."\">".. awful.util.pread(home .."/bin/tmux-mem-cpu-load 0 0") .."</span>")
 mytimer = timer({ timeout = 5 })
 mytimer:connect_signal("timeout", function()
-                    myload:set_text(awful.util.pread(home .. "/bin/tmux-mem-cpu-load 0 0"))
+                    myload:set_markup("<span color=\"".. theme.bg_focus .."\">".. awful.util.pread(home .."/bin/tmux-mem-cpu-load 0 0") .."</span>")
                   end)
 mytimer:start()
 
@@ -284,22 +302,30 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
     left_layout:add(mylauncher)
+    left_layout:add(sep)
     left_layout:add(mytaglist[s])
-    left_layout:add(tasklist_center_right)
-    left_layout:add(mypromptbox[s])
+    left_layout:add(arrow_widget(theme.bg_normal, theme.fg_focus, "right"))
+    left_layout:add(bg_widget(theme.fg_focus, mypromptbox[s]))
+    left_layout:add(arrow_widget(theme.fg_focus, theme.bg_normal, "right"))
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
-    right_layout:add(tasklist_center_left)
-    right_layout:add(myload)
-    right_layout:add(tasklist_center_left)
-    if (s == 1 and laptop == 1) then
-      right_layout:add(batwidget)
-      right_layout:add(tasklist_center_left)
-    end
+    right_layout:add(arrow_widget(theme.fg_focus, theme.bg_normal, "left"))
+    right_layout:add(bg_widget(theme.fg_focus, myload))
     if s == 1 then
+      right_layout:add(arrow_widget(theme.bg_focus, theme.fg_focus, "left"))
       right_layout:add(wibox.widget.systray())
-      right_layout:add(tasklist_center_left)
+      if laptop == 1 then
+      --if (s == 1 and laptop == 0) then
+        --batwidget:set_text("bla")
+        right_layout:add(arrow_widget(theme.fg_focus, theme.bg_focus, "left"))
+        right_layout:add(bg_widget(theme.fg_focus, batwidget))
+        right_layout:add(arrow_widget(theme.bg_normal, theme.fg_focus, "left"))
+      else
+        right_layout:add(arrow_widget(theme.bg_normal, theme.bg_focus, "left"))
+      end
+    else
+      right_layout:add(arrow_widget(theme.bg_normal, theme.fg_focus, "left"))
     end
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
@@ -518,7 +544,7 @@ clientkeys = awful.util.table.join(
         c:geometry(g)
       end
     end),
-    awful.key({qmodkey, "Control"   }, "Down",
+    awful.key({ modkey, "Control"   }, "Down",
     function(c)
       if floats(c) then
         local g = c:geometry()
@@ -527,13 +553,6 @@ clientkeys = awful.util.table.join(
         c:geometry(g)
       end
     end),
-    -- toggle always on top
-    awful.key({ modkey,           }, "t",
-        function (c)
-          if floats(c) then
-            c.above = not c.above
-          end
-        end),
     awful.key({ modkey, "Shift" }, "t", function (c)
       titlebar_disable(c)
     end)
@@ -598,6 +617,8 @@ awful.rules.rules = {
                      buttons = clientbuttons } },
     { rule = { class = "MPlayer" },
       properties = { floating = true } },
+    { rule = { class = "mplayer2" },
+      properties = { floating = true } },
     { rule = { class = "Pavucontrol" },
       properties = { floating = true } },
     { rule = { class = "feh" },
@@ -610,11 +631,6 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "Google-chrome" },
       properties = {    tag = tags[screen. count()][1] } },
-    { rule = { class = "com-mathworks-util-PostVMInit" },
-      callback = function(c)
-        awful.titlebar.add(c)
-      end
-    },
     { rule = { class = "Gimp", role="gimp-toolbox" },
       properties = {
         floating = true,
