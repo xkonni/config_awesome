@@ -36,9 +36,10 @@ do
 end
 -- }}}
 
--- get hostname
+-- get hostname, home and awesome directories
 host = awful.util.pread("hostname | tr -d '\n'")
 home = awful.util.pread("echo $HOME | tr -d '\n'")
+config=awful.util.getdir("config")
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
@@ -169,6 +170,10 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- }}}
 
 -- {{{ Wibox
+-- change size in 3.5
+-- 15:33 < psychon> sep = wibox.widget.base.empty_widget()
+-- 15:33 < psychon> sep.fit = function() return 20, 8 end
+
 -- Create a textclock widget
 mytextclock = awful.widget.textclock()
 
@@ -187,6 +192,7 @@ tasklist_right:set_image(theme.tasklist_right)
 
 -- Create load widget
 myload = wibox.widget.textbox()
+myload.fit = function() return 400, 8 end
 myload:set_text(awful.util.pread(home .. "/bin/tmux-mem-cpu-load 0 0"))
 mytimer = timer({ timeout = 5 })
 mytimer:connect_signal("timeout", function()
