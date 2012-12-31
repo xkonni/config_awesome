@@ -16,12 +16,13 @@ theme.font                                      = "Anonymous Pro for Powerline 1
 -- }}} Styles
 
 -- {{{ Colors
-theme.fg_normal                                 = "#DCDCCC"
-theme.fg_focus                                  = "#F0DFAF"
-theme.fg_urgent                                 = "#CC9393"
+theme.fg_normal                                 = "#EEE8D5"
+theme.fg_focus                                  = "#268BD2"
+theme.fg_urgent                                 = "#268BD2"
 theme.bg_normal                                 = "#3F3F3F"
-theme.bg_focus                                  = "#1E2320"
+theme.bg_focus                                  = "#1C1C1C"
 theme.bg_urgent                                 = "#3F3F3F"
+theme.bg_systray                                = theme.bg_focus
 -- }}} Colors
 
 -- {{{ Borders
@@ -32,8 +33,8 @@ theme.border_marked                             = "#00ff00"
 -- }}} Borders
 
 -- {{{ Titlebars
-theme.titlebar_bg_focus                         = "#3F3F3F"
-theme.titlebar_bg_normal                        = "#3F3F3F"
+theme.titlebar_bg_normal                        = theme.bg_normal
+theme.titlebar_bg_focus                         = theme.bg_focus
 -- }}} Titlebars
 
 -- {{{ Override
