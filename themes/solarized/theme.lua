@@ -8,7 +8,7 @@
 
 -- {{{ Main
 theme                                           = {}
-theme.wallpaper_cmd                             = { "" }
+theme.wallpaper                                 = config .. "/themes/solarized/awesome-background.png"
 -- }}} Main
 
 -- {{{ Styles
@@ -69,11 +69,6 @@ theme.tooltip_bg_color                          = "#00ff00"
 --theme.fg_end_widget                             = "#FF5656"
 --theme.bg_widget                                 = "#494B4F"
 --theme.border_widget                             = "#3F3F3F"
-theme.tasklist_left                             = config .. "/themes/solarized/tasklist/tasklist_left.png"
-theme.tasklist_center_left                      = config .. "/themes/solarized/tasklist/tasklist_center_left.png"
-theme.tasklist_center                           = config .. "/themes/solarized/tasklist/tasklist_center.png"
-theme.tasklist_center_right                     = config .. "/themes/solarized/tasklist/tasklist_center_right.png"
-theme.tasklist_right                            = config .. "/themes/solarized/tasklist/tasklist_right.png"
 -- }}} Widgets
 
 -- {{{ Mouse finder
