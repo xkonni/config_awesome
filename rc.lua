@@ -36,14 +36,30 @@ do
 end
 -- }}}
 
+-- {{{ Host specific
 -- get hostname, home and awesome directories
-host = awful.util.pread("hostname | tr -d '\n'")
-home = awful.util.pread("echo $HOME | tr -d '\n'")
-config=awful.util.getdir("config")
+host  = awful.util.pread("hostname | tr -d '\n'")
+home  = awful.util.pread("echo $HOME | tr -d '\n'")
+config= awful.util.getdir("config")
+
+if host == "silence" then
+  vicious = require("vicious")
+  BAT = "BAT1"
+  laptop = 1
+
+elseif host == "remembrance" then
+  vicious = require("vicious")
+  BAT = "BAT0"
+  laptop = 1
+
+else
+  laptop = 0
+end
+-- }}} Host specific
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, and wallpapers
-beautiful.init(home .."/.config/awesome/themes/black-blue/theme.lua")
+beautiful.init(config .. "/themes/solarized/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = 'urxvt'
@@ -51,10 +67,6 @@ terminal_class = 'URxvt'
 editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
 
-
-if host == "silence" or host == "remembrance" then
-  vicious = require("vicious")
-end
 
 
 -- Default modkey.
@@ -201,6 +213,10 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- change size in 3.5
 -- 15:33 < psychon> sep = wibox.widget.base.empty_widget()
 -- 15:33 < psychon> sep.fit = function() return 20, 8 end
+-- 14:39 < psychon>
+--    mybox.fit = function(widget, width, height)
+--      local width, height = wibox.widget.textbox.fit(widget, width, height)
+--      return math.min(width, 100), height end
 
 -- Create a separator widget with a fixed width
 sep = wibox.widget.base.empty_widget()
@@ -212,23 +228,16 @@ mytextclock = awful.widget.textclock()
 -- Create load widget
 myload = wibox.widget.textbox()
 myload:set_markup("<span color=\"".. theme.bg_focus .."\">".. awful.util.pread(home .."/bin/tmux-mem-cpu-load 0 0") .."</span>")
-mytimer = timer({ timeout = 5 })
-mytimer:connect_signal("timeout", function()
+myload_timer = timer({ timeout = 5 })
+myload_timer:connect_signal("timeout", function()
                     myload:set_markup("<span color=\"".. theme.bg_focus .."\">".. awful.util.pread(home .."/bin/tmux-mem-cpu-load 0 0") .."</span>")
                   end)
-mytimer:start()
+myload_timer:start()
 
--- Create a batwidget
-batwidget = wibox.widget.textbox()
-laptop = 0
--- Register widget
-if host == "silence" then
-  vicious.register(batwidget, vicious.widgets.bat, " $1$2% $3", 31, "BAT1")
-  laptop = 1
-end
-if host == "remembrance" then
-  vicious.register(batwidget, vicious.widgets.bat, " $1$2% $3", 31, "BAT0")
-  laptop = 1
+if laptop == 1 then
+  -- Create a batwidget
+  batwidget = wibox.widget.textbox()
+  vicious.register(batwidget, vicious.widgets.bat, " $1$2% $3", 31, BAT)
 end
 
 -- Create a wibox for each screen and add it
