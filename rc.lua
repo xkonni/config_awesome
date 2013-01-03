@@ -243,16 +243,16 @@ local widget_stats_arrow = arrow_widget(stats_sep, stats_bg, "cleft")
 -- cpu
 vicious.cache(vicious.widgets.cpu)
 -- icon
-widget_cpu_icon = wibox.widget.imagebox()
-widget_cpu_icon:set_resize(true)
-widget_cpu_icon:set_image(theme.widget_cpu)
+widget_cpu_icon = wibox.widget.textbox()
+widget_cpu_icon:set_font("Anonymous Pro for Powerline 16")
+widget_cpu_icon:set_text("☉")
 -- text
 widget_cpu_text = wibox.widget.textbox()
 widget_cpu_text.fit = function() return 35, 8 end
-vicious.register(widget_cpu_text, vicious.widgets.cpu, "$1%", 3)
+vicious.register(widget_cpu_text, vicious.widgets.cpu, " $1%", 3)
 -- graph
 widget_cpu_graph = awful.widget.graph()
-widget_cpu_graph:set_width(35)
+widget_cpu_graph:set_width(30)
 widget_cpu_graph:set_background_color(stats_bg)
 widget_cpu_graph:set_color(stats_graph)
 widget_cpu_graph:set_border_color(stats_bg)
@@ -261,13 +261,13 @@ vicious.register(widget_cpu_graph, vicious.widgets.cpu, "$1", 3)
 -- mem
 vicious.cache(vicious.widgets.mem)
 -- icon
-widget_mem_icon = wibox.widget.imagebox()
-widget_mem_icon:set_resize(true)
-widget_mem_icon:set_image(theme.widget_mem)
+widget_mem_icon = wibox.widget.textbox()
+widget_mem_icon:set_font("Anonymous Pro for Powerline 16")
+widget_mem_icon:set_text("☰")
 -- mem text
 widget_mem_text = wibox.widget.textbox()
 widget_mem_text.fit = function() return 35, 8 end
-vicious.register(widget_mem_text, vicious.widgets.mem, "$1%", 3)
+vicious.register(widget_mem_text, vicious.widgets.mem, " $1%", 3)
 -- mem bar
 widget_mem_bar = awful.widget.progressbar()
 widget_mem_bar:set_vertical(true):set_ticks(true)
@@ -275,7 +275,17 @@ widget_mem_bar:set_height(14):set_width(8):set_ticks_size(2)
 widget_mem_bar:set_background_color(stats_bg)
 widget_mem_bar:set_color(stats_graph)
 widget_mem_bar:set_border_color(stats_bg)
-vicious.register(widget_mem_bar, vicious.widgets.mem, "$1", 13)
+vicious.register(widget_mem_bar, vicious.widgets.mem, " $1", 13)
+
+-- hdd icon
+--widget_hdd_icon = wibox.widget.textbox()
+--widget_hdd_icon:set_font("Anonymous Pro for Powerline 16")
+--widget_hdd_icon:set_text("⛁")
+
+-- music icon
+--widget_msc_icon = wibox.widget.textbox()
+--widget_msc_icon:set_font("Anonymous Pro for Powerline 16")
+--widget_msc_icon:set_text("♫")
 
 if laptop then
   -- battery
