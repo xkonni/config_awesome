@@ -10,6 +10,8 @@ local beautiful = require("beautiful")
 -- Notification library - need global access
 naughty = require("naughty")
 local menubar = require("menubar")
+-- Widgets
+vicious = require("vicious")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -43,17 +45,11 @@ home  = awful.util.pread("echo $HOME | tr -d '\n'")
 config= awful.util.getdir("config")
 
 if host == "silence" then
-  vicious = require("vicious")
   BAT = "BAT1"
   laptop = 1
-
 elseif host == "remembrance" then
-  vicious = require("vicious")
   BAT = "BAT0"
   laptop = 1
-
-else
-  laptop = 0
 end
 -- }}} Host specific
 
@@ -105,6 +101,8 @@ function arrow_widget(fg, bg, direction)
   local widget_fg = wibox.widget.textbox()
 
   local arrow="|"
+  if direction == "cleft"   then arrow = "⮃" end
+  if direction == "cright"  then arrow = "⮁" end
   if direction == "left"   then arrow = " ⮂" end
   if direction == "right"  then arrow = "⮀ " end
 
@@ -232,19 +230,78 @@ sep.fit = function() return 3, 8 end
 -- Create a textclock widget
 mytextclock = awful.widget.textclock()
 
--- Create load widget
-myload = wibox.widget.textbox()
-myload:set_markup("<span color=\"".. theme.bg_focus .."\">".. awful.util.pread(home .."/bin/tmux-mem-cpu-load 0 0") .."</span>")
-myload_timer = timer({ timeout = 5 })
-myload_timer:connect_signal("timeout", function()
-                    myload:set_markup("<span color=\"".. theme.bg_focus .."\">".. awful.util.pread(home .."/bin/tmux-mem-cpu-load 0 0") .."</span>")
-                  end)
-myload_timer:start()
+-- Create a stats widget
+local widget_stats = wibox.layout.fixed.horizontal()
+local stats_fg = theme.fg_normal
+local stats_graph = theme.bg_normal
+local stats_bg = theme.fg_focus
+local stats_sep = theme.bg_focus
 
-if laptop == 1 then
-  -- Create a batwidget
-  batwidget = wibox.widget.textbox()
-  vicious.register(batwidget, vicious.widgets.bat, " $1$2% $3", 31, BAT)
+-- separator
+local widget_stats_arrow = arrow_widget(stats_sep, stats_bg, "cleft")
+
+-- cpu
+vicious.cache(vicious.widgets.cpu)
+-- icon
+widget_cpu_icon = wibox.widget.imagebox()
+widget_cpu_icon:set_resize(true)
+widget_cpu_icon:set_image(theme.widget_cpu)
+-- text
+widget_cpu_text = wibox.widget.textbox()
+widget_cpu_text.fit = function() return 35, 8 end
+vicious.register(widget_cpu_text, vicious.widgets.cpu, "$1%", 3)
+-- graph
+widget_cpu_graph = awful.widget.graph()
+widget_cpu_graph:set_width(35)
+widget_cpu_graph:set_background_color(stats_bg)
+widget_cpu_graph:set_color(stats_graph)
+widget_cpu_graph:set_border_color(stats_bg)
+vicious.register(widget_cpu_graph, vicious.widgets.cpu, "$1", 3)
+
+-- mem
+vicious.cache(vicious.widgets.mem)
+-- icon
+widget_mem_icon = wibox.widget.imagebox()
+widget_mem_icon:set_resize(true)
+widget_mem_icon:set_image(theme.widget_mem)
+-- mem text
+widget_mem_text = wibox.widget.textbox()
+widget_mem_text.fit = function() return 35, 8 end
+vicious.register(widget_mem_text, vicious.widgets.mem, "$1%", 3)
+-- mem bar
+widget_mem_bar = awful.widget.progressbar()
+widget_mem_bar:set_vertical(true):set_ticks(true)
+widget_mem_bar:set_height(14):set_width(8):set_ticks_size(2)
+widget_mem_bar:set_background_color(stats_bg)
+widget_mem_bar:set_color(stats_graph)
+widget_mem_bar:set_border_color(stats_bg)
+vicious.register(widget_mem_bar, vicious.widgets.mem, "$1", 13)
+
+if laptop then
+  -- battery
+  -- icon
+  widget_bat_icon = wibox.widget.imagebox()
+  widget_bat_icon:set_resize(true)
+  widget_bat_icon:set_image(theme.widget_bat)
+  -- text
+  widget_bat_text = wibox.widget.textbox()
+  widget_bat_text.fit = function() return 90, 8 end
+  vicious.register(widget_bat_text, vicious.widgets.bat, " $1$2% $3", 31, BAT)
+end
+
+
+-- Put stats widget together
+widget_stats:add(widget_cpu_icon)
+widget_stats:add(widget_cpu_text)
+widget_stats:add(widget_cpu_graph)
+widget_stats:add(widget_stats_arrow)
+widget_stats:add(widget_mem_icon)
+widget_stats:add(widget_mem_text)
+widget_stats:add(widget_mem_bar)
+if laptop then
+  widget_stats:add(widget_stats_arrow)
+  widget_stats:add(widget_bat_icon)
+  widget_stats:add(widget_bat_text)
 end
 
 -- Create a wibox for each screen and add it
@@ -327,19 +384,11 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
     right_layout:add(arrow_widget(theme.fg_focus, theme.bg_normal, "left"))
-    right_layout:add(bg_widget(theme.fg_focus, myload))
+    right_layout:add(bg_widget(theme.fg_focus, widget_stats))
     if s == 1 then
       right_layout:add(arrow_widget(theme.bg_focus, theme.fg_focus, "left"))
       right_layout:add(wibox.widget.systray())
-      if laptop == 1 then
-      --if (s == 1 and laptop == 0) then
-        --batwidget:set_text("bla")
-        right_layout:add(arrow_widget(theme.fg_focus, theme.bg_focus, "left"))
-        right_layout:add(bg_widget(theme.fg_focus, batwidget))
-        right_layout:add(arrow_widget(theme.bg_normal, theme.fg_focus, "left"))
-      else
-        right_layout:add(arrow_widget(theme.bg_normal, theme.bg_focus, "left"))
-      end
+      right_layout:add(arrow_widget(theme.bg_normal, theme.bg_focus, "left"))
     else
       right_layout:add(arrow_widget(theme.bg_normal, theme.fg_focus, "left"))
     end
@@ -457,7 +506,11 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "space",
               function (c)
                   awful.client.floating.toggle()
-                  titlebar_disable(c)
+                  if floats(c) then
+                    titlebar_enable(c)
+                  else
+                    titlebar_disable(c)
+                  end
               end),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end),
     awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ),
@@ -734,21 +787,21 @@ end)
 -- client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("focus", function(c)
   c.border_color = beautiful.border_focus
-  if floats(c) then
-    if (not awful.rules.match(c, { class = "Pidgin" })) and (not awful.rules.match(c, { class = terminal_class })) then
-      titlebar_enable(c)
-    end
-  end
+  --if floats(c) then
+  --  if (not awful.rules.match(c, { class = "Pidgin" })) and (not awful.rules.match(c, { class = terminal_class })) then
+  --    titlebar_enable(c)
+  --  end
+  --end
 end)
 
 -- client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 client.connect_signal("unfocus", function(c)
   c.border_color = beautiful.border_normal
-  if floats(c) then
-    if (not awful.rules.match(c, { class = "Pidgin" })) and (not awful.rules.match(c, { class = terminal_class })) then
-      titlebar_disable(c)
-    end
-  end
+  --if floats(c) then
+  --  if (not awful.rules.match(c, { class = "Pidgin" })) and (not awful.rules.match(c, { class = terminal_class })) then
+  --    titlebar_disable(c)
+  --  end
+  --end
 end)
 
 -- Autorun programs

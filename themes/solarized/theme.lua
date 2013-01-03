@@ -41,7 +41,8 @@ theme.titlebar_bg_focus                         = theme.bg_focus
 -- There are other variable sets
 -- overriding the default one when
 -- defined, the sets are:
--- [taglist|tasklist]_[bg|fg]_[focus|urgent]
+-- tasklist_[bg|fg]_[focus|urgent]
+-- taglist_[bg|fg]_[focus|urgent|occupied]
 -- titlebar_[normal|focus]
 -- tooltip_[font|opacity|fg_color|bg_color|border_width|border_color]
 -- Example:
@@ -49,10 +50,12 @@ theme.titlebar_bg_focus                         = theme.bg_focus
 -- }}} Override
 
 -- taglist
-theme.taglist_fg_focus                          = "#268bd2"
+theme.taglist_fg_occupied                       = theme.fg_focus
+--theme.taglist_bg_occupied                       = theme.bg_normal
+--theme.taglist_fg_focus                          = theme.fg_focus
 
 -- tasklist
-theme.tasklist_fg_focus                         = "#268bd2"
+--theme.tasklist_fg_focus                         = theme.fg_focus
 
 -- TODO seems unused
 -- tooltip
@@ -85,6 +88,22 @@ theme.menu_width                                = "100"
 -- }}} Menu
 
 -- {{{ Icons
+-- {{{ Widget
+theme.widget_cpu                                = config .. "/themes/solarized/widget/cpu.png"
+theme.widget_bat                                = config .. "/themes/solarized/widget/bat.png"
+theme.widget_mem                                = config .. "/themes/solarized/widget/mem.png"
+theme.widget_fs                                 = config .. "/themes/solarized/widget/disk.png"
+--theme.widget_net    = config .. "/themes/solarized/widget/down.png"
+--theme.widget_netup  = config .. "/themes/solarized/widget/up.png"
+--theme.widget_wifi   = config .. "/themes/solarized/widget/wifi.png"
+--theme.widget_mail   = config .. "/themes/solarized/widget/mail.png"
+--theme.widget_vol    = config .. "/themes/solarized/widget/vol.png"
+--theme.widget_org    = config .. "/themes/solarized/widget/cal.png"
+--theme.widget_date   = config .. "/themes/solarized/widget/time.png"
+--theme.widget_crypto = config .. "/themes/solarized/widget/crypto.png"
+--theme.widget_sep    = config .. "/themes/solarized/widget/separator.png"
+-- }}} Widget
+
 -- {{{ Taglist
 theme.taglist_squares_sel                       = config .. "/themes/solarized/taglist/squarefz.png"
 theme.taglist_squares_unsel                     = config .. "/themes/solarized/taglist/squarez.png"
