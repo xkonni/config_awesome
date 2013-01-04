@@ -57,9 +57,8 @@ theme.taglist_fg_occupied                       = theme.fg_focus
 -- tasklist
 --theme.tasklist_fg_focus                         = theme.fg_focus
 
--- TODO seems unused
 -- tooltip
-theme.tooltip_fg_color                          = "#ff0000"
+theme.tooltip_fg_color                          = theme.fg_focus
 theme.tooltip_bg_color                          = "#00ff00"
 -- }}} Override
 

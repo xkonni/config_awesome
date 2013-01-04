@@ -96,17 +96,17 @@ end
 
 -- {{{ Functions
 -- create an arrow as transition between fg and bg color
-function arrow_widget(fg, bg, direction)
+function mwidget_arrow(fg, bg, direction)
   local widget_bg = wibox.widget.background()
   local widget_fg = wibox.widget.textbox()
 
   local arrow="|"
   if direction == "cleft"   then arrow = "⮃" end
   if direction == "cright"  then arrow = "⮁" end
-  if direction == "left"   then arrow = " ⮂" end
-  if direction == "right"  then arrow = "⮀ " end
+  if direction == "left"   then arrow = "⮂" end
+  if direction == "right"  then arrow = "⮀" end
 
-  widget_fg:set_font("Anonymous Pro for Powerline 20")
+  widget_fg:set_font("Anonymous Pro for Powerline 18")
   widget_fg:set_markup("<span color=\"".. fg .. "\">".. arrow .."</span>")
   widget_bg:set_bg(bg)
 
@@ -114,12 +114,31 @@ function arrow_widget(fg, bg, direction)
   return widget_bg
 end
 
+function mwidget_icon(symbol)
+  local mwidget_icon = wibox.widget.textbox()
+  mwidget_icon:set_font("Anonymous Pro for Powerline 14")
+  mwidget_icon:set_text(symbol)
+  return mwidget_icon
+end
+
 -- color the background of a widget
-function bg_widget(bg, widget)
+function mwidget_bg(bg, widget)
   local widget_bg = wibox.widget.background()
   widget_bg:set_bg(bg)
   widget_bg:set_widget(widget)
   return widget_bg
+end
+
+-- return a string with fixed length
+-- cut off at the end of filled with
+-- whitespaces at the beginning
+function prettystring(str, length, fill)
+  if string.len(str) > length then
+    str=string.sub(str, 1, length-1).."…"
+  elseif fill then
+    str = string.rep(" ", length-string.len(str))..str
+  end
+  return str
 end
 
 -- test if window floats
@@ -238,14 +257,13 @@ local stats_bg = theme.fg_focus
 local stats_sep = theme.bg_focus
 
 -- separator
-local widget_stats_arrow = arrow_widget(stats_sep, stats_bg, "cleft")
+widget_stats_arrow = mwidget_arrow(stats_sep, stats_bg, "cleft")
 
--- cpu
+-- {{{ CPU
 vicious.cache(vicious.widgets.cpu)
+widget_cpu = wibox.layout.fixed.horizontal()
 -- icon
-widget_cpu_icon = wibox.widget.textbox()
-widget_cpu_icon:set_font("Anonymous Pro for Powerline 16")
-widget_cpu_icon:set_text("☉")
+widget_cpu_icon = mwidget_icon("☉")
 -- text
 widget_cpu_text = wibox.widget.textbox()
 widget_cpu_text.fit = function() return 35, 8 end
@@ -257,61 +275,176 @@ widget_cpu_graph:set_background_color(stats_bg)
 widget_cpu_graph:set_color(stats_graph)
 widget_cpu_graph:set_border_color(stats_bg)
 vicious.register(widget_cpu_graph, vicious.widgets.cpu, "$1", 3)
+-- cpu tooltip
+tooltip_cpu = awful.tooltip({ objects = { widget_cpu }})
+vicious.register(
+  tooltip_cpu, vicious.widgets.cpuinf,
+  function (widget,args)
+    if not laptop then
+      tooltip_cpu:set_text(
+        " <span weight=\"bold\" color=\""..theme.fg_normal.."\">cpu frequencies</span> \n"..
+        " --------------- \n"..
+        " ☉ core1 <span color=\""..theme.fg_normal.."\">"..args["{cpu0 mhz}"].."</span> Mhz \n"..
+        " ☉ core2 <span color=\""..theme.fg_normal.."\">"..args["{cpu1 mhz}"].."</span> Mhz \n"..
+        " ☉ core3 <span color=\""..theme.fg_normal.."\">"..args["{cpu2 mhz}"].."</span> Mhz \n"..
+        " ☉ core4 <span color=\""..theme.fg_normal.."\">"..args["{cpu3 mhz}"].."</span> Mhz ")
+    else
+      tooltip_cpu:set_text(
+        " <span weight=\"bold\" color=\""..theme.fg_normal.."\">cpu frequencies</span> \n"..
+        " --------------- \n"..
+        " ☉ core1 <span color=\""..theme.fg_normal.."\">"..args["{cpu0 mhz}"].."</span> Mhz \n"..
+        " ☉ core2 <span color=\""..theme.fg_normal.."\">"..args["{cpu1 mhz}"].."</span> Mhz ")
+    end
+    return
+  end, 3)
+-- put it together
+widget_cpu:add(widget_cpu_icon)
+widget_cpu:add(widget_cpu_text)
+widget_cpu:add(widget_cpu_graph)
+-- }}} CPU
 
--- mem
+-- {{{ MEM
 vicious.cache(vicious.widgets.mem)
+widget_mem = wibox.layout.fixed.horizontal()
 -- icon
-widget_mem_icon = wibox.widget.textbox()
-widget_mem_icon:set_font("Anonymous Pro for Powerline 16")
-widget_mem_icon:set_text("☰")
+widget_mem_icon = mwidget_icon("⚈")
 -- mem text
 widget_mem_text = wibox.widget.textbox()
 widget_mem_text.fit = function() return 35, 8 end
 vicious.register(widget_mem_text, vicious.widgets.mem, " $1%", 3)
 -- mem bar
 widget_mem_bar = awful.widget.progressbar()
-widget_mem_bar:set_vertical(true):set_ticks(true)
-widget_mem_bar:set_height(14):set_width(8):set_ticks_size(2)
+widget_mem_bar:set_vertical(true)
+widget_mem_bar:set_ticks(true)
+widget_mem_bar:set_height(20)
+widget_mem_bar:set_width(8)
+widget_mem_bar:set_ticks_size(1)
 widget_mem_bar:set_background_color(stats_bg)
 widget_mem_bar:set_color(stats_graph)
 widget_mem_bar:set_border_color(stats_bg)
-vicious.register(widget_mem_bar, vicious.widgets.mem, " $1", 13)
+vicious.register(widget_mem_bar, vicious.widgets.mem, "$1", 3)
+-- mem tooltip
+tooltip_mem = awful.tooltip({ objects = { widget_mem }})
+vicious.register(
+  tooltip_mem, vicious.widgets.mem,
+  function (widget,args)
+    -- keep values at same length
+    local len2 = string.len(args[2])
+    local len3 = string.len(args[3])
+     tooltip_mem:set_text(
+        " <span weight=\"bold\" color=\""..theme.fg_normal.."\">memory &amp; swap usage</span> \n"..
+        " ---------------------- \n"..
+        " ⚈ memory <span color=\""..theme.fg_normal.."\">"..args[2].."/"..args[3].."</span> MB \n"..
+        " ⚈ swap   <span color=\""..theme.fg_normal.."\">"..prettystring(args[6], len2, 1).."/"..prettystring(args[7], len3, 1).."</span> MB "
+     )
+     return
+  end, 3)
+-- put it together
+widget_mem:add(widget_mem_icon)
+widget_mem:add(widget_mem_text)
+widget_mem:add(widget_mem_bar)
+-- }}} MEM
 
--- hdd icon
---widget_hdd_icon = wibox.widget.textbox()
---widget_hdd_icon:set_font("Anonymous Pro for Powerline 16")
---widget_hdd_icon:set_text("⛁")
+-- {{{ HDD
+--widget_hdd_icon = mwidget_icon("⛁")
+-- }}} HDD
 
--- music icon
---widget_msc_icon = wibox.widget.textbox()
---widget_msc_icon:set_font("Anonymous Pro for Powerline 16")
---widget_msc_icon:set_text("♫")
-
-if laptop then
-  -- battery
-  -- icon
-  widget_bat_icon = wibox.widget.imagebox()
-  widget_bat_icon:set_resize(true)
-  widget_bat_icon:set_image(theme.widget_bat)
-  -- text
-  widget_bat_text = wibox.widget.textbox()
-  widget_bat_text.fit = function() return 90, 8 end
-  vicious.register(widget_bat_text, vicious.widgets.bat, " $1$2% $3", 31, BAT)
+-- {{{ MUSIC
+if not laptop then
+  vicious.cache(vicious.widgets.mpd)
+  widget_mpd = wibox.layout.fixed.horizontal()
+  widget_mpd.fit = function() return 300, 8 end
+  -- mpd icon
+  widget_mpd_icon = mwidget_icon("♫ ")
+  -- mpd text
+  widget_mpd_text = wibox.widget.textbox()
+  vicious.register(widget_mpd_text, vicious.widgets.mpd,
+    function (widget, args)
+      if args["{state}"] == "Stop" then
+        return " ✖ "
+      else
+        return args["{Artist}"].." - "..args["{Title}"]
+      end
+  end, 5)
+  -- mpd tooltip
+  tooltip_mpd = awful.tooltip({ objects = { widget_mpd }})
+  vicious.register(tooltip_mpd, vicious.widgets.mpd,
+    function (widget,args)
+      local len = math.max(string.len(args["{Artist}"], string.len(args["{Album}"]), string.len(args["{Title}"])))
+      if args["{state}"] == "Play" then
+        tooltip_mpd:set_text(
+           " <span weight=\"bold\" color=\""..theme.fg_normal.."\">mpd information</span> \n"..
+           " ------ ♫ playing ♫ ------ \n"..
+           " Artist <span color=\""..theme.fg_normal.."\">"..prettystring(args["{Artist}"], len, 1).." </span>\n"..
+           " Album  <span color=\""..theme.fg_normal.."\">"..prettystring(args["{Album}"], len, 1).." </span>\n"..
+           " Title  <span color=\""..theme.fg_normal.."\">"..prettystring(args["{Title}"], len, 1).." </span>")
+      elseif args["{state}"] == "Pause" then
+        tooltip_mpd:set_text(
+           " <span weight=\"bold\" color=\""..theme.fg_normal.."\">mpd information</span> \n"..
+           " -------- paused -------- \n"..
+           " Artist <span color=\""..theme.fg_normal.."\">"..prettystring(args["{Artist}"], len, 1).." </span>\n"..
+           " Album  <span color=\""..theme.fg_normal.."\">"..prettystring(args["{Album}"], len, 1).." </span>\n"..
+           " Title  <span color=\""..theme.fg_normal.."\">"..prettystring(args["{Title}"], len, 1).." </span>")
+      else
+        tooltip_mpd:set_text(
+           " mpd information \n"..
+           " --- stopped --- ")
+      end
+      return
+    end, 3)
+  -- put it together
+  widget_mpd:add(widget_mpd_icon)
+  widget_mpd:add(widget_mpd_text)
 end
+-- }}} MUSIC
+
+-- {{{ BATTERY
+if laptop then
+  vicious.cache(vicious.widgets.bat)
+  widget_bat = wibox.layout.fixed.horizontal()
+  -- bat icon
+  widget_bat_icon = mwidget_icon("⚡ ")
+  -- bat text
+  widget_bat_text = wibox.widget.textbox()
+  widget_bat_text.fit = function() return 40, 8 end
+  vicious.register(widget_bat_text, vicious.widgets.bat, " $1$2%", 15, BAT)
+  -- bat tooltip
+  tooltip_bat = awful.tooltip({ objects = { widget_bat }})
+  vicious.register(
+    tooltip_bat, vicious.widgets.bat,
+    function (widget,args)
+      if args[1] == "-" then
+        tooltip_bat:set_text(
+          " <span weight=\"bold\" color=\""..theme.fg_normal.."\">battery information</span> \n"..
+          " --- discharging --- \n"..
+          " ⚡ charge    <span color=\""..theme.fg_normal.."\">"..args[2].."</span> % \n"..
+          " ◴ time left <span color=\""..theme.fg_normal.."\">"..args[3].."</span>")
+      else
+        tooltip_bat:set_text(
+          " <span weight=\"bold\" color=\""..theme.fg_normal.."\">battery information</span> \n"..
+          " ---- charging  ---- \n"..
+          " ⚡ charge    <span color=\""..theme.fg_normal.."\">"..args[2].."</span> % \n"..
+          " ◴ time left <span color=\""..theme.fg_normal.."\">"..args[3].."</span>")
+      end
+      return
+    end, 15, BAT)
+  -- put it together
+  widget_bat:add(widget_bat_icon)
+  widget_bat:add(widget_bat_text)
+end
+-- }}} BATTERY
 
 
 -- Put stats widget together
-widget_stats:add(widget_cpu_icon)
-widget_stats:add(widget_cpu_text)
-widget_stats:add(widget_cpu_graph)
+widget_stats:add(widget_cpu)
 widget_stats:add(widget_stats_arrow)
-widget_stats:add(widget_mem_icon)
-widget_stats:add(widget_mem_text)
-widget_stats:add(widget_mem_bar)
-if laptop then
+widget_stats:add(widget_mem)
+if not laptop then
   widget_stats:add(widget_stats_arrow)
-  widget_stats:add(widget_bat_icon)
-  widget_stats:add(widget_bat_text)
+  widget_stats:add(widget_mpd)
+else
+  widget_stats:add(widget_stats_arrow)
+  widget_stats:add(widget_bat)
 end
 
 -- Create a wibox for each screen and add it
@@ -387,20 +520,20 @@ for s = 1, screen.count() do
     left_layout:add(mylauncher)
     left_layout:add(sep)
     left_layout:add(mytaglist[s])
-    left_layout:add(arrow_widget(theme.bg_normal, theme.fg_focus, "right"))
-    left_layout:add(bg_widget(theme.fg_focus, mypromptbox[s]))
-    left_layout:add(arrow_widget(theme.fg_focus, theme.bg_normal, "right"))
+    left_layout:add(mwidget_arrow(theme.bg_normal, theme.fg_focus, "right"))
+    left_layout:add(mwidget_bg(theme.fg_focus, mypromptbox[s]))
+    left_layout:add(mwidget_arrow(theme.fg_focus, theme.bg_normal, "right"))
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
-    right_layout:add(arrow_widget(theme.fg_focus, theme.bg_normal, "left"))
-    right_layout:add(bg_widget(theme.fg_focus, widget_stats))
+    right_layout:add(mwidget_arrow(theme.fg_focus, theme.bg_normal, "left"))
+    right_layout:add(mwidget_bg(theme.fg_focus, widget_stats))
     if s == 1 then
-      right_layout:add(arrow_widget(theme.bg_focus, theme.fg_focus, "left"))
+      right_layout:add(mwidget_arrow(theme.bg_focus, theme.fg_focus, "left"))
       right_layout:add(wibox.widget.systray())
-      right_layout:add(arrow_widget(theme.bg_normal, theme.bg_focus, "left"))
+      right_layout:add(mwidget_arrow(theme.bg_normal, theme.bg_focus, "left"))
     else
-      right_layout:add(arrow_widget(theme.bg_normal, theme.fg_focus, "left"))
+      right_layout:add(mwidget_arrow(theme.bg_normal, theme.fg_focus, "left"))
     end
     right_layout:add(mytextclock)
     right_layout:add(mylayoutbox[s])
@@ -708,7 +841,7 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "Iceweasel", role="Manager" },
       properties = { floating = true } },
-    { rule = { class = "Google-chrome" },
+    { rule = { class = "chromium" },
       properties = {    tag = tags[screen. count()][1] } },
     { rule = { class = "Gimp", role="gimp-toolbox" },
       properties = {
