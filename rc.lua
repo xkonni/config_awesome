@@ -263,8 +263,26 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 sep = wibox.widget.base.empty_widget()
 sep.fit = function() return 3, 8 end
 
--- Create a textclock widget
-mytextclock = awful.widget.textclock()
+-- Create a clock widget
+widget_clock = awful.widget.textclock(" %H:%M ")
+tooltip_clock = awful.tooltip({ objects = { widget_clock }})
+tooltip_clock:set_text("bla")
+timer_clock = timer({ timeout = 300 })
+timer_clock:connect_signal("timeout", function()
+    local title = os.date("%A %d %B %Y")
+    local len = string.len(title)+2
+    local text
+    text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+           " "..string.rep("-", len).." \n"
+           --" Time <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..prettystring(os.date("%H:%M"), 18, " ").." </span>\n"..
+           --" Date <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..prettystring(os.date("%a %b %d %Y"), 18, " ").." </span>"
+    local date = awful.util.pread("cal | sed '1d;$d;s/^/   /;s/$/ /'")
+    date = " "..date.." "
+    text = text..date
+    tooltip_clock:set_text(text)
+end)
+timer_clock:start()
+timer_clock:emit_signal("timeout")
 
 -- Create a stats widget
 local widget_stats = wibox.layout.fixed.horizontal()
@@ -337,8 +355,8 @@ vicious.register(widget_mem_bar, vicious.widgets.mem, "$1", 3)
 tooltip_mem = awful.tooltip({ objects = { widget_mem }})
 vicious.register( tooltip_mem, vicious.widgets.mem,
   function (widget,args)
-    local title = "memory/swap usage"
-    local tlen = string.len(title)+2
+    local title = "memory &amp; swap usage"
+    local tlen = string.len(title)+2-4
     tooltip_mem:set_text(
       " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
       " "..string.rep("-", tlen).." \n"..
@@ -418,7 +436,7 @@ if not laptop then
     function (widget,args)
       local title = "mpd information"
       local tlen = string.len(title)+2
-      local len = math.max(string.len(args["{Artist}"]), string.len(args["{Album}"]), string.len(args["{Title}"]))
+      local len = math.max(string.len(args["{Artist}"]), string.len(args["{Album}"]), string.len(args["{Title}"]), 10)
       local text
       text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
              " "..string.rep("-", tlen).." \n"
@@ -576,11 +594,12 @@ for s = 1, screen.count() do
     if s == 1 then
       right_layout:add(mwidget_arrow(theme.bg_focus, theme.fg_focus, "left"))
       right_layout:add(wibox.widget.systray())
+      right_layout:add(mwidget_bg(theme.bg_focus, sep))
       right_layout:add(mwidget_arrow(theme.bg_normal, theme.bg_focus, "left"))
     else
       right_layout:add(mwidget_arrow(theme.bg_normal, theme.fg_focus, "left"))
     end
-    right_layout:add(mytextclock)
+    right_layout:add(widget_clock)
     right_layout:add(mylayoutbox[s])
 
     -- Now bring it all together (with the tasklist in the middle)
