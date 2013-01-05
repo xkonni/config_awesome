@@ -47,9 +47,19 @@ config= awful.util.getdir("config")
 if host == "silence" then
   BAT = "BAT1"
   laptop = 1
+  cores = 2
+  partitions = { "/", "/home", "/extra"}
 elseif host == "remembrance" then
   BAT = "BAT0"
   laptop = 1
+  cores = 2
+  partitions = { "/", "/home", "/extra"}
+elseif host == "annoyance" then
+  cores = 4
+  partitions = { "/", "/home", "/extra", "/extra/src"}
+else
+  cores = 2
+  partitions = { "/", "/home"}
 end
 -- }}} Host specific
 
@@ -132,11 +142,18 @@ end
 -- return a string with fixed length
 -- cut off at the end of filled with
 -- whitespaces at the beginning
-function prettystring(str, length, fill)
+function prettystring(str, length, fill, center)
   if string.len(str) > length then
     str=string.sub(str, 1, length-1).."…"
   elseif fill then
-    str = string.rep(" ", length-string.len(str))..str
+    local num=length-string.len(str)
+    if center then
+      local left = math.floor(num/2)
+      local right = num-left
+      str = string.rep(fill, left)..str..string.rep(fill, right)
+    else
+      str = string.rep(fill, num)..str
+    end
   end
   return str
 end
@@ -277,24 +294,17 @@ widget_cpu_graph:set_border_color(stats_bg)
 vicious.register(widget_cpu_graph, vicious.widgets.cpu, "$1", 3)
 -- cpu tooltip
 tooltip_cpu = awful.tooltip({ objects = { widget_cpu }})
-vicious.register(
-  tooltip_cpu, vicious.widgets.cpuinf,
+vicious.register( tooltip_cpu, vicious.widgets.cpuinf,
   function (widget,args)
-    if not laptop then
-      tooltip_cpu:set_text(
-        " <span weight=\"bold\" color=\""..theme.fg_normal.."\">cpu frequencies</span> \n"..
-        " --------------- \n"..
-        " ☉ core1 <span color=\""..theme.fg_normal.."\">"..args["{cpu0 mhz}"].."</span> Mhz \n"..
-        " ☉ core2 <span color=\""..theme.fg_normal.."\">"..args["{cpu1 mhz}"].."</span> Mhz \n"..
-        " ☉ core3 <span color=\""..theme.fg_normal.."\">"..args["{cpu2 mhz}"].."</span> Mhz \n"..
-        " ☉ core4 <span color=\""..theme.fg_normal.."\">"..args["{cpu3 mhz}"].."</span> Mhz ")
-    else
-      tooltip_cpu:set_text(
-        " <span weight=\"bold\" color=\""..theme.fg_normal.."\">cpu frequencies</span> \n"..
-        " --------------- \n"..
-        " ☉ core1 <span color=\""..theme.fg_normal.."\">"..args["{cpu0 mhz}"].."</span> Mhz \n"..
-        " ☉ core2 <span color=\""..theme.fg_normal.."\">"..args["{cpu1 mhz}"].."</span> Mhz ")
+    local title = "cpu frequencies"
+    local len = string.len(title)+2
+    local text
+    text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+           " "..string.rep("-", len).." \n"
+    for core = 1, cores do
+      text = text.." ☉ core"..core.." <span color=\""..theme.fg_normal.."\">"..args["{cpu"..core.." mhz}"].."</span> Mhz \n"
     end
+    tooltip_cpu:set_text(text)
     return
   end, 3)
 -- put it together
@@ -325,18 +335,15 @@ widget_mem_bar:set_border_color(stats_bg)
 vicious.register(widget_mem_bar, vicious.widgets.mem, "$1", 3)
 -- mem tooltip
 tooltip_mem = awful.tooltip({ objects = { widget_mem }})
-vicious.register(
-  tooltip_mem, vicious.widgets.mem,
+vicious.register( tooltip_mem, vicious.widgets.mem,
   function (widget,args)
-    -- keep values at same length
-    local len2 = string.len(args[2])
-    local len3 = string.len(args[3])
-     tooltip_mem:set_text(
-        " <span weight=\"bold\" color=\""..theme.fg_normal.."\">memory &amp; swap usage</span> \n"..
-        " ---------------------- \n"..
-        " ⚈ memory <span color=\""..theme.fg_normal.."\">"..args[2].."/"..args[3].."</span> MB \n"..
-        " ⚈ swap   <span color=\""..theme.fg_normal.."\">"..prettystring(args[6], len2, 1).."/"..prettystring(args[7], len3, 1).."</span> MB "
-     )
+    local title = "memory/swap usage"
+    local tlen = string.len(title)+2
+    tooltip_mem:set_text(
+      " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+      " "..string.rep("-", tlen).." \n"..
+      " ⚈ memory <span color=\""..theme.fg_normal.."\">"..prettystring(args[2], 5, " ").."/"..prettystring(args[3], 5, " ").."</span> MB \n"..
+      " ⚈ swap   <span color=\""..theme.fg_normal.."\">"..prettystring(args[6], 5, " ").."/"..prettystring(args[7], 5, " ").."</span> MB ")
      return
   end, 3)
 -- put it together
@@ -346,52 +353,90 @@ widget_mem:add(widget_mem_bar)
 -- }}} MEM
 
 -- {{{ HDD
---widget_hdd_icon = mwidget_icon("⛁")
+vicious.cache(vicious.widgets.fs)
+widget_hdd = wibox.layout.fixed.horizontal()
+-- hdd icon
+widget_hdd_icon = mwidget_icon("⛁ ")
+-- hdd text
+widget_hdd_text = wibox.widget.textbox()
+vicious.register(widget_hdd_text, vicious.widgets.fs,
+  function (widget, args)
+    return partitions[1].." "..args["{"..partitions[1].." used_p}"].."% "..
+           partitions[2].." "..args["{"..partitions[2].." used_p}"].."% "
+end, 30)
+-- hdd tooltip
+tooltip_hdd = awful.tooltip({ objects = { widget_hdd }})
+vicious.register(tooltip_hdd, vicious.widgets.fs,
+  function (widget,args)
+    local title = "hdd information"
+    local tlen = string.len(title)+2
+    local text
+      text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+             " "..string.rep("-", tlen).." \n"
+      for p = 1, #partitions do
+        text = text.." ⛁ on "..
+                 prettystring(partitions[p], 10, " ").." <span color=\""..theme.fg_normal.."\">"..
+                 prettystring(args["{"..partitions[p].." used_p}"], 3, " ").."%  "..
+                 prettystring(args["{"..partitions[p].." used_gb}"], 5, " ").."/"..
+                 prettystring(args["{"..partitions[p].." size_gb}"], 5, " ").."</span> GB "
+        if p < #partitions then
+          text = text.."\n"
+        end
+      end
+    tooltip_hdd:set_text(text)
+    return
+end, 30)
+-- put it together
+widget_hdd:add(widget_hdd_icon)
+widget_hdd:add(widget_hdd_text)
 -- }}} HDD
 
 -- {{{ MUSIC
 if not laptop then
   vicious.cache(vicious.widgets.mpd)
   widget_mpd = wibox.layout.fixed.horizontal()
-  widget_mpd.fit = function() return 300, 8 end
+
   -- mpd icon
   widget_mpd_icon = mwidget_icon("♫ ")
   -- mpd text
   widget_mpd_text = wibox.widget.textbox()
+  widget_mpd_text.fit = function(widget, width, height)
+    local w, h = wibox.widget.textbox.fit(widget, width, height)
+    return math.min(w, 300), h
+  end
   vicious.register(widget_mpd_text, vicious.widgets.mpd,
     function (widget, args)
       if args["{state}"] == "Stop" then
         return " ✖ "
       else
-        return args["{Artist}"].." - "..args["{Title}"]
+        return args["{Artist}"].." - "..args["{Title}"].." "
       end
   end, 5)
   -- mpd tooltip
   tooltip_mpd = awful.tooltip({ objects = { widget_mpd }})
   vicious.register(tooltip_mpd, vicious.widgets.mpd,
     function (widget,args)
-      local len = math.max(string.len(args["{Artist}"], string.len(args["{Album}"]), string.len(args["{Title}"])))
-      if args["{state}"] == "Play" then
-        tooltip_mpd:set_text(
-           " <span weight=\"bold\" color=\""..theme.fg_normal.."\">mpd information</span> \n"..
-           " ------ ♫ playing ♫ ------ \n"..
-           " Artist <span color=\""..theme.fg_normal.."\">"..prettystring(args["{Artist}"], len, 1).." </span>\n"..
-           " Album  <span color=\""..theme.fg_normal.."\">"..prettystring(args["{Album}"], len, 1).." </span>\n"..
-           " Title  <span color=\""..theme.fg_normal.."\">"..prettystring(args["{Title}"], len, 1).." </span>")
-      elseif args["{state}"] == "Pause" then
-        tooltip_mpd:set_text(
-           " <span weight=\"bold\" color=\""..theme.fg_normal.."\">mpd information</span> \n"..
-           " -------- paused -------- \n"..
-           " Artist <span color=\""..theme.fg_normal.."\">"..prettystring(args["{Artist}"], len, 1).." </span>\n"..
-           " Album  <span color=\""..theme.fg_normal.."\">"..prettystring(args["{Album}"], len, 1).." </span>\n"..
-           " Title  <span color=\""..theme.fg_normal.."\">"..prettystring(args["{Title}"], len, 1).." </span>")
+      local title = "mpd information"
+      local tlen = string.len(title)+2
+      local len = math.max(string.len(args["{Artist}"]), string.len(args["{Album}"]), string.len(args["{Title}"]))
+      local text
+      text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+             " "..string.rep("-", tlen).." \n"
+      if args["{state}"] == "Stop" then
+        text = text.." Status <span color=\""..theme.fg_normal.."\">"..prettystring("stopped", len, " ").." </span>"
       else
-        tooltip_mpd:set_text(
-           " mpd information \n"..
-           " --- stopped --- ")
+        if args["{state}"] == "Play" then
+          text = text.." Status <span color=\""..theme.fg_normal.."\">"..prettystring("playing" , len, " ").." </span>\n"
+        else
+          text = text.." Status <span color=\""..theme.fg_normal.."\">"..prettystring("paused", len, " ").." </span>\n"
+        end
+        text = text.." Artist <span color=\""..theme.fg_normal.."\">"..prettystring(args["{Artist}"], len, " ").." </span>\n"..
+                     " Album  <span color=\""..theme.fg_normal.."\">"..prettystring(args["{Album}"], len, " ").." </span>\n"..
+                     " Title  <span color=\""..theme.fg_normal.."\">"..prettystring(args["{Title}"], len, " ").." </span>"
       end
+      tooltip_mpd:set_text(text)
       return
-    end, 3)
+    end, 5)
   -- put it together
   widget_mpd:add(widget_mpd_icon)
   widget_mpd:add(widget_mpd_text)
@@ -410,8 +455,7 @@ if laptop then
   vicious.register(widget_bat_text, vicious.widgets.bat, " $1$2%", 15, BAT)
   -- bat tooltip
   tooltip_bat = awful.tooltip({ objects = { widget_bat }})
-  vicious.register(
-    tooltip_bat, vicious.widgets.bat,
+  vicious.register( tooltip_bat, vicious.widgets.bat,
     function (widget,args)
       if args[1] == "-" then
         tooltip_bat:set_text(
@@ -439,6 +483,8 @@ end
 widget_stats:add(widget_cpu)
 widget_stats:add(widget_stats_arrow)
 widget_stats:add(widget_mem)
+widget_stats:add(widget_stats_arrow)
+widget_stats:add(widget_hdd)
 if not laptop then
   widget_stats:add(widget_stats_arrow)
   widget_stats:add(widget_mpd)
@@ -827,6 +873,15 @@ awful.rules.rules = {
                      focus = awful.client.focus.filter,
                      keys = clientkeys,
                      buttons = clientbuttons } },
+    -- match all new clients, notify name and class
+    --{ rule = { },
+    --  properties = { },
+    --  callback = function(c)
+    --    local cname=c.name
+    --    local cclass=c.class
+    --    naughty.notify({title="new window", text="name: "..cname.." class: "..cclass})
+    --  end
+    --},
     { rule = { class = "MPlayer" },
       properties = { floating = true } },
     { rule = { class = "mplayer2" },
