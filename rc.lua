@@ -478,7 +478,6 @@ if laptop then
 end
 -- }}} BATTERY
 
-
 -- Put stats widget together
 widget_stats:add(widget_cpu)
 widget_stats:add(widget_stats_arrow)
@@ -607,6 +606,7 @@ root.buttons(awful.util.table.join(
 globalkeys = awful.util.table.join(
     awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
     awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
+    awful.key({ modkey,           }, "`",  awful.tag.viewnext       ),
     awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
 
     awful.key({ modkey,           }, "j",
