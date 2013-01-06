@@ -55,7 +55,7 @@ elseif host == "remembrance" then
   cores = 2
   partitions = { "/", "/home", "/extra"}
 elseif host == "annoyance" then
-  cores = 4
+  cores = 8
   partitions = { "/", "/home", "/extra", "/extra/src"}
 else
   cores = 2
@@ -251,13 +251,10 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- }}}
 
 -- {{{ Wibox
--- change size in 3.5
--- 15:33 < psychon> sep = wibox.widget.base.empty_widget()
--- 15:33 < psychon> sep.fit = function() return 20, 8 end
--- 14:39 < psychon>
---    mybox.fit = function(widget, width, height)
---      local width, height = wibox.widget.textbox.fit(widget, width, height)
---      return math.min(width, 100), height end
+-- set common widget timeouts
+local timeout_short  = 3
+local timeout_medium = 15
+local timeout_long   = 60
 
 -- Create a separator widget with a fixed width
 sep = wibox.widget.base.empty_widget()
@@ -267,19 +264,19 @@ sep.fit = function() return 3, 8 end
 widget_clock = awful.widget.textclock(" %H:%M ")
 tooltip_clock = awful.tooltip({ objects = { widget_clock }})
 tooltip_clock:set_text("bla")
-timer_clock = timer({ timeout = 300 })
+timer_clock = timer({ timeout = timeout_long })
 timer_clock:connect_signal("timeout", function()
-    local title = os.date("%A %d %B %Y")
-    local len = string.len(title)+2
-    local text
-    text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
-           " "..string.rep("-", len).." \n"
-           --" Time <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..prettystring(os.date("%H:%M"), 18, " ").." </span>\n"..
-           --" Date <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..prettystring(os.date("%a %b %d %Y"), 18, " ").." </span>"
-    local date = awful.util.pread("cal | sed '1d;$d;s/^/   /;s/$/ /'")
-    date = " "..date.." "
-    text = text..date
-    tooltip_clock:set_text(text)
+  local title = os.date("%A %d %B %Y")
+  local len = string.len(title)+2
+  local text
+  text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+         " "..string.rep("-", len).." \n"
+         --" Time <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..prettystring(os.date("%H:%M"), 18, " ").." </span>\n"..
+         --" Date <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..prettystring(os.date("%a %b %d %Y"), 18, " ").." </span>"
+  local date = awful.util.pread("cal | sed '1d;$d;s/^/   /;s/$/ /'")
+  date = " "..date.." "
+  text = text..date
+  tooltip_clock:set_text(text)
 end)
 timer_clock:start()
 timer_clock:emit_signal("timeout")
@@ -302,17 +299,17 @@ widget_cpu_icon = mwidget_icon("☉")
 -- text
 widget_cpu_text = wibox.widget.textbox()
 widget_cpu_text.fit = function() return 35, 8 end
-vicious.register(widget_cpu_text, vicious.widgets.cpu, " $1%", 3)
+vicious.register(widget_cpu_text, vicious.widgets.cpu, " $1%", timeout_short)
 -- graph
 widget_cpu_graph = awful.widget.graph()
 widget_cpu_graph:set_width(30)
 widget_cpu_graph:set_background_color(stats_bg)
 widget_cpu_graph:set_color(stats_graph)
 widget_cpu_graph:set_border_color(stats_bg)
-vicious.register(widget_cpu_graph, vicious.widgets.cpu, "$1", 3)
+vicious.register(widget_cpu_graph, vicious.widgets.cpu, "$1", timeout_medium)
 -- cpu tooltip
 tooltip_cpu = awful.tooltip({ objects = { widget_cpu }})
-vicious.register( tooltip_cpu, vicious.widgets.cpuinf,
+vicious.register(tooltip_cpu, vicious.widgets.cpuinf,
   function (widget,args)
     local title = "cpu frequencies"
     local len = string.len(title)+2
@@ -320,11 +317,14 @@ vicious.register( tooltip_cpu, vicious.widgets.cpuinf,
     text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
            " "..string.rep("-", len).." \n"
     for core = 1, cores do
-      text = text.." ☉ core"..core.." <span color=\""..theme.fg_normal.."\">"..args["{cpu"..core.." mhz}"].."</span> Mhz \n"
+      text = text.." ☉ core"..core.." <span color=\""..theme.fg_normal.."\">"..args["{cpu"..(core-1).." mhz}"].."</span> Mhz "
+      if core < cores then
+        text = text.."\n"
+      end
     end
     tooltip_cpu:set_text(text)
     return
-  end, 3)
+  end, timeout_medium)
 -- put it together
 widget_cpu:add(widget_cpu_icon)
 widget_cpu:add(widget_cpu_text)
@@ -339,18 +339,14 @@ widget_mem_icon = mwidget_icon("⚈")
 -- mem text
 widget_mem_text = wibox.widget.textbox()
 widget_mem_text.fit = function() return 35, 8 end
-vicious.register(widget_mem_text, vicious.widgets.mem, " $1%", 3)
+vicious.register(widget_mem_text, vicious.widgets.mem, " $1%", timeout_short)
 -- mem bar
-widget_mem_bar = awful.widget.progressbar()
-widget_mem_bar:set_vertical(true)
-widget_mem_bar:set_ticks(true)
-widget_mem_bar:set_height(20)
-widget_mem_bar:set_width(8)
-widget_mem_bar:set_ticks_size(1)
-widget_mem_bar:set_background_color(stats_bg)
-widget_mem_bar:set_color(stats_graph)
-widget_mem_bar:set_border_color(stats_bg)
-vicious.register(widget_mem_bar, vicious.widgets.mem, "$1", 3)
+widget_mem_graph = awful.widget.graph()
+widget_mem_graph:set_width(30)
+widget_mem_graph:set_background_color(stats_bg)
+widget_mem_graph:set_color(stats_graph)
+widget_mem_graph:set_border_color(stats_bg)
+vicious.register(widget_mem_graph, vicious.widgets.mem, "$1", timeout_medium)
 -- mem tooltip
 tooltip_mem = awful.tooltip({ objects = { widget_mem }})
 vicious.register( tooltip_mem, vicious.widgets.mem,
@@ -363,11 +359,11 @@ vicious.register( tooltip_mem, vicious.widgets.mem,
       " ⚈ memory <span color=\""..theme.fg_normal.."\">"..prettystring(args[2], 5, " ").."/"..prettystring(args[3], 5, " ").."</span> MB \n"..
       " ⚈ swap   <span color=\""..theme.fg_normal.."\">"..prettystring(args[6], 5, " ").."/"..prettystring(args[7], 5, " ").."</span> MB ")
      return
-  end, 3)
+  end, timeout_medium)
 -- put it together
 widget_mem:add(widget_mem_icon)
 widget_mem:add(widget_mem_text)
-widget_mem:add(widget_mem_bar)
+widget_mem:add(widget_mem_graph)
 -- }}} MEM
 
 -- {{{ HDD
@@ -381,7 +377,7 @@ vicious.register(widget_hdd_text, vicious.widgets.fs,
   function (widget, args)
     return partitions[1].." "..args["{"..partitions[1].." used_p}"].."% "..
            partitions[2].." "..args["{"..partitions[2].." used_p}"].."% "
-end, 30)
+end, timeout_long)
 -- hdd tooltip
 tooltip_hdd = awful.tooltip({ objects = { widget_hdd }})
 vicious.register(tooltip_hdd, vicious.widgets.fs,
@@ -403,7 +399,7 @@ vicious.register(tooltip_hdd, vicious.widgets.fs,
       end
     tooltip_hdd:set_text(text)
     return
-end, 30)
+end, timeout_long)
 -- put it together
 widget_hdd:add(widget_hdd_icon)
 widget_hdd:add(widget_hdd_text)
@@ -413,7 +409,6 @@ widget_hdd:add(widget_hdd_text)
 if not laptop then
   vicious.cache(vicious.widgets.mpd)
   widget_mpd = wibox.layout.fixed.horizontal()
-
   -- mpd icon
   widget_mpd_icon = mwidget_icon("♫ ")
   -- mpd text
@@ -429,7 +424,7 @@ if not laptop then
       else
         return args["{Artist}"].." - "..args["{Title}"].." "
       end
-  end, 5)
+  end, timeout_medium)
   -- mpd tooltip
   tooltip_mpd = awful.tooltip({ objects = { widget_mpd }})
   vicious.register(tooltip_mpd, vicious.widgets.mpd,
@@ -454,7 +449,7 @@ if not laptop then
       end
       tooltip_mpd:set_text(text)
       return
-    end, 5)
+    end, timeout_medium)
   -- put it together
   widget_mpd:add(widget_mpd_icon)
   widget_mpd:add(widget_mpd_text)
@@ -470,26 +465,26 @@ if laptop then
   -- bat text
   widget_bat_text = wibox.widget.textbox()
   widget_bat_text.fit = function() return 40, 8 end
-  vicious.register(widget_bat_text, vicious.widgets.bat, " $1$2%", 15, BAT)
+  vicious.register(widget_bat_text, vicious.widgets.bat, " $1$2%", timeout_medium, BAT)
   -- bat tooltip
   tooltip_bat = awful.tooltip({ objects = { widget_bat }})
   vicious.register( tooltip_bat, vicious.widgets.bat,
     function (widget,args)
+      local title = "battery information"
+      local tlen = string.len(title)+2
+      local text
+      text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+             " "..string.rep("-", tlen).." \n"
       if args[1] == "-" then
-        tooltip_bat:set_text(
-          " <span weight=\"bold\" color=\""..theme.fg_normal.."\">battery information</span> \n"..
-          " --- discharging --- \n"..
-          " ⚡ charge    <span color=\""..theme.fg_normal.."\">"..args[2].."</span> % \n"..
-          " ◴ time left <span color=\""..theme.fg_normal.."\">"..args[3].."</span>")
+        text = text.." ⚫ status    <span color=\""..theme.fg_normal.."\">"..prettystring("discharging", 12, " ").." </span>\n"
       else
-        tooltip_bat:set_text(
-          " <span weight=\"bold\" color=\""..theme.fg_normal.."\">battery information</span> \n"..
-          " ---- charging  ---- \n"..
-          " ⚡ charge    <span color=\""..theme.fg_normal.."\">"..args[2].."</span> % \n"..
-          " ◴ time left <span color=\""..theme.fg_normal.."\">"..args[3].."</span>")
+        text = text.." ⚫ status    <span color=\""..theme.fg_normal.."\">"..prettystring("charging", 12, " ").." </span>\n"
       end
+      text = text.." ⚡ charge    <span color=\""..theme.fg_normal.."\">"..prettystring(args[2], 11, " ").."% </span>\n"..
+                   " ◴ time left <span color=\""..theme.fg_normal.."\">"..prettystring(args[3], 12, " ").." </span>"
+      tooltip_bat:set_text(text)
       return
-    end, 15, BAT)
+    end, timeout_medium, BAT)
   -- put it together
   widget_bat:add(widget_bat_icon)
   widget_bat:add(widget_bat_text)
