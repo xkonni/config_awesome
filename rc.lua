@@ -44,22 +44,28 @@ host  = awful.util.pread("hostname | tr -d '\n'")
 home  = awful.util.pread("echo $HOME | tr -d '\n'")
 config= awful.util.getdir("config")
 
+-- default values
+local timeout_short  = 3
+local timeout_medium = 15
+local timeout_long   = 60
+local cores = 2
+local partitions = { "/", "/home"}
+
+-- host overrides
 if host == "silence" then
   BAT = "BAT1"
   laptop = 1
-  cores = 2
   partitions = { "/", "/home", "/extra"}
 elseif host == "remembrance" then
   BAT = "BAT0"
   laptop = 1
-  cores = 2
   partitions = { "/", "/home", "/extra"}
 elseif host == "annoyance" then
+  timeout_short  = 1
+  timeout_medium = 5
+  timeout_long   = 60
   cores = 8
   partitions = { "/", "/home", "/extra", "/extra/src"}
-else
-  cores = 2
-  partitions = { "/", "/home"}
 end
 -- }}} Host specific
 
@@ -72,8 +78,6 @@ terminal = 'urxvt'
 terminal_class = 'URxvt'
 editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
-
-
 
 -- Default modkey.
 modkey = "Mod4"
@@ -251,11 +255,6 @@ menubar.utils.terminal = terminal -- Set the terminal for applications that requ
 -- }}}
 
 -- {{{ Wibox
--- set common widget timeouts
-local timeout_short  = 3
-local timeout_medium = 15
-local timeout_long   = 60
-
 -- Create a separator widget with a fixed width
 sep = wibox.widget.base.empty_widget()
 sep.fit = function() return 3, 8 end
