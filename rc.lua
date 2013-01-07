@@ -260,7 +260,7 @@ sep = wibox.widget.base.empty_widget()
 sep.fit = function() return 3, 8 end
 
 -- Create a clock widget
-widget_clock = awful.widget.textclock(" %H:%M ")
+widget_clock = awful.widget.textclock(" %d %b %Y %H:%M ")
 tooltip_clock = awful.tooltip({ objects = { widget_clock }})
 tooltip_clock:set_text("bla")
 timer_clock = timer({ timeout = timeout_long })
@@ -272,7 +272,8 @@ timer_clock:connect_signal("timeout", function()
          " "..string.rep("-", len).." \n"
          --" Time <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..prettystring(os.date("%H:%M"), 18, " ").." </span>\n"..
          --" Date <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..prettystring(os.date("%a %b %d %Y"), 18, " ").." </span>"
-  local date = awful.util.pread("cal | sed '1d;$d;s/^/   /;s/$/ /'")
+  local day = awful.util.pread("date +%d | sed 's/^0/ /' | tr -d '\n'")
+  local date = awful.util.pread("cal | sed '1d;$d;s/^/   /;s/$/ /;s:"..day..":<span weight=\"bold\" color=\""..theme.fg_normal.."\">"..day.."</span>:'")
   date = " "..date.." "
   text = text..date
   tooltip_clock:set_text(text)

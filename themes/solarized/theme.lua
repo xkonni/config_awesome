@@ -32,11 +32,6 @@ theme.border_focus                              = "#268bd2"
 theme.border_marked                             = "#00ff00"
 -- }}} Borders
 
--- {{{ Titlebars
-theme.titlebar_bg_normal                        = theme.bg_normal
-theme.titlebar_bg_focus                         = theme.bg_focus
--- }}} Titlebars
-
 -- {{{ Override
 -- There are other variable sets
 -- overriding the default one when
@@ -47,19 +42,12 @@ theme.titlebar_bg_focus                         = theme.bg_focus
 -- tooltip_[font|opacity|fg_color|bg_color|border_width|border_color]
 -- Example:
 -- theme.taglist_bg_focus = "#CC9393"
--- }}} Override
 
 -- taglist
 theme.taglist_fg_occupied                       = theme.fg_focus
---theme.taglist_bg_occupied                       = theme.bg_normal
---theme.taglist_fg_focus                          = theme.fg_focus
 
 -- tasklist
---theme.tasklist_fg_focus                         = theme.fg_focus
-
--- tooltip
-theme.tooltip_fg_color                          = theme.fg_focus
-theme.tooltip_bg_color                          = "#00ff00"
+theme.tasklist_bg_focus                         = theme.bg_normal
 -- }}} Override
 
 -- {{{ Widgets
