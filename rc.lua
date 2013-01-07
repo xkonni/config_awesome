@@ -287,6 +287,8 @@ local stats_fg = theme.fg_normal
 local stats_graph = theme.bg_normal
 local stats_bg = theme.fg_focus
 local stats_sep = theme.bg_focus
+-- "from" and "to" define coordinates of  a line along which the gradient spreads
+local stats_grad = { type = "linear", from = { 0, 0 }, to = { 0, 30 }, stops = { { 0, "#dc322f" }, { 0.5, "#808000" }, { 1, "#859900" }}}
 
 -- separator
 widget_stats_arrow = mwidget_arrow(stats_sep, stats_bg, "cleft")
@@ -304,7 +306,8 @@ vicious.register(widget_cpu_text, vicious.widgets.cpu, " $1%", timeout_short)
 widget_cpu_graph = awful.widget.graph()
 widget_cpu_graph:set_width(30)
 widget_cpu_graph:set_background_color(stats_bg)
-widget_cpu_graph:set_color(stats_graph)
+--widget_cpu_graph:set_color(stats_graph)
+widget_cpu_graph:set_color(stats_grad)
 widget_cpu_graph:set_border_color(stats_bg)
 vicious.register(widget_cpu_graph, vicious.widgets.cpu, "$1", timeout_medium)
 -- cpu tooltip
@@ -344,7 +347,8 @@ vicious.register(widget_mem_text, vicious.widgets.mem, " $1%", timeout_short)
 widget_mem_graph = awful.widget.graph()
 widget_mem_graph:set_width(30)
 widget_mem_graph:set_background_color(stats_bg)
-widget_mem_graph:set_color(stats_graph)
+--widget_mem_graph:set_color(stats_graph)
+widget_mem_graph:set_color(stats_grad)
 widget_mem_graph:set_border_color(stats_bg)
 vicious.register(widget_mem_graph, vicious.widgets.mem, "$1", timeout_medium)
 -- mem tooltip
@@ -382,7 +386,7 @@ end, timeout_long)
 tooltip_hdd = awful.tooltip({ objects = { widget_hdd }})
 vicious.register(tooltip_hdd, vicious.widgets.fs,
   function (widget,args)
-    local title = "hdd information"
+    local title = "harddisk information"
     local tlen = string.len(title)+2
     local text
       text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
@@ -429,7 +433,7 @@ if not laptop then
   tooltip_mpd = awful.tooltip({ objects = { widget_mpd }})
   vicious.register(tooltip_mpd, vicious.widgets.mpd,
     function (widget,args)
-      local title = "mpd information"
+      local title = "music information"
       local tlen = string.len(title)+2
       local len = math.max(string.len(args["{Artist}"]), string.len(args["{Album}"]), string.len(args["{Title}"]), 10)
       local text
