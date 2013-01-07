@@ -287,7 +287,7 @@ local stats_graph = theme.bg_normal
 local stats_bg = theme.fg_focus
 local stats_sep = theme.bg_focus
 -- "from" and "to" define coordinates of  a line along which the gradient spreads
-local stats_grad = { type = "linear", from = { 0, 0 }, to = { 0, 30 }, stops = { { 0, "#dc322f" }, { 0.5, "#808000" }, { 1, "#859900" }}}
+local stats_grad = { type = "linear", from = { 0, 0 }, to = { 0, 20 }, stops = { { 0, "#dc322f" }, { 0.5, "#808000" }, { 1, "#859900" }}}
 
 -- separator
 widget_stats_arrow = mwidget_arrow(stats_sep, stats_bg, "cleft")
@@ -374,13 +374,23 @@ vicious.cache(vicious.widgets.fs)
 widget_hdd = wibox.layout.fixed.horizontal()
 -- hdd icon
 widget_hdd_icon = mwidget_icon("⛁ ")
--- hdd text
-widget_hdd_text = wibox.widget.textbox()
-vicious.register(widget_hdd_text, vicious.widgets.fs,
-  function (widget, args)
-    return partitions[1].." "..args["{"..partitions[1].." used_p}"].."% "..
-           partitions[2].." "..args["{"..partitions[2].." used_p}"].."% "
-end, timeout_long)
+-- hdd bars
+widget_hdd_bars = wibox.layout.fixed.horizontal()
+widget_hdd_bar = {}
+for p = 1, #partitions do
+  widget_hdd_bar[p] = awful.widget.progressbar()
+  widget_hdd_bar[p]:set_vertical(true)
+  widget_hdd_bar[p]:set_height(20)
+  widget_hdd_bar[p]:set_width(5)
+  widget_hdd_bar[p]:set_background_color(stats_bg)
+  widget_hdd_bar[p]:set_color(stats_grad)
+  vicious.register(widget_hdd_bar[p], vicious.widgets.fs,
+    function (widget, args)
+      return args["{"..partitions[p].." used_p}"]
+  end, timeout_long)
+  widget_hdd_bars:add(widget_hdd_bar[p])
+  widget_hdd_bars:add(sep)
+end
 -- hdd tooltip
 tooltip_hdd = awful.tooltip({ objects = { widget_hdd }})
 vicious.register(tooltip_hdd, vicious.widgets.fs,
@@ -405,7 +415,7 @@ vicious.register(tooltip_hdd, vicious.widgets.fs,
 end, timeout_long)
 -- put it together
 widget_hdd:add(widget_hdd_icon)
-widget_hdd:add(widget_hdd_text)
+widget_hdd:add(widget_hdd_bars)
 -- }}} HDD
 
 -- {{{ MUSIC
