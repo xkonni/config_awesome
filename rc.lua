@@ -270,12 +270,9 @@ timer_clock:connect_signal("timeout", function()
   local text
   text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
          " "..string.rep("-", len).." \n"
-         --" Time <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..prettystring(os.date("%H:%M"), 18, " ").." </span>\n"..
-         --" Date <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..prettystring(os.date("%a %b %d %Y"), 18, " ").." </span>"
   local day = awful.util.pread("date +%d | sed 's/^0/ /' | tr -d '\n'")
   local date = awful.util.pread("cal | sed '1d;$d;s/^/   /;s/$/ /;s:"..day..":<span weight=\"bold\" color=\""..theme.fg_normal.."\">"..day.."</span>:'")
-  date = " "..date.." "
-  text = text..date
+  text = text.." "..date.." "
   tooltip_clock:set_text(text)
 end)
 timer_clock:start()
