@@ -312,15 +312,15 @@ widget_cpu_graph:set_border_color(stats_bg)
 vicious.register(widget_cpu_graph, vicious.widgets.cpu, "$1", timeout_medium)
 -- cpu tooltip
 tooltip_cpu = awful.tooltip({ objects = { widget_cpu }})
-vicious.register(tooltip_cpu, vicious.widgets.cpuinf,
+vicious.register(tooltip_cpu, vicious.widgets.cpu,
   function (widget,args)
-    local title = "cpu frequencies"
+    local title = "cpu usage"
     local len = string.len(title)+2
     local text
     text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
            " "..string.rep("-", len).." \n"
     for core = 1, cores do
-      text = text.." ☉ core"..core.." <span color=\""..theme.fg_normal.."\">"..args["{cpu"..(core-1).." mhz}"].."</span> Mhz "
+      text = text.." ☉ core"..core.." <span color=\""..theme.fg_normal.."\">"..args[core+1].."</span> % "
       if core < cores then
         text = text.."\n"
       end
