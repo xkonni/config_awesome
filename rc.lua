@@ -219,7 +219,7 @@ end
 tags = {}
 for s = 1, screen.count() do
     -- Each screen has its own tag table.
-    tags[s] = awful.tag({ 1, 2, 3, 4, 5, 6, 7, 8, 9 }, s, layouts[1])
+    tags[s] = awful.tag({ "➊", "➋", "➌", "➍", "➎", "➏", "➐", "➑", "➒" }, s, layouts[1])
 end
 -- }}}
 
@@ -294,7 +294,7 @@ widget_stats_arrow = mwidget_arrow(stats_sep, stats_bg, "cleft")
 vicious.cache(vicious.widgets.cpu)
 widget_cpu = wibox.layout.fixed.horizontal()
 -- icon
-widget_cpu_icon = mwidget_icon("☉")
+widget_cpu_icon = mwidget_icon("◈")
 -- text
 widget_cpu_text = wibox.widget.textbox()
 widget_cpu_text.fit = function() return 35, 8 end
@@ -317,7 +317,7 @@ vicious.register(tooltip_cpu, vicious.widgets.cpu,
     text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
            " "..string.rep("-", len).." \n"
     for core = 1, cores do
-      text = text.." ☉ core"..core.." <span color=\""..theme.fg_normal.."\">"..args[core+1].."</span> % "
+      text = text.." ◈ core"..core.." <span color=\""..theme.fg_normal.."\">"..args[core+1].."</span> % "
       if core < cores then
         text = text.."\n"
       end
@@ -335,7 +335,7 @@ widget_cpu:add(widget_cpu_graph)
 vicious.cache(vicious.widgets.mem)
 widget_mem = wibox.layout.fixed.horizontal()
 -- icon
-widget_mem_icon = mwidget_icon("⚈")
+widget_mem_icon = mwidget_icon("◌")
 -- mem text
 widget_mem_text = wibox.widget.textbox()
 widget_mem_text.fit = function() return 35, 8 end
@@ -357,8 +357,8 @@ vicious.register( tooltip_mem, vicious.widgets.mem,
     tooltip_mem:set_text(
       " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
       " "..string.rep("-", tlen).." \n"..
-      " ⚈ memory <span color=\""..theme.fg_normal.."\">"..prettystring(args[2], 5, " ").."/"..prettystring(args[3], 5, " ").."</span> MB \n"..
-      " ⚈ swap   <span color=\""..theme.fg_normal.."\">"..prettystring(args[6], 5, " ").."/"..prettystring(args[7], 5, " ").."</span> MB ")
+      " ◌ memory <span color=\""..theme.fg_normal.."\">"..prettystring(args[2], 5, " ").."/"..prettystring(args[3], 5, " ").."</span> MB \n"..
+      " ○ swap   <span color=\""..theme.fg_normal.."\">"..prettystring(args[6], 5, " ").."/"..prettystring(args[7], 5, " ").."</span> MB ")
      return
   end, timeout_medium)
 -- put it together
@@ -421,7 +421,7 @@ if not laptop then
   vicious.cache(vicious.widgets.mpd)
   widget_mpd = wibox.layout.fixed.horizontal()
   -- mpd icon
-  widget_mpd_icon = mwidget_icon("♫ ")
+  widget_mpd_icon = mwidget_icon(" ▸ ")
   -- mpd text
   widget_mpd_text = wibox.widget.textbox()
   widget_mpd_text.fit = function(widget, width, height)
@@ -431,10 +431,14 @@ if not laptop then
   vicious.register(widget_mpd_text, vicious.widgets.mpd,
     function (widget, args)
       if args["{state}"] == "Stop" then
-        return " ✖ "
+        widget_mpd_icon:set_text(" ▹ ")
+        return " - "
+      elseif args["{state}"] == "Pause" then
+        widget_mpd_icon:set_text(" ▹ ")
       else
-        return args["{Artist}"].." - "..args["{Title}"].." "
+        widget_mpd_icon:set_text(" ▸ ")
       end
+      return args["{Artist}"].." - "..args["{Title}"].." "
   end, timeout_medium)
   -- mpd tooltip
   tooltip_mpd = awful.tooltip({ objects = { widget_mpd }})
@@ -466,6 +470,56 @@ if not laptop then
   widget_mpd:add(widget_mpd_text)
 end
 -- }}} MUSIC
+
+-- {{{ VOLUME
+vicious.cache(vicious.widgets.volume)
+widget_vol = wibox.layout.fixed.horizontal()
+-- vol icon
+widget_vol_icon = wibox.widget.textbox()
+widget_vol_icon:set_font("Anonymous Pro for Powerline 14")
+-- vol bars
+widget_vol_bar = awful.widget.progressbar()
+widget_vol_bar:set_vertical(true)
+widget_vol_bar:set_height(20)
+widget_vol_bar:set_width(5)
+widget_vol_bar:set_background_color(stats_bg)
+widget_vol_bar:set_color(theme.bg_normal.."A0")
+widget_vol_bar:set_border_color(stats_bg)
+vicious.register(widget_vol_bar, vicious.widgets.volume,
+  function(widget, args)
+    if args[2] == "♫" then
+      widget_vol_icon:set_text(args[2].." ")
+      widget_vol_bar:set_color(theme.bg_normal.."A0")
+    else
+      widget_vol_icon:set_text(args[2].." ")
+      widget_vol_bar:set_color(theme.bg_focus.."40")
+    end
+    return args[1]
+  end,
+timeout_short, "Master")
+-- vol tooltip
+tooltip_vol = awful.tooltip({ objects = { widget_vol }})
+vicious.register(tooltip_vol, vicious.widgets.volume,
+  function (widget, args)
+    local title = "volume information"
+    local tlen = string.len(title)+2
+    local text
+    text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+           " "..string.rep("-", tlen).." \n"
+    if args[2] == "♫" then
+      text = text.." state  <span color=\""..theme.fg_normal.."\">"..prettystring("on", 3, " ").." </span>\n"
+    else
+      text = text.." state  <span color=\""..theme.fg_normal.."\">"..prettystring("off", 3, " ").." </span>\n"
+    end
+    text = text.." volume <span color=\""..theme.fg_normal.."\">"..prettystring(args[1], 3, " ").." </span> %"
+    tooltip_vol:set_text(text)
+    return
+  end, timeout_short)
+-- put it together
+widget_vol:add(widget_vol_icon)
+widget_vol:add(widget_vol_bar)
+widget_vol:add(sep)
+-- }}} VOLUME
 
 -- {{{ BATTERY
 if laptop then
@@ -511,7 +565,10 @@ widget_stats:add(widget_hdd)
 if not laptop then
   widget_stats:add(widget_stats_arrow)
   widget_stats:add(widget_mpd)
-else
+end
+widget_stats:add(widget_stats_arrow)
+widget_stats:add(widget_vol)
+if laptop then
   widget_stats:add(widget_stats_arrow)
   widget_stats:add(widget_bat)
 end

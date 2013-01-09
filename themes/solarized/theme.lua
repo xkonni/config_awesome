@@ -44,7 +44,7 @@ theme.border_marked                             = "#00ff00"
 -- theme.taglist_bg_focus = "#CC9393"
 
 -- taglist
-theme.taglist_fg_occupied                       = theme.fg_focus
+theme.taglist_bg_focus                          = theme.bg_normal
 
 -- tasklist
 theme.tasklist_bg_focus                         = theme.bg_normal
@@ -78,7 +78,6 @@ theme.menu_width                                = "100"
 -- {{{ Taglist
 theme.taglist_squares_sel                       = config .. "/themes/solarized/taglist/squarefz.png"
 theme.taglist_squares_unsel                     = config .. "/themes/solarized/taglist/squarez.png"
-theme.taglist_squares_resize                    = "true"
 -- }}} Taglist
 
 -- {{{ Misc
