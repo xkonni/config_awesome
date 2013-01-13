@@ -45,24 +45,26 @@ home  = awful.util.pread("echo $HOME | tr -d '\n'")
 config= awful.util.getdir("config")
 
 -- default values
-local timeout_short  = 3
-local timeout_medium = 15
-local timeout_long   = 120
+local timeout_tooltip = 1
+local timeout_short   = 3
+local timeout_medium  = 15
+local timeout_long    = 120
 local partitions = { "/", "/home"}
 
 -- host overrides
 if host == "silence" then
   BAT = "BAT1"
   laptop = 1
+  local timeout_short   = 5
+  local timeout_medium  = 20
   partitions = { "/", "/home", "/extra"}
 elseif host == "remembrance" then
   BAT = "BAT0"
   laptop = 1
   partitions = { "/", "/home", "/extra"}
 elseif host == "annoyance" then
-  timeout_short  = 2
-  timeout_medium = 5
-  timeout_long   = 120
+  timeout_short   = 2
+  timeout_medium  = 5
   partitions = { "/", "/home", "/extra", "/extra/src"}
 end
 -- }}} Host specific
@@ -259,10 +261,8 @@ sep.fit = function() return 3, 8 end
 
 -- Create a clock widget
 widget_clock = awful.widget.textclock(" %d %b %Y %H:%M ")
-tooltip_clock = awful.tooltip({ objects = { widget_clock }})
-tooltip_clock:set_text("bla")
-timer_clock = timer({ timeout = timeout_long })
-timer_clock:connect_signal("timeout", function()
+-- clock tooltip
+tooltip_clock = awful.tooltip({ objects = { widget_clock }, timeout = timeout_tooltip, timer_function = function()
   local title = os.date("%A %d %B %Y")
   local len = string.len(title)+2
   local text
@@ -271,10 +271,8 @@ timer_clock:connect_signal("timeout", function()
   local day = awful.util.pread("date +%d | sed 's/^0/ /' | tr -d '\n'")
   local date = awful.util.pread("cal | sed '1d;$d;s/^/   /;s/$/ /;s:"..day..":<span weight=\"bold\" color=\""..theme.fg_normal.."\">"..day.."</span>:'")
   text = text.." "..date.." "
-  tooltip_clock:set_text(text)
-end)
-timer_clock:start()
-timer_clock:emit_signal("timeout")
+  return text
+end})
 
 -- Create a stats widget
 local widget_stats = wibox.layout.fixed.horizontal()
@@ -291,38 +289,35 @@ widget_stats_arrow = mwidget_arrow(stats_sep, stats_bg, "cleft")
 -- {{{ CPU
 vicious.cache(vicious.widgets.cpu)
 widget_cpu = wibox.layout.fixed.horizontal()
--- icon
+-- cpu icon
 widget_cpu_icon = mwidget_icon("◈")
--- text
+-- cpu text
 widget_cpu_text = wibox.widget.textbox()
 widget_cpu_text.fit = function() return 35, 8 end
 vicious.register(widget_cpu_text, vicious.widgets.cpu, " $1%", timeout_short)
--- graph
+-- cpu graph
 widget_cpu_graph = awful.widget.graph()
 widget_cpu_graph:set_width(30)
 widget_cpu_graph:set_background_color(stats_bg)
---widget_cpu_graph:set_color(stats_graph)
 widget_cpu_graph:set_color(stats_grad)
 widget_cpu_graph:set_border_color(stats_bg)
 vicious.register(widget_cpu_graph, vicious.widgets.cpu, "$1", timeout_medium)
 -- cpu tooltip
-tooltip_cpu = awful.tooltip({ objects = { widget_cpu }})
-vicious.register(tooltip_cpu, vicious.widgets.cpu,
-  function (widget,args)
-    local title = "cpu usage"
-    local len = string.len(title)+2
-    local text
-    text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
-           " "..string.rep("-", len).." \n"
-    for core = 2, #args do
-      text = text.." ◈ core"..(core-1).." <span color=\""..theme.fg_normal.."\">"..args[core].."</span> % "
-      if core < #args then
-        text = text.."\n"
-      end
+tooltip_cpu = awful.tooltip({ objects = { widget_cpu }, timeout = timeout_tooltip, timer_function = function()
+  info_cpu = vicious.widgets.cpu()
+  local title = "cpu usage"
+  local len = string.len(title)+2
+  local text
+  text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+         " "..string.rep("-", len).." \n"
+  for core = 2, #info_cpu do
+    text = text.." ◈ core"..(core-1).." <span color=\""..theme.fg_normal.."\">"..info_cpu[core].."</span> % "
+    if core < #info_cpu then
+      text = text.."\n"
     end
-    tooltip_cpu:set_text(text)
-    return
-  end, timeout_medium)
+  end
+  return text
+end})
 -- put it together
 widget_cpu:add(widget_cpu_icon)
 widget_cpu:add(widget_cpu_text)
@@ -332,7 +327,7 @@ widget_cpu:add(widget_cpu_graph)
 -- {{{ MEM
 vicious.cache(vicious.widgets.mem)
 widget_mem = wibox.layout.fixed.horizontal()
--- icon
+-- mem icon
 widget_mem_icon = mwidget_icon("◌")
 -- mem text
 widget_mem_text = wibox.widget.textbox()
@@ -342,23 +337,21 @@ vicious.register(widget_mem_text, vicious.widgets.mem, " $1%", timeout_short)
 widget_mem_graph = awful.widget.graph()
 widget_mem_graph:set_width(30)
 widget_mem_graph:set_background_color(stats_bg)
---widget_mem_graph:set_color(stats_graph)
 widget_mem_graph:set_color(stats_grad)
 widget_mem_graph:set_border_color(stats_bg)
 vicious.register(widget_mem_graph, vicious.widgets.mem, "$1", timeout_medium)
 -- mem tooltip
-tooltip_mem = awful.tooltip({ objects = { widget_mem }})
-vicious.register( tooltip_mem, vicious.widgets.mem,
-  function (widget,args)
-    local title = "memory &amp; swap usage"
-    local tlen = string.len(title)+2-4
-    tooltip_mem:set_text(
-      " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
-      " "..string.rep("-", tlen).." \n"..
-      " ◌ memory <span color=\""..theme.fg_normal.."\">"..prettystring(args[2], 5, " ").."/"..prettystring(args[3], 5, " ").."</span> MB \n"..
-      " ○ swap   <span color=\""..theme.fg_normal.."\">"..prettystring(args[6], 5, " ").."/"..prettystring(args[7], 5, " ").."</span> MB ")
-     return
-  end, timeout_medium)
+tooltip_mem = awful.tooltip({ objects = { widget_mem }, timeout = timeout_tooltip, timer_function = function()
+  info_mem = vicious.widgets.mem()
+  local title = "memory &amp; swap usage"
+  local tlen = string.len(title)+2-4
+  local text
+  text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+         " "..string.rep("-", tlen).." \n"..
+         " ◌ memory <span color=\""..theme.fg_normal.."\">"..prettystring(info_mem[2], 5, " ").."/"..prettystring(info_mem[3], 5, " ").."</span> MB \n"..
+         " ○ swap   <span color=\""..theme.fg_normal.."\">"..prettystring(info_mem[6], 5, " ").."/"..prettystring(info_mem[7], 5, " ").."</span> MB "
+   return text
+ end})
 -- put it together
 widget_mem:add(widget_mem_icon)
 widget_mem:add(widget_mem_text)
@@ -388,27 +381,25 @@ for p = 1, #partitions do
   widget_hdd_bars:add(sep)
 end
 -- hdd tooltip
-tooltip_hdd = awful.tooltip({ objects = { widget_hdd }})
-vicious.register(tooltip_hdd, vicious.widgets.fs,
-  function (widget,args)
-    local title = "harddisk information"
-    local tlen = string.len(title)+2
-    local text
-      text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
-             " "..string.rep("-", tlen).." \n"
-      for p = 1, #partitions do
-        text = text.." ⛁ on "..
-                 prettystring(partitions[p], 10, " ").." <span color=\""..theme.fg_normal.."\">"..
-                 prettystring(args["{"..partitions[p].." used_p}"], 3, " ").."%  "..
-                 prettystring(args["{"..partitions[p].." used_gb}"], 5, " ").."/"..
-                 prettystring(args["{"..partitions[p].." size_gb}"], 5, " ").."</span> GB "
-        if p < #partitions then
-          text = text.."\n"
-        end
+tooltip_hdd = awful.tooltip({ objects = { widget_hdd } , timeout = timeout_tooltip, timer_function = function()
+  info_hdd = vicious.widgets.fs()
+  local title = "harddisk information"
+  local tlen = string.len(title)+2
+  local text
+    text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+           " "..string.rep("-", tlen).." \n"
+    for p = 1, #partitions do
+      text = text.." ⛁ on "..
+               prettystring(partitions[p], 10, " ").." <span color=\""..theme.fg_normal.."\">"..
+               prettystring(info_hdd["{"..partitions[p].." used_p}"], 3, " ").."%  "..
+               prettystring(info_hdd["{"..partitions[p].." used_gb}"], 5, " ").."/"..
+               prettystring(info_hdd["{"..partitions[p].." size_gb}"], 5, " ").."</span> GB "
+      if p < #partitions then
+        text = text.."\n"
       end
-    tooltip_hdd:set_text(text)
-    return
-end, timeout_long)
+    end
+  return text
+end})
 -- put it together
 widget_hdd:add(widget_hdd_icon)
 widget_hdd:add(widget_hdd_bars)
@@ -439,30 +430,28 @@ if not laptop then
       return args["{Artist}"].." - "..args["{Title}"].." "
   end, timeout_medium)
   -- mpd tooltip
-  tooltip_mpd = awful.tooltip({ objects = { widget_mpd }})
-  vicious.register(tooltip_mpd, vicious.widgets.mpd,
-    function (widget,args)
-      local title = "music information"
-      local tlen = string.len(title)+2
-      local len = math.max(string.len(args["{Artist}"]), string.len(args["{Album}"]), string.len(args["{Title}"]), 10)
-      local text
-      text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
-             " "..string.rep("-", tlen).." \n"
-      if args["{state}"] == "Stop" then
-        text = text.." Status <span color=\""..theme.fg_normal.."\">"..prettystring("stopped", len, " ").." </span>"
+  tooltip_mpd = awful.tooltip({ objects = { widget_mpd }, timeout = timeout_tooltip, timer_function = function()
+    local info_mpd = vicious.widgets.mpd()
+    local title = "music information"
+    local tlen = string.len(title)+2
+    local len = math.max(string.len(info_mpd["{Artist}"]), string.len(info_mpd["{Album}"]), string.len(info_mpd["{Title}"]), 10)
+    local text
+    text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+           " "..string.rep("-", tlen).." \n"
+    if info_mpd["{state}"] == "Stop" then
+      text = text.." Status <span color=\""..theme.fg_normal.."\">"..prettystring("stopped", len, " ").." </span>"
+    else
+      if info_mpd["{state}"] == "Play" then
+        text = text.." Status <span color=\""..theme.fg_normal.."\">"..prettystring("playing" , len, " ").." </span>\n"
       else
-        if args["{state}"] == "Play" then
-          text = text.." Status <span color=\""..theme.fg_normal.."\">"..prettystring("playing" , len, " ").." </span>\n"
-        else
-          text = text.." Status <span color=\""..theme.fg_normal.."\">"..prettystring("paused", len, " ").." </span>\n"
-        end
-        text = text.." Artist <span color=\""..theme.fg_normal.."\">"..prettystring(args["{Artist}"], len, " ").." </span>\n"..
-                     " Album  <span color=\""..theme.fg_normal.."\">"..prettystring(args["{Album}"], len, " ").." </span>\n"..
-                     " Title  <span color=\""..theme.fg_normal.."\">"..prettystring(args["{Title}"], len, " ").." </span>"
+        text = text.." Status <span color=\""..theme.fg_normal.."\">"..prettystring("paused", len, " ").." </span>\n"
       end
-      tooltip_mpd:set_text(text)
-      return
-    end, timeout_medium)
+      text = text.." Artist <span color=\""..theme.fg_normal.."\">"..prettystring(info_mpd["{Artist}"], len, " ").." </span>\n"..
+                   " Album  <span color=\""..theme.fg_normal.."\">"..prettystring(info_mpd["{Album}"], len, " ").." </span>\n"..
+                   " Title  <span color=\""..theme.fg_normal.."\">"..prettystring(info_mpd["{Title}"], len, " ").." </span>"
+    end
+    return text
+  end})
   -- put it together
   widget_mpd:add(widget_mpd_icon)
   widget_mpd:add(widget_mpd_text)
@@ -494,25 +483,23 @@ vicious.register(widget_vol_bar, vicious.widgets.volume,
     end
     return args[1]
   end,
-timeout_short, "Master")
+timeout_medium, "Master")
 -- vol tooltip
-tooltip_vol = awful.tooltip({ objects = { widget_vol }})
-vicious.register(tooltip_vol, vicious.widgets.volume,
-  function (widget, args)
-    local title = "volume information"
-    local tlen = string.len(title)+2
-    local text
-    text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
-           " "..string.rep("-", tlen).." \n"
-    if args[2] == "♫" then
-      text = text.." state  <span color=\""..theme.fg_normal.."\">"..prettystring("on", 3, " ").." </span>\n"
-    else
-      text = text.." state  <span color=\""..theme.fg_normal.."\">"..prettystring("off", 3, " ").." </span>\n"
-    end
-    text = text.." volume <span color=\""..theme.fg_normal.."\">"..prettystring(args[1], 3, " ").." </span> %"
-    tooltip_vol:set_text(text)
-    return
-  end, timeout_short)
+tooltip_vol = awful.tooltip({ objects = { widget_vol }, timeout = timeout_tooltip, timer_function = function()
+  info_vol = vicious.widgets.volume(widget, "Master")
+  local title = "volume information"
+  local tlen = string.len(title)+2
+  local text
+  text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+         " "..string.rep("-", tlen).." \n"
+  if info_vol[2] == "♫" then
+    text = text.." state  <span color=\""..theme.fg_normal.."\">"..prettystring("on", 3, " ").." </span>\n"
+  else
+    text = text.." state  <span color=\""..theme.fg_normal.."\">"..prettystring("off", 3, " ").." </span>\n"
+  end
+  text = text.." volume <span color=\""..theme.fg_normal.."\">"..prettystring(info_vol[1], 3, " ").." </span> %"
+  return text
+end})
 -- put it together
 widget_vol:add(widget_vol_icon)
 widget_vol:add(widget_vol_bar)
@@ -530,24 +517,22 @@ if laptop then
   widget_bat_text.fit = function() return 40, 8 end
   vicious.register(widget_bat_text, vicious.widgets.bat, " $1$2%", timeout_medium, BAT)
   -- bat tooltip
-  tooltip_bat = awful.tooltip({ objects = { widget_bat }})
-  vicious.register( tooltip_bat, vicious.widgets.bat,
-    function (widget,args)
-      local title = "battery information"
-      local tlen = string.len(title)+2
-      local text
-      text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
-             " "..string.rep("-", tlen).." \n"
-      if args[1] == "-" then
-        text = text.." ⚫ status    <span color=\""..theme.fg_normal.."\">"..prettystring("discharging", 12, " ").." </span>\n"
-      else
-        text = text.." ⚫ status    <span color=\""..theme.fg_normal.."\">"..prettystring("charging", 12, " ").." </span>\n"
-      end
-      text = text.." ⚡ charge    <span color=\""..theme.fg_normal.."\">"..prettystring(args[2], 11, " ").."% </span>\n"..
-                   " ◴ time left <span color=\""..theme.fg_normal.."\">"..prettystring(args[3], 12, " ").." </span>"
-      tooltip_bat:set_text(text)
-      return
-    end, timeout_medium, BAT)
+  tooltip_bat = awful.tooltip({ objects = { widget_bat }, timeout = timeout_tooltip, timer_function = function()
+    local info_bat = vicious.widgets.bat(widget, BAT)
+    local title = "battery information"
+    local tlen = string.len(title)+2
+    local text
+    text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+           " "..string.rep("-", tlen).." \n"
+    if info_bat[1] == "-" then
+      text = text.." ⚫ status    <span color=\""..theme.fg_normal.."\">"..prettystring("discharging", 12, " ").." </span>\n"
+    else
+      text = text.." ⚫ status    <span color=\""..theme.fg_normal.."\">"..prettystring("charging", 12, " ").." </span>\n"
+    end
+    text = text.." ⚡ charge    <span color=\""..theme.fg_normal.."\">"..prettystring(info_bat[2], 11, " ").."% </span>\n"..
+                 " ◴ time left <span color=\""..theme.fg_normal.."\">"..prettystring(info_bat[3], 12, " ").." </span>"
+    return text
+  end})
   -- put it together
   widget_bat:add(widget_bat_icon)
   widget_bat:add(widget_bat_text)
