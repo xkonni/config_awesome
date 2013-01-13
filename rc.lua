@@ -228,7 +228,7 @@ end
 myusermenu = {
    { "reconfigure", awesome.restart },
    { "logout", awesome.quit },
-   { "login trixi", "dm-tool switch-to-user trixi" },
+   { "login user", "dm-tool switch-to-greeter" },
  }
 myappmenu = {
    { "terminal", terminal }
@@ -701,7 +701,6 @@ globalkeys = awful.util.table.join(
             awful.client.focus.byidx(-1)
             if client.focus then client.focus:raise() end
         end),
-    awful.key({ modkey,           }, "w", function () mymainmenu:show() end),
 
     -- Layout manipulation
     awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end),
