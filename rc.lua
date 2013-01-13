@@ -48,7 +48,6 @@ config= awful.util.getdir("config")
 local timeout_short  = 3
 local timeout_medium = 15
 local timeout_long   = 120
-local cores = 2
 local partitions = { "/", "/home"}
 
 -- host overrides
@@ -64,7 +63,6 @@ elseif host == "annoyance" then
   timeout_short  = 2
   timeout_medium = 5
   timeout_long   = 120
-  cores = 8
   partitions = { "/", "/home", "/extra", "/extra/src"}
 end
 -- }}} Host specific
@@ -316,9 +314,9 @@ vicious.register(tooltip_cpu, vicious.widgets.cpu,
     local text
     text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
            " "..string.rep("-", len).." \n"
-    for core = 1, cores do
-      text = text.." ◈ core"..core.." <span color=\""..theme.fg_normal.."\">"..args[core+1].."</span> % "
-      if core < cores then
+    for core = 2, #args do
+      text = text.." ◈ core"..(core-1).." <span color=\""..theme.fg_normal.."\">"..args[core].."</span> % "
+      if core < #args then
         text = text.."\n"
       end
     end
