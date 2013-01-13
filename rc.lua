@@ -47,7 +47,7 @@ config= awful.util.getdir("config")
 -- default values
 local timeout_short  = 3
 local timeout_medium = 15
-local timeout_long   = 60
+local timeout_long   = 120
 local cores = 2
 local partitions = { "/", "/home"}
 
@@ -61,9 +61,9 @@ elseif host == "remembrance" then
   laptop = 1
   partitions = { "/", "/home", "/extra"}
 elseif host == "annoyance" then
-  timeout_short  = 1
+  timeout_short  = 2
   timeout_medium = 5
-  timeout_long   = 60
+  timeout_long   = 120
   cores = 8
   partitions = { "/", "/home", "/extra", "/extra/src"}
 end
