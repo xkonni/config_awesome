@@ -57,26 +57,21 @@ globalkeys = awful.util.table.join(
 
     awful.key({ modkey, "Control" }, "n", awful.client.restore),
     -- Power
-    awful.key({                   }, "XF86HomePage", function () awful.util.spawn("systemctl suspend") end),
-    awful.key({                   }, "XF86Mail", function () awful.util.spawn("systemctl hibernate") end),
+    awful.key({                   }, "XF86Sleep", function () awful.util.spawn("systemctl suspend") end),
+    awful.key({                   }, "XF86Suspend", function () awful.util.spawn("systemctl hibernate") end),
 
     -- Media
-    awful.key({                   }, "XF86AudioMute", function () awful.util.spawn(home .."/bin/notify_volume toggle") end),
-    awful.key({                   }, "XF86AudioLowerVolume", function () awful.util.spawn(home .."/bin/notify_volume decrease") end),
-    awful.key({                   }, "XF86AudioRaiseVolume", function () awful.util.spawn(home .."/bin/notify_volume increase") end),
-
-    awful.key({                   }, "XF86Eject", function () awful.util.spawn(home .."/bin/switchmpd.sh") end),
-    awful.key({                   }, "XF86Tools", function () awful.util.spawn(home .."/bin/notify_music") end),
+    awful.key({                   }, "XF86AudioMute",        function() awful.util.spawn(home .."/bin/notify_volume toggle")   end),
+    awful.key({                   }, "XF86AudioLowerVolume", function() awful.util.spawn(home .."/bin/notify_volume decrease") end),
+    awful.key({                   }, "XF86AudioRaiseVolume", function() awful.util.spawn(home .."/bin/notify_volume increase") end),
 
     awful.key({                   }, "XF86AudioNext", function () awful.util.spawn(home .."/bin/notify_music next") end),
     awful.key({                   }, "XF86AudioPlay", function () awful.util.spawn(home .."/bin/notify_music toggle") end),
     awful.key({                   }, "XF86AudioStop", function () awful.util.spawn(home .."/bin/notify_music stop") end),
     awful.key({                   }, "XF86AudioPrev", function () awful.util.spawn(home .."/bin/notify_music prev") end),
 
-    awful.key({ modkey,           }, "XF86AudioLowerVolume", function () awful.util.spawn(home .."/bin/notify_music volume -5") end),
-    awful.key({ modkey,           }, "XF86AudioRaiseVolume", function () awful.util.spawn(home .."/bin/notify_music volume +5") end),
-
-    awful.key({                   }, "XF86Display", function () awful.util.spawn(home .."/bin/myxrandr") end),
+    awful.key({                   }, "XF86WLAN", function () awful.util.spawn(home .."/bin/notify_music") end),
+    awful.key({                   }, "XF86WebCam", function () awful.util.spawn(home .."/bin/switchmpd.sh") end),
 
     -- Prompt
     awful.key({ modkey },            "r",     function () mypromptbox[mouse.screen]:run() end),

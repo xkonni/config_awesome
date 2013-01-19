@@ -3,7 +3,7 @@ awesome config
 
 key features
 ------------
-* solarized themed
+* matches with solarized themed apps
 * powerline widgets
 * tooltips
 
