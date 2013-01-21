@@ -61,9 +61,9 @@ globalkeys = awful.util.table.join(
     awful.key({                   }, "XF86Suspend", function () awful.util.spawn("systemctl hibernate") end),
 
     -- Media
-    awful.key({                   }, "XF86AudioMute",        function() awful.util.spawn(home .."/bin/notify_volume toggle")   end),
-    awful.key({                   }, "XF86AudioLowerVolume", function() awful.util.spawn(home .."/bin/notify_volume decrease") end),
-    awful.key({                   }, "XF86AudioRaiseVolume", function() awful.util.spawn(home .."/bin/notify_volume increase") end),
+    awful.key({                   }, "XF86AudioMute",        function () set_volume("toggle")   end),
+    awful.key({                   }, "XF86AudioLowerVolume", function () set_volume("decrease") end),
+    awful.key({                   }, "XF86AudioRaiseVolume", function () set_volume("increase") end),
 
     awful.key({                   }, "XF86AudioNext", function () awful.util.spawn(home .."/bin/notify_music next") end),
     awful.key({                   }, "XF86AudioPlay", function () awful.util.spawn(home .."/bin/notify_music toggle") end),

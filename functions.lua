@@ -101,3 +101,31 @@ end
 function titlebar_disable(c)
   awful.titlebar(c, {size=0})
 end
+
+function set_volume(action)
+  local text
+  local info_vol = vicious.widgets.volume(widget, "Master")
+
+  if (action == "toggle") then
+    if info_vol[2] == "♫" then info_vol[2] = "♩"
+    else info_vol[2] = "♫" end
+    awful.util.spawn(home .."/bin/notify_volume toggle")
+  elseif (action == "decrease") then
+    awful.util.spawn(home .."/bin/notify_volume decrease")
+  elseif (action == "increase") then
+    awful.util.spawn(home .."/bin/notify_volume increase")
+  end
+
+  if info_vol[2] == "♫" then
+    widget_vol_bar:set_color(theme.bg_normal.."A0")
+    text = "["..info_vol[1].."%] [on]"
+  else
+    widget_vol_bar:set_color(theme.bg_focus.."40")
+    text = "["..info_vol[1].."%] [off]"
+  end
+
+  widget_vol_icon:set_text(info_vol[2].." ")
+  widget_vol_bar:set_value(info_vol[1]/100)
+  naughty.destroy(notify_volume)
+  notify_volume = naughty.notify({title="volume", text=text})
+end
