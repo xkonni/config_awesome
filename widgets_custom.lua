@@ -257,7 +257,7 @@ if laptop then
   widget_bat_icon = mwidget_icon("⚡ ")
   -- bat text
   widget_bat_text = wibox.widget.textbox()
-  widget_bat_text.fit = function() return 40, 8 end
+  widget_bat_text.fit = function() return 50, 8 end
   vicious.register(widget_bat_text, vicious.widgets.bat, " $1$2%", timeout_medium, BAT)
   -- bat tooltip
   tooltip_bat = awful.tooltip({ objects = { widget_bat }, timeout = timeout_tooltip, timer_function = function()
