@@ -79,13 +79,8 @@ layouts =
 -- host overrides
 if host == "silence" then
   BAT = "BAT1"
-  laptop = 1
   local timeout_short   = 5
   local timeout_medium  = 20
-  partitions = { "/", "/home", "/extra"}
-elseif host == "remembrance" then
-  BAT = "BAT0"
-  laptop = 1
   partitions = { "/", "/home", "/extra"}
 elseif host == "annoyance" then
   timeout_short   = 2

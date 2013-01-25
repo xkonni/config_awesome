@@ -149,7 +149,7 @@ widget_hdd:add(widget_hdd_bars)
 -- }}} HDD
 
 -- {{{ MUSIC
-if not laptop then
+if not BAT then
   vicious.cache(vicious.widgets.mpd)
   widget_mpd = wibox.layout.fixed.horizontal()
   -- mpd icon
@@ -250,7 +250,7 @@ widget_vol:add(sep)
 -- }}} VOLUME
 
 -- {{{ BATTERY
-if laptop then
+if BAT then
   vicious.cache(vicious.widgets.bat)
   widget_bat = wibox.layout.fixed.horizontal()
   -- bat icon
@@ -288,13 +288,13 @@ widget_stats:add(widget_stats_arrow)
 widget_stats:add(widget_mem)
 widget_stats:add(widget_stats_arrow)
 widget_stats:add(widget_hdd)
-if not laptop then
+if not BAT then
   widget_stats:add(widget_stats_arrow)
   widget_stats:add(widget_mpd)
 end
 widget_stats:add(widget_stats_arrow)
 widget_stats:add(widget_vol)
-if laptop then
+if BAT then
   widget_stats:add(widget_stats_arrow)
   widget_stats:add(widget_bat)
 end
