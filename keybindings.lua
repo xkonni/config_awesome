@@ -56,25 +56,26 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts, -1) end),
 
     awful.key({ modkey, "Control" }, "n", awful.client.restore),
+
     -- Power
-    awful.key({                   }, "XF86Sleep", function () awful.util.spawn("systemctl suspend") end),
-    awful.key({                   }, "XF86Suspend", function () awful.util.spawn("systemctl hibernate") end),
+    awful.key({                   }, "XF86Sleep",             function () awful.util.spawn("systemctl suspend") end),
+    awful.key({                   }, "XF86Suspend",           function () awful.util.spawn("systemctl hibernate") end),
 
     -- Media
-    awful.key({                   }, "XF86AudioMute",        function () set_volume("toggle")   end),
-    awful.key({                   }, "XF86AudioLowerVolume", function () set_volume("decrease") end),
-    awful.key({                   }, "XF86AudioRaiseVolume", function () set_volume("increase") end),
+    awful.key({                   }, "XF86AudioMute",         function () set_volume("toggle")   end),
+    awful.key({                   }, "XF86AudioLowerVolume",  function () set_volume("decrease") end),
+    awful.key({                   }, "XF86AudioRaiseVolume",  function () set_volume("increase") end),
 
-    awful.key({                   }, "XF86AudioNext", function () awful.util.spawn(home .."/bin/notify_music next") end),
-    awful.key({                   }, "XF86AudioPlay", function () awful.util.spawn(home .."/bin/notify_music toggle") end),
-    awful.key({                   }, "XF86AudioStop", function () awful.util.spawn(home .."/bin/notify_music stop") end),
-    awful.key({                   }, "XF86AudioPrev", function () awful.util.spawn(home .."/bin/notify_music prev") end),
+    awful.key({                   }, "XF86AudioNext",         function () awful.util.spawn(home .."/bin/notify_music next") end),
+    awful.key({                   }, "XF86AudioPlay",         function () awful.util.spawn(home .."/bin/notify_music toggle") end),
+    awful.key({                   }, "XF86AudioStop",         function () awful.util.spawn(home .."/bin/notify_music stop") end),
+    awful.key({                   }, "XF86AudioPrev",         function () awful.util.spawn(home .."/bin/notify_music prev") end),
 
-    awful.key({                   }, "XF86WLAN", function () awful.util.spawn(home .."/bin/notify_music") end),
-    awful.key({                   }, "XF86WebCam", function () awful.util.spawn(home .."/bin/switchmpd.sh") end),
+    awful.key({                   }, "XF86Display",            function () awful.util.spawn(home .."/bin/notify_music") end),
+    awful.key({                   }, "XF86WebCam",            function () awful.util.spawn(home .."/bin/switchmpd.sh") end),
 
     -- Prompt
-    awful.key({ modkey },            "r",     function () mypromptbox[mouse.screen]:run() end),
+    awful.key({ modkey },            "r",                     function () mypromptbox[mouse.screen]:run() end),
 
     awful.key({ modkey }, "x",
               function ()
