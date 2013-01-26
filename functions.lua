@@ -104,6 +104,7 @@ end
 
 function set_volume(action)
   local text
+  local icon
   local info_vol = vicious.widgets.volume(widget, "Master")
 
   if (action == "toggle") then
@@ -119,12 +120,14 @@ function set_volume(action)
   if info_vol[2] == "♫" then
     widget_vol_bar:set_color(theme.bg_normal.."A0")
     text = "["..info_vol[1].."%] [on]"
+    icon = "♫ "
   else
     widget_vol_bar:set_color(theme.bg_focus.."40")
     text = "["..info_vol[1].."%] [off]"
+    icon = " ♯ "
   end
 
-  widget_vol_icon:set_text(info_vol[2].." ")
+  widget_vol_icon:set_text(icon)
   widget_vol_bar:set_value(info_vol[1]/100)
   naughty.destroy(notify_volume)
   notify_volume = naughty.notify({title="volume", text=text})

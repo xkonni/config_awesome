@@ -206,6 +206,7 @@ vicious.cache(vicious.widgets.volume)
 widget_vol = wibox.layout.fixed.horizontal()
 -- vol icon
 widget_vol_icon = wibox.widget.textbox()
+widget_vol_icon.fit = function() return 25, 8 end
 widget_vol_icon:set_font("Anonymous Pro for Powerline 14")
 -- vol bars
 widget_vol_bar = awful.widget.progressbar()
@@ -217,13 +218,14 @@ widget_vol_bar:set_color(theme.bg_normal.."A0")
 widget_vol_bar:set_border_color(stats_bg)
 vicious.register(widget_vol_bar, vicious.widgets.volume,
   function(widget, args)
-    if args[2] == "♫" then
-      widget_vol_icon:set_text(args[2].." ")
+    if args[2] == " " then
       widget_vol_bar:set_color(theme.bg_normal.."A0")
+      icon = "♫ "
     else
-      widget_vol_icon:set_text(args[2].." ")
       widget_vol_bar:set_color(theme.bg_focus.."40")
+      icon = " ♯ "
     end
+    widget_vol_icon:set_text(icon)
     return args[1]
   end,
 timeout_medium, "Master")
