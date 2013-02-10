@@ -41,7 +41,7 @@ globalkeys = awful.util.table.join(
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
     awful.key({ modkey,           }, "b", function () awful.util.spawn("chromium") end),
-    awful.key({ modkey,           }, "v", function () awful.util.spawn("/usr/bin/thunar") end),
+    awful.key({ modkey,           }, "v", function () awful.util.spawn(terminal .." -e /usr/bin/ranger") end),
     awful.key({ modkey, "Control" }, "s", function () awful.util.spawn("/usr/bin/xscreensaver-command -lock") end),
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
@@ -71,7 +71,7 @@ globalkeys = awful.util.table.join(
     awful.key({                   }, "XF86AudioStop",         function () awful.util.spawn(home .."/bin/notify_music stop") end),
     awful.key({                   }, "XF86AudioPrev",         function () awful.util.spawn(home .."/bin/notify_music prev") end),
 
-    awful.key({                   }, "XF86Display",            function () awful.util.spawn(home .."/bin/notify_music") end),
+    awful.key({                   }, "XF86Display",           function () awful.util.spawn(home .."/bin/notify_music") end),
     awful.key({                   }, "XF86WebCam",            function () awful.util.spawn(home .."/bin/switchmpd.sh") end),
 
     -- Prompt
@@ -179,7 +179,7 @@ clientkeys = awful.util.table.join(
       if floats(c) then
         local g = c:geometry()
         local w = screen[c.screen].workarea
-        g.x = w.x + w.width - g.width - 2
+        g.x = w.x + w.width - g.width - 2*beautiful.border_width
         c:geometry(g)
       end
     end),
@@ -206,12 +206,15 @@ clientkeys = awful.util.table.join(
       if floats(c) then
         local g = c:geometry()
         local w = screen[c.screen].workarea
-        g.y = w.y + w.height - g.height - 2
+        g.y = w.y + w.height - g.height - 2*beautiful.border_width
         c:geometry(g)
       end
     end),
     awful.key({ modkey, "Shift" }, "t", function (c)
       titlebar_disable(c)
+    end),
+    awful.key({ modkey, "Control" }, "t", function (c)
+      c.sticky =  not c.sticky
     end)
 )
 

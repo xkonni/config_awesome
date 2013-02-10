@@ -218,7 +218,7 @@ widget_vol_bar:set_color(theme.bg_normal.."A0")
 widget_vol_bar:set_border_color(stats_bg)
 vicious.register(widget_vol_bar, vicious.widgets.volume,
   function(widget, args)
-    if args[2] == " " then
+    if args[2] == "♫" then
       widget_vol_bar:set_color(theme.bg_normal.."A0")
       icon = "♫ "
     else

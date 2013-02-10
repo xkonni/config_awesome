@@ -29,8 +29,8 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "Iceweasel", role="Manager" },
       properties = { floating = true } },
-    { rule = { class = "chromium" },
-      properties = {    tag = tags[screen. count()][1] } },
+    { rule = { class = "Chromium" },
+      properties = { tag = tags[screen.count()][1] } },
     { rule = { class = "Gimp", role="gimp-toolbox" },
       properties = {
         floating = true,
