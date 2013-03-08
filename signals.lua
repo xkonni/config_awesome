@@ -21,7 +21,7 @@ client.connect_signal("manage", function (c, startup)
     end
 
     local titlebars_enabled = false
-    if titlebars_enabled and (c.type == "normal" or c.type == "dialog") then
+    if (titlebars_enabled and c.type == "normal") or (c.type == "dialog") or floats(c) then
         titlebar_enable(c)
     end
 end)
