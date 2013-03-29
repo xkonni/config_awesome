@@ -40,7 +40,7 @@ globalkeys = awful.util.table.join(
 
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
-    awful.key({ modkey,           }, "b", function () awful.util.spawn("chromium") end),
+    awful.key({ modkey,           }, "b", function () awful.util.spawn(browser) end),
     awful.key({ modkey,           }, "v", function () awful.util.spawn(terminal .." -e /usr/bin/ranger") end),
     awful.key({ modkey, "Control" }, "s", function () awful.util.spawn("/usr/bin/xscreensaver-command -lock") end),
     awful.key({ modkey, "Control" }, "r", awesome.restart),

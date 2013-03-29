@@ -15,6 +15,10 @@ awful.rules.rules = {
     --    naughty.notify({title="new window", text="name: "..cname.." class: "..cclass})
     --  end
     --},
+    --
+    -- WM_CLASS(STRING) = "Download", "Firefox"
+    --{ rule = { class = "Firefox", instance="Download" },
+    --  properties = { floating = true } },
     { rule = { class = "MPlayer" },
       properties = { floating = true } },
     { rule = { class = "mplayer2" },
@@ -27,10 +31,8 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "pinentry" },
       properties = { floating = true } },
-    { rule = { class = "Iceweasel", role="Manager" },
+    { rule = { class = "Firefox", role="Manager" },
       properties = { floating = true } },
-    { rule = { class = "Chromium" },
-      properties = { tag = tags[screen.count()][1] } },
     { rule = { class = "Gimp", role="gimp-toolbox" },
       properties = {
         floating = true,

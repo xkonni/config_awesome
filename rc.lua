@@ -49,6 +49,7 @@ terminal = 'urxvt'
 terminal_class = 'URxvt'
 editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
+browser = 'firefox'
 
 timeout_tooltip = 1
 timeout_short   = 3
