@@ -7,4 +7,4 @@ key features
 * powerline widgets
 * tooltips
 
-![ScreenShot](https://raw.github.com/xkonni/dot/master/config__awesome/awesome.png)
+![ScreenShot](https://raw.github.com/xkonni/config_awesome/master/awesome.png)
