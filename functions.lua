@@ -1,26 +1,26 @@
 -- create an arrow as transition between fg and bg color
-function mwidget_arrow(fg, bg, direction)
-  local widget_bg = wibox.widget.background()
-  local widget_fg = wibox.widget.textbox()
+function mwidget_arrow(arrow, fg, bg)
+  -- ⮃ ⮁ ⮂ ⮀
+  local widget_arrow = wibox.layout.fixed.horizontal()
+  local widget_fg = {}
+  local widget_bg = {}
+  for w = 1, #arrow do
+    widget_fg[w] = wibox.widget.textbox()
+    widget_bg[w] = wibox.widget.background()
 
-  local arrow="|"
-  if direction == "cleft"   then arrow = "⮃" end
-  if direction == "cright"  then arrow = "⮁" end
-  if direction == "left"   then arrow = "⮂" end
-  if direction == "right"  then arrow = "⮀" end
-
-  widget_fg:set_font("Anonymous Pro for Powerline 18")
-  widget_fg:set_markup("<span color=\"".. fg .. "\">".. arrow .."</span>")
-  widget_bg:set_bg(bg)
-
-  widget_bg:set_widget(widget_fg)
-  return widget_bg
+    widget_fg[w]:set_font("Anonymous Pro for Powerline 18")
+    widget_fg[w]:set_markup("<span color=\"".. fg[w] .. "\">".. arrow[w] .."</span>")
+    widget_bg[w]:set_bg(bg[w])
+    widget_bg[w]:set_widget(widget_fg[w])
+    widget_arrow:add(widget_bg[w])
+  end
+  return widget_arrow
 end
 
 function mwidget_icon(symbol)
   local mwidget_icon = wibox.widget.textbox()
   mwidget_icon:set_font("Anonymous Pro for Powerline 14")
-  mwidget_icon:set_text(symbol)
+  mwidget_icon:set_markup(symbol)
   return mwidget_icon
 end
 
@@ -106,6 +106,7 @@ function set_volume(action)
   local text
   local icon
   local info_vol = vicious.widgets.volume(widget, "Master")
+  local stats_grad = { type = "linear", from = { 0, 0 }, to = { 0, 20 }, stops = { { 0, "#dc322f" }, { 0.5, "#808000" }, { 1, "#859900" }}}
 
   if (action == "toggle") then
     if info_vol[2] == "♫" then info_vol[2] = "♩"
@@ -118,11 +119,11 @@ function set_volume(action)
   end
 
   if info_vol[2] == "♫" then
-    widget_vol_bar:set_color(theme.bg_normal.."A0")
+    widget_vol_bar:set_color(stats_grad)
     text = "["..info_vol[1].."%] [on]"
     icon = "♫ "
   else
-    widget_vol_bar:set_color(theme.bg_focus.."40")
+    widget_vol_bar:set_color(theme.fg_normal .. "40")
     text = "["..info_vol[1].."%] [off]"
     icon = " ♯ "
   end

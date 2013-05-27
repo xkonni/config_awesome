@@ -1,6 +1,17 @@
--- Create a separator widget with a fixed width
+-- Create a stats widget
+widget_stats = wibox.layout.fixed.horizontal()
+local stats_fg = theme.fg_normal
+local stats_graph = theme.bg_normal
+local stats_bg = theme.bg_normal
+local stats_sep = theme.fg_focus
+-- "from" and "to" define coordinates of  a line along which the gradient spreads
+local stats_grad = { type = "linear", from = { 0, 0 }, to = { 0, 18 }, stops = { { 0, "#dc322f" }, { 0.5, "#808000" }, { 1, "#859900" }}}
+
+-- invisible separator with fixed width
 sep = wibox.widget.base.empty_widget()
 sep.fit = function() return 3, 8 end
+-- separator arrow
+widget_stats_arrow = mwidget_arrow({"⮂", "⮂"}, {stats_sep, stats_bg}, {stats_bg, stats_sep})
 
 -- Create a clock widget
 widget_clock = awful.widget.textclock(" %d %b %Y %H:%M ")
@@ -11,23 +22,11 @@ tooltip_clock = awful.tooltip({ objects = { widget_clock }, timeout = timeout_to
   local text
   text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
          " "..string.rep("-", len).." \n"
-  local day = awful.util.pread("date +%d | sed 's/^0/ /' | tr -d '\n'")
+  local day = os.date("%d")
   local date = awful.util.pread("cal | sed '1d;s/^/   /;s/$/ /;s:"..day..":<span weight=\"bold\" color=\""..theme.fg_normal.."\">"..day.."</span>:'")
   text = text.." "..date.." "
   return text
 end})
-
--- Create a stats widget
-widget_stats = wibox.layout.fixed.horizontal()
-local stats_fg = theme.fg_normal
-local stats_graph = theme.bg_normal
-local stats_bg = theme.fg_focus
-local stats_sep = theme.bg_focus
--- "from" and "to" define coordinates of  a line along which the gradient spreads
-local stats_grad = { type = "linear", from = { 0, 0 }, to = { 0, 20 }, stops = { { 0, "#dc322f" }, { 0.5, "#808000" }, { 1, "#859900" }}}
-
--- separator
-widget_stats_arrow = mwidget_arrow(stats_sep, stats_bg, "cleft")
 
 -- {{{ CPU
 vicious.cache(vicious.widgets.cpu)
@@ -211,18 +210,18 @@ widget_vol_icon:set_font("Anonymous Pro for Powerline 14")
 -- vol bars
 widget_vol_bar = awful.widget.progressbar()
 widget_vol_bar:set_vertical(true)
-widget_vol_bar:set_height(20)
-widget_vol_bar:set_width(5)
+widget_vol_bar:set_height(18)
+widget_vol_bar:set_width(6)
 widget_vol_bar:set_background_color(stats_bg)
-widget_vol_bar:set_color(theme.bg_normal.."A0")
+widget_vol_bar:set_color(stats_grad)
 widget_vol_bar:set_border_color(stats_bg)
 vicious.register(widget_vol_bar, vicious.widgets.volume,
   function(widget, args)
     if args[2] == "♫" then
-      widget_vol_bar:set_color(theme.bg_normal.."A0")
+      widget_vol_bar:set_color(stats_grad)
       icon = "♫ "
     else
-      widget_vol_bar:set_color(theme.bg_focus.."40")
+      widget_vol_bar:set_color(theme.fg_normal .. "40")
       icon = " ♯ "
     end
     widget_vol_icon:set_text(icon)
@@ -285,6 +284,7 @@ end
 -- }}} BATTERY
 
 -- Put stats widget together
+widget_stats:add(widget_stats_arrow)
 widget_stats:add(widget_cpu)
 widget_stats:add(widget_stats_arrow)
 widget_stats:add(widget_mem)
@@ -300,3 +300,4 @@ if BAT then
   widget_stats:add(widget_stats_arrow)
   widget_stats:add(widget_bat)
 end
+widget_stats:add(widget_stats_arrow)

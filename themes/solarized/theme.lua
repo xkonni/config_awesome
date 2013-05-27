@@ -1,7 +1,7 @@
 ------------------------------------------------
---  "Blue" awesome theme by xkonni            --
+--  "solarized" awesome theme by konni        --
 --    based on "Zenburn" By Adrian C. (anrxc) --
------------------------------------------------
+------------------------------------------------
 
 -- Alternative icon sets and widget icons:
 --  * http://awesome.naquadah.org/wiki/Nice_Icons
@@ -12,7 +12,7 @@ theme.wallpaper                                 = config .. "/themes/solarized/a
 -- }}} Main
 
 -- {{{ Styles
-theme.font                                      = "Anonymous Pro for Powerline 11"
+theme.font                                      = "Inconsolata for Powerline 11"
 -- }}} Styles
 
 -- {{{ Colors
@@ -22,7 +22,7 @@ theme.fg_urgent                                 = "#268BD2"
 theme.bg_normal                                 = "#3F3F3F"
 theme.bg_focus                                  = "#1C1C1C"
 theme.bg_urgent                                 = "#3F3F3F"
-theme.bg_systray                                = theme.bg_focus
+theme.bg_systray                                = theme.bg_normal
 -- }}} Colors
 
 -- {{{ Borders

@@ -71,21 +71,19 @@ for s = 1, screen.count() do
     left_layout:add(mylauncher)
     left_layout:add(sep)
     left_layout:add(mytaglist[s])
-    left_layout:add(mwidget_arrow(theme.bg_normal, theme.fg_focus, "right"))
+    left_layout:add(mwidget_arrow({"⮀"}, {theme.bg_normal}, {theme.fg_focus}))
     left_layout:add(mwidget_bg(theme.fg_focus, mypromptbox[s]))
-    left_layout:add(mwidget_arrow(theme.fg_focus, theme.bg_normal, "right"))
+    left_layout:add(mwidget_arrow({"⮀"}, {theme.fg_focus}, {theme.bg_normal}))
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
-    right_layout:add(mwidget_arrow(theme.fg_focus, theme.bg_normal, "left"))
-    right_layout:add(mwidget_bg(theme.fg_focus, widget_stats))
+    right_layout:add(widget_stats)
     if s == 1 then
-      right_layout:add(mwidget_arrow(theme.bg_focus, theme.fg_focus, "left"))
       right_layout:add(wibox.widget.systray())
-      right_layout:add(mwidget_bg(theme.bg_focus, sep))
-      right_layout:add(mwidget_arrow(theme.bg_normal, theme.bg_focus, "left"))
+      right_layout:add(sep)
+      right_layout:add(mwidget_arrow({"⮂", "⮂"}, {theme.fg_focus, theme.bg_normal}, {theme.bg_normal, theme.fg_focus}))
     else
-      right_layout:add(mwidget_arrow(theme.bg_normal, theme.fg_focus, "left"))
+      --right_layout:add(mwidget_arrow(theme.bg_normal, theme.fg_focus, {"left"}))
     end
     right_layout:add(widget_clock)
     right_layout:add(mylayoutbox[s])
