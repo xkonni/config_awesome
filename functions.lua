@@ -85,6 +85,61 @@ function titlebar_disable(c)
   awful.titlebar(c, {size=0})
 end
 
+function resize(c)
+  if awful.client.floating.get(c) then
+    grabber = awful.keygrabber.run(
+      function(mod, key, event)
+        if event == "release" then return end
+
+        if     key == 'h'       then awful.client.moveresize(0, 0, -50, 0, c)
+        elseif key == 'j'       then awful.client.moveresize(0, 0, 0, 50, c)
+        elseif key == 'k'       then awful.client.moveresize(0, 0, 0, -50, c)
+        elseif key == 'l'       then awful.client.moveresize(0, 0, 50, 0, c)
+        else                         awful.keygrabber.stop(grabber)
+        end
+      end)
+    else
+      grabber = awful.keygrabber.run(
+      function(mod, key, event)
+        if event == "release" then return end
+
+        if     key == 'h'       then awful.tag.incmwfact(-0.05)
+        elseif key == 'l'       then awful.tag.incmwfact(0.05)
+        else                         awful.keygrabber.stop(grabber)
+        end
+      end)
+    end
+end
+
+function move(c)
+  if awful.client.floating.get(c) then
+    grabber = awful.keygrabber.run(
+      function(mod, key, event)
+        if event == "release" then return end
+
+        local g = c:geometry()
+        local w = screen[c.screen].workarea
+        m = 100
+        local p = {
+          g.x - w.x,
+          g.y - w.y,
+          w.width - (g.x + g.width) - 2*beautiful.border_width,
+          w.height - (g.y + g.height) - 2*beautiful.border_width
+        }
+        for i=1, #p do
+          if p[i] > m then p[i] = m end
+        end
+
+        if     key == 'h'       then awful.client.moveresize(-p[1], 0, 0, 0, c)
+        elseif key == 'j'       then awful.client.moveresize(0, p[4], 0, 0, c)
+        elseif key == 'k'       then awful.client.moveresize(0, -p[2], 0, 0, c)
+        elseif key == 'l'       then awful.client.moveresize(p[3], 0, 0, 0, c)
+        else                         awful.keygrabber.stop(grabber)
+        end
+      end)
+    end
+end
+
 function set_volume(action)
   local text
   local icon

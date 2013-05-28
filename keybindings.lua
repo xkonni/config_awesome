@@ -8,10 +8,10 @@ root.buttons(awful.util.table.join(
 
 -- {{{ Keyboard bindings }}}
 globalkeys = awful.util.table.join(
-    awful.key({ modkey,           }, "Left",   awful.tag.viewprev       ),
-    awful.key({ modkey,           }, "Right",  awful.tag.viewnext       ),
-    awful.key({ modkey,           }, "`",  awful.tag.viewnext       ),
-    awful.key({ modkey,           }, "Escape", awful.tag.history.restore),
+    awful.key({ modkey,           }, "Left",    awful.tag.viewprev       ),
+    awful.key({ modkey,           }, "Right",   awful.tag.viewnext       ),
+    awful.key({ modkey,           }, "`",       awful.tag.viewnext       ),
+    awful.key({ modkey,           }, "Escape",  awful.tag.history.restore),
 
     awful.key({ modkey,           }, "j",
         function ()
@@ -87,6 +87,8 @@ globalkeys = awful.util.table.join(
 )
 
 clientkeys = awful.util.table.join(
+    awful.key({ modkey, "Shift"   }, "r",      function (c) resize(c)  end),
+    awful.key({ modkey, "Shift"   }, "m",      function (c) move(c)  end),
     awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),
     awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end),
     awful.key({ modkey, "Control" }, "space",
@@ -113,101 +115,6 @@ clientkeys = awful.util.table.join(
             c.maximized_vertical   = not c.maximized_vertical
         end),
 
-    -- resize floating windows
-    awful.key({ modkey, "Shift"   }, "Right",
-    function(c)
-      if awful.client.floating.get(c) then
-        local g = c:geometry()
-        local w = screen[c.screen].workarea
-        local inc = 100
-        inc_p = w.x + w.width - g.x - g.width
-        if inc > inc_p then
-          inc = inc_p
-        end
-        g.width = g.width + inc
-        c:geometry(g)
-      end
-    end),
-    awful.key({ modkey, "Shift"   }, "Left",
-    function(c)
-      if awful.client.floating.get(c) then
-        local g = c:geometry()
-        local dec = 100
-        local min = 200
-        dec_p = g.width - min
-        if dec > dec_p then
-          dec = dec_p
-        end
-        g.width = g.width - dec
-        c:geometry(g)
-      end
-    end),
-    awful.key({ modkey, "Shift"   }, "Up",
-    function(c)
-      if awful.client.floating.get(c) then
-        local g = c:geometry()
-        local dec = 100
-        local min = 200
-        dec_p = g.height - min
-        if dec > dec_p then
-          dec = dec_p
-        end
-        g.height = g.height - dec
-        c:geometry(g)
-      end
-    end),
-    awful.key({ modkey, "Shift"   }, "Down",
-    function(c)
-      if awful.client.floating.get(c) then
-        local g = c:geometry()
-        local w = screen[c.screen].workarea
-        local inc = 100
-        inc_p = w.y + w.height - g.y - g.height
-        if inc > inc_p then
-          inc = inc_p
-        end
-        g.height = g.height + inc
-        c:geometry(g)
-      end
-    end),
-
-    -- move floating windows to screen edges
-    awful.key({ modkey, "Control"   }, "Right",
-    function(c)
-      if awful.client.floating.get(c) then
-        local g = c:geometry()
-        local w = screen[c.screen].workarea
-        g.x = w.x + w.width - g.width - 2*beautiful.border_width
-        c:geometry(g)
-      end
-    end),
-    awful.key({ modkey, "Control"   }, "Left",
-    function(c)
-      if awful.client.floating.get(c) then
-        local g = c:geometry()
-        local w = screen[c.screen].workarea
-        g.x = w.x
-        c:geometry(g)
-      end
-    end),
-    awful.key({ modkey, "Control"   }, "Up",
-    function(c)
-      if awful.client.floating.get(c) then
-        local g = c:geometry()
-        local w = screen[c.screen].workarea
-        g.y = w.y
-        c:geometry(g)
-      end
-    end),
-    awful.key({ modkey, "Control"   }, "Down",
-    function(c)
-      if awful.client.floating.get(c) then
-        local g = c:geometry()
-        local w = screen[c.screen].workarea
-        g.y = w.y + w.height - g.height - 2*beautiful.border_width
-        c:geometry(g)
-      end
-    end),
     awful.key({ modkey, "Shift" }, "t", function (c)
       titlebar_disable(c)
     end),
