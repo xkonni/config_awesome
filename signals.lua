@@ -21,7 +21,7 @@ client.connect_signal("manage", function (c, startup)
     end
 
     local titlebars_enabled = false
-    if (titlebars_enabled and c.type == "normal") or (c.type == "dialog") or floats(c) then
+    if (titlebars_enabled and c.type == "normal") or (c.type == "dialog") or awful.client.floating.get(c) then
         titlebar_enable(c)
     end
 end)
@@ -29,7 +29,7 @@ end)
 -- client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("focus", function(c)
   c.border_color = beautiful.border_focus
-  --if floats(c) then
+  --if awful.client.floating.get(c) then
   --  if (not awful.rules.match(c, { class = "Pidgin" })) and (not awful.rules.match(c, { class = terminal_class })) then
   --    titlebar_enable(c)
   --  end
@@ -39,7 +39,7 @@ end)
 -- client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 client.connect_signal("unfocus", function(c)
   c.border_color = beautiful.border_normal
-  --if floats(c) then
+  --if awful.client.floating.get(c) then
   --  if (not awful.rules.match(c, { class = "Pidgin" })) and (not awful.rules.match(c, { class = terminal_class })) then
   --    titlebar_disable(c)
   --  end

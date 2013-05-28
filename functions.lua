@@ -44,16 +44,6 @@ function prettystring(str, length, fill)
   return str
 end
 
--- test if window floats
-function floats(c)
-  local ret = false
-  local l = awful.layout.get(c.screen)
-  if awful.layout.getname(l) == 'floating' or awful.client.floating.get(c) then
-    ret = true
-  end
-  return ret
-end
-
 function titlebar_enable(c)
   -- Widgets that are aligned to the left
   local left_layout = wibox.layout.fixed.horizontal()

@@ -92,7 +92,7 @@ clientkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "space",
               function (c)
                   awful.client.floating.toggle()
-                  if floats(c) then
+                  if awful.client.floating.get(c) then
                     titlebar_enable(c)
                   else
                     titlebar_disable(c)
@@ -116,7 +116,7 @@ clientkeys = awful.util.table.join(
     -- resize floating windows
     awful.key({ modkey, "Shift"   }, "Right",
     function(c)
-      if floats(c) then
+      if awful.client.floating.get(c) then
         local g = c:geometry()
         local w = screen[c.screen].workarea
         local inc = 100
@@ -130,7 +130,7 @@ clientkeys = awful.util.table.join(
     end),
     awful.key({ modkey, "Shift"   }, "Left",
     function(c)
-      if floats(c) then
+      if awful.client.floating.get(c) then
         local g = c:geometry()
         local dec = 100
         local min = 200
@@ -144,7 +144,7 @@ clientkeys = awful.util.table.join(
     end),
     awful.key({ modkey, "Shift"   }, "Up",
     function(c)
-      if floats(c) then
+      if awful.client.floating.get(c) then
         local g = c:geometry()
         local dec = 100
         local min = 200
@@ -158,7 +158,7 @@ clientkeys = awful.util.table.join(
     end),
     awful.key({ modkey, "Shift"   }, "Down",
     function(c)
-      if floats(c) then
+      if awful.client.floating.get(c) then
         local g = c:geometry()
         local w = screen[c.screen].workarea
         local inc = 100
@@ -174,7 +174,7 @@ clientkeys = awful.util.table.join(
     -- move floating windows to screen edges
     awful.key({ modkey, "Control"   }, "Right",
     function(c)
-      if floats(c) then
+      if awful.client.floating.get(c) then
         local g = c:geometry()
         local w = screen[c.screen].workarea
         g.x = w.x + w.width - g.width - 2*beautiful.border_width
@@ -183,7 +183,7 @@ clientkeys = awful.util.table.join(
     end),
     awful.key({ modkey, "Control"   }, "Left",
     function(c)
-      if floats(c) then
+      if awful.client.floating.get(c) then
         local g = c:geometry()
         local w = screen[c.screen].workarea
         g.x = w.x
@@ -192,7 +192,7 @@ clientkeys = awful.util.table.join(
     end),
     awful.key({ modkey, "Control"   }, "Up",
     function(c)
-      if floats(c) then
+      if awful.client.floating.get(c) then
         local g = c:geometry()
         local w = screen[c.screen].workarea
         g.y = w.y
@@ -201,7 +201,7 @@ clientkeys = awful.util.table.join(
     end),
     awful.key({ modkey, "Control"   }, "Down",
     function(c)
-      if floats(c) then
+      if awful.client.floating.get(c) then
         local g = c:geometry()
         local w = screen[c.screen].workarea
         g.y = w.y + w.height - g.height - 2*beautiful.border_width
