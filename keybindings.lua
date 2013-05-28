@@ -231,7 +231,11 @@ for i = 1, keynumber do
                   function ()
                         local screen = mouse.screen
                         if tags[screen][i] then
-                            awful.tag.viewonly(tags[screen][i])
+                            if tags[screen][i].selected then
+                                awful.tag.history.restore(screen)
+                            else
+                                awful.tag.viewonly(tags[screen][i])
+                            end
                         end
                   end),
         awful.key({ modkey, "Control" }, "#" .. i + 9,
