@@ -86,8 +86,8 @@ tooltip_mem = awful.tooltip({ objects = { widget_mem }, timeout = timeout_toolti
   local text
   text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
          " "..string.rep("-", tlen).." \n"..
-         " ◌ memory <span color=\""..beautiful.fg_normal.."\">"..prettystring(info_mem[2], 5, " ").."/"..prettystring(info_mem[3], 5, " ").."</span> MB \n"..
-         " ○ swap   <span color=\""..beautiful.fg_normal.."\">"..prettystring(info_mem[6], 5, " ").."/"..prettystring(info_mem[7], 5, " ").."</span> MB "
+         " ◌ memory <span color=\""..beautiful.fg_normal.."\">"..formatstring(info_mem[2], 5).."/"..formatstring(info_mem[3], 5).."</span> MB \n"..
+         " ○ swap   <span color=\""..beautiful.fg_normal.."\">"..formatstring(info_mem[6], 5).."/"..formatstring(info_mem[7], 5).."</span> MB "
    return text
  end})
 
@@ -128,10 +128,10 @@ tooltip_hdd = awful.tooltip({ objects = { widget_hdd } , timeout = timeout_toolt
            " "..string.rep("-", tlen).." \n"
     for p = 1, #partitions do
       text = text.." ⛁ on "..
-               prettystring(partitions[p], 10, " ").." <span color=\""..beautiful.fg_normal.."\">"..
-               prettystring(info_hdd["{"..partitions[p].." used_p}"], 3, " ").."%  "..
-               prettystring(info_hdd["{"..partitions[p].." used_gb}"], 5, " ").."/"..
-               prettystring(info_hdd["{"..partitions[p].." size_gb}"], 5, " ").."</span> GB "
+               formatstring(partitions[p], 10).." <span color=\""..beautiful.fg_normal.."\">"..
+               formatstring(info_hdd["{"..partitions[p].." used_p}"], 3).."%  "..
+               formatstring(info_hdd["{"..partitions[p].." used_gb}"], 5).."/"..
+               formatstring(info_hdd["{"..partitions[p].." size_gb}"], 5).."</span> GB "
       if p < #partitions then
         text = text.."\n"
       end
@@ -177,16 +177,16 @@ if not BAT then
     text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
            " "..string.rep("-", tlen).." \n"
     if info_mpd["{state}"] == "Stop" then
-      text = text.." Status <span color=\""..beautiful.fg_normal.."\">"..prettystring("stopped", len, " ").." </span>"
+      text = text.." Status <span color=\""..beautiful.fg_normal.."\">"..formatstring("stopped", len).." </span>"
     else
       if info_mpd["{state}"] == "Play" then
-        text = text.." Status <span color=\""..beautiful.fg_normal.."\">"..prettystring("playing" , len, " ").." </span>\n"
+        text = text.." Status <span color=\""..beautiful.fg_normal.."\">"..formatstring("playing" , len).." </span>\n"
       else
-        text = text.." Status <span color=\""..beautiful.fg_normal.."\">"..prettystring("paused", len, " ").." </span>\n"
+        text = text.." Status <span color=\""..beautiful.fg_normal.."\">"..formatstring("paused", len).." </span>\n"
       end
-      text = text.." Artist <span color=\""..beautiful.fg_normal.."\">"..prettystring(info_mpd["{Artist}"], len, " ").." </span>\n"..
-                   " Album  <span color=\""..beautiful.fg_normal.."\">"..prettystring(info_mpd["{Album}"], len, " ").." </span>\n"..
-                   " Title  <span color=\""..beautiful.fg_normal.."\">"..prettystring(info_mpd["{Title}"], len, " ").." </span>"
+      text = text.." Artist <span color=\""..beautiful.fg_normal.."\">"..formatstring(info_mpd["{Artist}"], len).." </span>\n"..
+                   " Album  <span color=\""..beautiful.fg_normal.."\">"..formatstring(info_mpd["{Album}"], len).." </span>\n"..
+                   " Title  <span color=\""..beautiful.fg_normal.."\">"..formatstring(info_mpd["{Title}"], len).." </span>"
     end
     return text
   end})
@@ -234,11 +234,11 @@ tooltip_vol = awful.tooltip({ objects = { widget_vol }, timeout = timeout_toolti
   text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
          " "..string.rep("-", tlen).." \n"
   if info_vol[2] == "♫" then
-    text = text.." state  <span color=\""..beautiful.fg_normal.."\">"..prettystring("on", 3, " ").." </span>\n"
+    text = text.." state  <span color=\""..beautiful.fg_normal.."\">"..formatstring("on", 3).." </span>\n"
   else
-    text = text.." state  <span color=\""..beautiful.fg_normal.."\">"..prettystring("off", 3, " ").." </span>\n"
+    text = text.." state  <span color=\""..beautiful.fg_normal.."\">"..formatstring("off", 3).." </span>\n"
   end
-  text = text.." volume <span color=\""..beautiful.fg_normal.."\">"..prettystring(info_vol[1], 3, " ").." </span> %"
+  text = text.." volume <span color=\""..beautiful.fg_normal.."\">"..formatstring(info_vol[1], 3).." </span> %"
   return text
 end})
 
@@ -266,12 +266,12 @@ if BAT then
     text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
            " "..string.rep("-", tlen).." \n"
     if info_bat[1] == "-" then
-      text = text.." ⚫ status    <span color=\""..beautiful.fg_normal.."\">"..prettystring("discharging", 12, " ").." </span>\n"
+      text = text.." ⚫ status    <span color=\""..beautiful.fg_normal.."\">"..formatstring("discharging", 12).." </span>\n"
     else
-      text = text.." ⚫ status    <span color=\""..beautiful.fg_normal.."\">"..prettystring("charging", 12, " ").." </span>\n"
+      text = text.." ⚫ status    <span color=\""..beautiful.fg_normal.."\">"..formatstring("charging", 12).." </span>\n"
     end
-    text = text.." ⚡ charge    <span color=\""..beautiful.fg_normal.."\">"..prettystring(info_bat[2], 11, " ").."% </span>\n"..
-                 " ◴ time left <span color=\""..beautiful.fg_normal.."\">"..prettystring(info_bat[3], 12, " ").." </span>"
+    text = text.." ⚡ charge    <span color=\""..beautiful.fg_normal.."\">"..formatstring(info_bat[2], 11).."% </span>\n"..
+                 " ◴ time left <span color=\""..beautiful.fg_normal.."\">"..formatstring(info_bat[3], 12).." </span>"
     return text
   end})
 
