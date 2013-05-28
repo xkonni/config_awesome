@@ -161,7 +161,7 @@ function set_volume(action)
     text = "["..info_vol[1].."%] [on]"
     icon = "♫ "
   else
-    widget_vol_bar:set_color(theme.fg_normal .. "40")
+    widget_vol_bar:set_color(beautiful.fg_normal .. "40")
     text = "["..info_vol[1].."%] [off]"
     icon = " ♯ "
   end

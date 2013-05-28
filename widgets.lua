@@ -7,7 +7,7 @@ local stats_grad = { type = "linear", from = { 0, 0 }, to = { 0, 18 }, stops = {
 local widget_sep = wibox.widget.base.empty_widget()
 widget_sep.fit = function() return 3, 8 end
 -- widget_separator arrow
-local widget_sep_arrow = mwidget_arrow({"<span font_weight=\"ultrabold\">⮃</span>"}, {theme.fg_focus}, {theme.bg_normal})
+local widget_sep_arrow = mwidget_arrow({"<span font_weight=\"ultrabold\">⮃</span>"}, {beautiful.fg_focus}, {beautiful.bg_normal})
 
 -- Create a clock widget
 local widget_clock = awful.widget.textclock(" %d %b %Y %H:%M ")
@@ -16,10 +16,10 @@ local tooltip_clock = awful.tooltip({ objects = { widget_clock }, timeout = time
   local title = os.date("%A %d %B %Y")
   local len = string.len(title)+2
   local text
-  text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+  text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
          " "..string.rep("-", len).." \n"
   local day = os.date("%d")
-  local date = awful.util.pread("cal | sed '1d;s/^/   /;s/$/ /;s:"..day..":<span weight=\"bold\" color=\""..theme.fg_normal.."\">"..day.."</span>:'")
+  local date = awful.util.pread("cal | sed '1d;s/^/   /;s/$/ /;s:"..day..":<span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..day.."</span>:'")
   text = text.." "..date.." "
   return text
 end})
@@ -36,9 +36,9 @@ widget_cpu_text.fit = function() return 35, 8 end
 vicious.register(widget_cpu_text, vicious.widgets.cpu, " $1%", timeout_short)
 
 widget_cpu_graph:set_width(30)
-widget_cpu_graph:set_background_color(theme.bg_normal)
+widget_cpu_graph:set_background_color(beautiful.bg_normal)
 widget_cpu_graph:set_color(stats_grad)
-widget_cpu_graph:set_border_color(theme.bg_normal)
+widget_cpu_graph:set_border_color(beautiful.bg_normal)
 vicious.register(widget_cpu_graph, vicious.widgets.cpu, "$1", timeout_medium)
 
 tooltip_cpu = awful.tooltip({ objects = { widget_cpu }, timeout = timeout_tooltip, timer_function = function()
@@ -46,10 +46,10 @@ tooltip_cpu = awful.tooltip({ objects = { widget_cpu }, timeout = timeout_toolti
   local title = "cpu usage"
   local len = string.len(title)+2
   local text
-  text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+  text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
          " "..string.rep("-", len).." \n"
   for core = 2, #info_cpu do
-    text = text.." ◈ core"..(core-1).." <span color=\""..theme.fg_normal.."\">"..info_cpu[core].."</span> % "
+    text = text.." ◈ core"..(core-1).." <span color=\""..beautiful.fg_normal.."\">"..info_cpu[core].."</span> % "
     if core < #info_cpu then
       text = text.."\n"
     end
@@ -74,9 +74,9 @@ widget_mem_text.fit = function() return 35, 8 end
 vicious.register(widget_mem_text, vicious.widgets.mem, " $1%", timeout_short)
 
 widget_mem_graph:set_width(30)
-widget_mem_graph:set_background_color(theme.bg_normal)
+widget_mem_graph:set_background_color(beautiful.bg_normal)
 widget_mem_graph:set_color(stats_grad)
-widget_mem_graph:set_border_color(theme.bg_normal)
+widget_mem_graph:set_border_color(beautiful.bg_normal)
 vicious.register(widget_mem_graph, vicious.widgets.mem, "$1", timeout_medium)
 
 tooltip_mem = awful.tooltip({ objects = { widget_mem }, timeout = timeout_tooltip, timer_function = function()
@@ -84,10 +84,10 @@ tooltip_mem = awful.tooltip({ objects = { widget_mem }, timeout = timeout_toolti
   local title = "memory &amp; swap usage"
   local tlen = string.len(title)+2-4
   local text
-  text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+  text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
          " "..string.rep("-", tlen).." \n"..
-         " ◌ memory <span color=\""..theme.fg_normal.."\">"..prettystring(info_mem[2], 5, " ").."/"..prettystring(info_mem[3], 5, " ").."</span> MB \n"..
-         " ○ swap   <span color=\""..theme.fg_normal.."\">"..prettystring(info_mem[6], 5, " ").."/"..prettystring(info_mem[7], 5, " ").."</span> MB "
+         " ◌ memory <span color=\""..beautiful.fg_normal.."\">"..prettystring(info_mem[2], 5, " ").."/"..prettystring(info_mem[3], 5, " ").."</span> MB \n"..
+         " ○ swap   <span color=\""..beautiful.fg_normal.."\">"..prettystring(info_mem[6], 5, " ").."/"..prettystring(info_mem[7], 5, " ").."</span> MB "
    return text
  end})
 
@@ -109,7 +109,7 @@ for p = 1, #partitions do
   widget_hdd_bar[p]:set_vertical(true)
   widget_hdd_bar[p]:set_height(20)
   widget_hdd_bar[p]:set_width(5)
-  widget_hdd_bar[p]:set_background_color(theme.bg_normal)
+  widget_hdd_bar[p]:set_background_color(beautiful.bg_normal)
   widget_hdd_bar[p]:set_color(stats_grad)
   vicious.register(widget_hdd_bar[p], vicious.widgets.fs,
     function (widget, args)
@@ -124,11 +124,11 @@ tooltip_hdd = awful.tooltip({ objects = { widget_hdd } , timeout = timeout_toolt
   local title = "harddisk information"
   local tlen = string.len(title)+2
   local text
-    text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+    text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
            " "..string.rep("-", tlen).." \n"
     for p = 1, #partitions do
       text = text.." ⛁ on "..
-               prettystring(partitions[p], 10, " ").." <span color=\""..theme.fg_normal.."\">"..
+               prettystring(partitions[p], 10, " ").." <span color=\""..beautiful.fg_normal.."\">"..
                prettystring(info_hdd["{"..partitions[p].." used_p}"], 3, " ").."%  "..
                prettystring(info_hdd["{"..partitions[p].." used_gb}"], 5, " ").."/"..
                prettystring(info_hdd["{"..partitions[p].." size_gb}"], 5, " ").."</span> GB "
@@ -174,19 +174,19 @@ if not BAT then
     local tlen = string.len(title)+2
     local len = math.max(string.len(info_mpd["{Artist}"]), string.len(info_mpd["{Album}"]), string.len(info_mpd["{Title}"]), 10)
     local text
-    text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+    text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
            " "..string.rep("-", tlen).." \n"
     if info_mpd["{state}"] == "Stop" then
-      text = text.." Status <span color=\""..theme.fg_normal.."\">"..prettystring("stopped", len, " ").." </span>"
+      text = text.." Status <span color=\""..beautiful.fg_normal.."\">"..prettystring("stopped", len, " ").." </span>"
     else
       if info_mpd["{state}"] == "Play" then
-        text = text.." Status <span color=\""..theme.fg_normal.."\">"..prettystring("playing" , len, " ").." </span>\n"
+        text = text.." Status <span color=\""..beautiful.fg_normal.."\">"..prettystring("playing" , len, " ").." </span>\n"
       else
-        text = text.." Status <span color=\""..theme.fg_normal.."\">"..prettystring("paused", len, " ").." </span>\n"
+        text = text.." Status <span color=\""..beautiful.fg_normal.."\">"..prettystring("paused", len, " ").." </span>\n"
       end
-      text = text.." Artist <span color=\""..theme.fg_normal.."\">"..prettystring(info_mpd["{Artist}"], len, " ").." </span>\n"..
-                   " Album  <span color=\""..theme.fg_normal.."\">"..prettystring(info_mpd["{Album}"], len, " ").." </span>\n"..
-                   " Title  <span color=\""..theme.fg_normal.."\">"..prettystring(info_mpd["{Title}"], len, " ").." </span>"
+      text = text.." Artist <span color=\""..beautiful.fg_normal.."\">"..prettystring(info_mpd["{Artist}"], len, " ").." </span>\n"..
+                   " Album  <span color=\""..beautiful.fg_normal.."\">"..prettystring(info_mpd["{Album}"], len, " ").." </span>\n"..
+                   " Title  <span color=\""..beautiful.fg_normal.."\">"..prettystring(info_mpd["{Title}"], len, " ").." </span>"
     end
     return text
   end})
@@ -209,16 +209,16 @@ widget_vol_icon:set_font("Anonymous Pro for Powerline 14")
 widget_vol_bar:set_vertical(true)
 widget_vol_bar:set_height(18)
 widget_vol_bar:set_width(6)
-widget_vol_bar:set_background_color(theme.bg_normal)
+widget_vol_bar:set_background_color(beautiful.bg_normal)
 widget_vol_bar:set_color(stats_grad)
-widget_vol_bar:set_border_color(theme.bg_normal)
+widget_vol_bar:set_border_color(beautiful.bg_normal)
 vicious.register(widget_vol_bar, vicious.widgets.volume,
   function(widget, args)
     if args[2] == "♫" then
       widget_vol_bar:set_color(stats_grad)
       icon = "♫ "
     else
-      widget_vol_bar:set_color(theme.fg_normal .. "40")
+      widget_vol_bar:set_color(beautiful.fg_normal .. "40")
       icon = " ♯ "
     end
     widget_vol_icon:set_text(icon)
@@ -231,14 +231,14 @@ tooltip_vol = awful.tooltip({ objects = { widget_vol }, timeout = timeout_toolti
   local title = "volume information"
   local tlen = string.len(title)+2
   local text
-  text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+  text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
          " "..string.rep("-", tlen).." \n"
   if info_vol[2] == "♫" then
-    text = text.." state  <span color=\""..theme.fg_normal.."\">"..prettystring("on", 3, " ").." </span>\n"
+    text = text.." state  <span color=\""..beautiful.fg_normal.."\">"..prettystring("on", 3, " ").." </span>\n"
   else
-    text = text.." state  <span color=\""..theme.fg_normal.."\">"..prettystring("off", 3, " ").." </span>\n"
+    text = text.." state  <span color=\""..beautiful.fg_normal.."\">"..prettystring("off", 3, " ").." </span>\n"
   end
-  text = text.." volume <span color=\""..theme.fg_normal.."\">"..prettystring(info_vol[1], 3, " ").." </span> %"
+  text = text.." volume <span color=\""..beautiful.fg_normal.."\">"..prettystring(info_vol[1], 3, " ").." </span> %"
   return text
 end})
 
@@ -263,15 +263,15 @@ if BAT then
     local title = "battery information"
     local tlen = string.len(title)+2
     local text
-    text = " <span weight=\"bold\" color=\""..theme.fg_normal.."\">"..title.."</span> \n"..
+    text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
            " "..string.rep("-", tlen).." \n"
     if info_bat[1] == "-" then
-      text = text.." ⚫ status    <span color=\""..theme.fg_normal.."\">"..prettystring("discharging", 12, " ").." </span>\n"
+      text = text.." ⚫ status    <span color=\""..beautiful.fg_normal.."\">"..prettystring("discharging", 12, " ").." </span>\n"
     else
-      text = text.." ⚫ status    <span color=\""..theme.fg_normal.."\">"..prettystring("charging", 12, " ").." </span>\n"
+      text = text.." ⚫ status    <span color=\""..beautiful.fg_normal.."\">"..prettystring("charging", 12, " ").." </span>\n"
     end
-    text = text.." ⚡ charge    <span color=\""..theme.fg_normal.."\">"..prettystring(info_bat[2], 11, " ").."% </span>\n"..
-                 " ◴ time left <span color=\""..theme.fg_normal.."\">"..prettystring(info_bat[3], 12, " ").." </span>"
+    text = text.." ⚡ charge    <span color=\""..beautiful.fg_normal.."\">"..prettystring(info_bat[2], 11, " ").."% </span>\n"..
+                 " ◴ time left <span color=\""..beautiful.fg_normal.."\">"..prettystring(info_bat[3], 12, " ").." </span>"
     return text
   end})
 
@@ -370,13 +370,13 @@ for s = 1, screen.count() do
     left_layout:add(mylauncher)
     left_layout:add(widget_sep)
     left_layout:add(mytaglist[s])
-    left_layout:add(mwidget_arrow({"⮀"}, {theme.bg_normal}, {theme.fg_focus}))
-    left_layout:add(mwidget_bg(theme.fg_focus, mypromptbox[s]))
-    left_layout:add(mwidget_arrow({"⮀"}, {theme.fg_focus}, {theme.bg_normal}))
+    left_layout:add(mwidget_arrow({"⮀"}, {beautiful.bg_normal}, {beautiful.fg_focus}))
+    left_layout:add(mwidget_bg(beautiful.fg_focus, mypromptbox[s]))
+    left_layout:add(mwidget_arrow({"⮀"}, {beautiful.fg_focus}, {beautiful.bg_normal}))
 
     -- Widgets that are aligned to the right
     local right_layout = wibox.layout.fixed.horizontal()
-    right_layout:add(mwidget_arrow({"⮂", "⮂"}, {theme.fg_focus, theme.bg_normal}, {theme.bg_normal, theme.fg_focus}))
+    right_layout:add(mwidget_arrow({"⮂", "⮂"}, {beautiful.fg_focus, beautiful.bg_normal}, {beautiful.bg_normal, beautiful.fg_focus}))
     right_layout:add(widget_stats)
     if s == 1 then
       right_layout:add(widget_sep_arrow)
