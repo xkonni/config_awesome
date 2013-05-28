@@ -33,20 +33,13 @@ function mwidget_bg(bg, widget)
 end
 
 -- return a string with fixed length
--- cut off at the end of filled with
--- whitespaces at the beginning
-function prettystring(str, length, fill, center)
+-- cut off at the end or filled with some character at the beginning
+function prettystring(str, length, fill)
   if string.len(str) > length then
-    str=string.sub(str, 1, length-1).."…"
+    str=string.sub(str, 1, length-1)..string.len(str).."…"
   elseif fill then
     local num=length-string.len(str)
-    if center then
-      local left = math.floor(num/2)
-      local right = num-left
-      str = string.rep(fill, left)..str..string.rep(fill, right)
-    else
-      str = string.rep(fill, num)..str
-    end
+    str = string.rep(fill, num)..str
   end
   return str
 end

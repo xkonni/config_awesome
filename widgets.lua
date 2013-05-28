@@ -153,7 +153,7 @@ if not BAT then
 
   widget_mpd_text.fit = function(widget, width, height)
     local w, h = wibox.widget.textbox.fit(widget, width, height)
-    return math.min(w, 300), h
+    return 300, h
   end
   vicious.register(widget_mpd_text, vicious.widgets.mpd,
     function (widget, args)
@@ -165,7 +165,7 @@ if not BAT then
       else
         widget_mpd_icon:set_text(" ▸ ")
       end
-      return args["{Artist}"].." - "..args["{Title}"].." "
+      return args["{Artist}"].." - "..args["{Title}"]
   end, timeout_medium)
 
   tooltip_mpd = awful.tooltip({ objects = { widget_mpd }, timeout = timeout_tooltip, timer_function = function()
@@ -281,15 +281,15 @@ end
 -- }}} BATTERY
 
 -- Put stats widget together
+if not BAT then
+  widget_stats:add(widget_mpd)
+  widget_stats:add(widget_sep_arrow)
+end
 widget_stats:add(widget_cpu)
 widget_stats:add(widget_sep_arrow)
 widget_stats:add(widget_mem)
 widget_stats:add(widget_sep_arrow)
 widget_stats:add(widget_hdd)
-if not BAT then
-  widget_stats:add(widget_sep_arrow)
-  widget_stats:add(widget_mpd)
-end
 widget_stats:add(widget_sep_arrow)
 widget_stats:add(widget_vol)
 if BAT then

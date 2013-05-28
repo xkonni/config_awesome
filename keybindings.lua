@@ -40,8 +40,6 @@ globalkeys = awful.util.table.join(
 
     -- Standard program
     awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
-    awful.key({ modkey,           }, "b", function () awful.util.spawn(browser) end),
-    awful.key({ modkey,           }, "v", function () awful.util.spawn(terminal .." -e /usr/bin/ranger") end),
     awful.key({ modkey, "Control" }, "s", function () awful.util.spawn("/usr/bin/xscreensaver-command -lock") end),
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
@@ -66,13 +64,13 @@ globalkeys = awful.util.table.join(
     awful.key({                   }, "XF86AudioLowerVolume",  function () set_volume("decrease") end),
     awful.key({                   }, "XF86AudioRaiseVolume",  function () set_volume("increase") end),
 
-    awful.key({                   }, "XF86AudioNext",         function () awful.util.spawn(home .."/bin/notify_music next") end),
-    awful.key({                   }, "XF86AudioPlay",         function () awful.util.spawn(home .."/bin/notify_music toggle") end),
-    awful.key({                   }, "XF86AudioStop",         function () awful.util.spawn(home .."/bin/notify_music stop") end),
-    awful.key({                   }, "XF86AudioPrev",         function () awful.util.spawn(home .."/bin/notify_music prev") end),
+    awful.key({                   }, "XF86AudioNext",         function () awful.util.spawn(home .."/bin/notify_mpd next") end),
+    awful.key({                   }, "XF86AudioPlay",         function () awful.util.spawn(home .."/bin/notify_mpd toggle") end),
+    awful.key({                   }, "XF86AudioStop",         function () awful.util.spawn(home .."/bin/notify_mpd stop") end),
+    awful.key({                   }, "XF86AudioPrev",         function () awful.util.spawn(home .."/bin/notify_mpd prev") end),
 
-    awful.key({                   }, "XF86Display",           function () awful.util.spawn(home .."/bin/notify_music") end),
-    awful.key({                   }, "XF86WebCam",            function () awful.util.spawn(home .."/bin/switchmpd.sh") end),
+    awful.key({                   }, "XF86WebCam",            function () awful.util.spawn(home .."/bin/notify_mpd switch") end),
+    awful.key({                   }, "XF86Display",           function () awful.util.spawn(home .."/bin/notify_mpd") end),
 
     -- Prompt
     awful.key({ modkey },            "r",                     function () mypromptbox[mouse.screen]:run() end),
