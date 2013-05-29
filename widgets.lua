@@ -7,7 +7,7 @@ local stats_grad = { type = "linear", from = { 0, 0 }, to = { 0, 18 }, stops = {
 local widget_sep = wibox.widget.base.empty_widget()
 widget_sep.fit = function() return 3, 8 end
 -- widget_separator arrow
-local widget_sep_arrow = mwidget_arrow({"<span font_weight=\"ultrabold\">⮃</span>"}, {beautiful.fg_focus}, {beautiful.bg_normal})
+local widget_sep_arrow = mwidget_arrow({"<span font_weight=\"ultrabold\">⮃</span>"}, {beautiful.fg_focus}, {beautiful.bg_normal}, 3)
 
 -- Create a clock widget
 local widget_clock = awful.widget.textclock(" %d %b %Y %H:%M ")
@@ -27,7 +27,7 @@ end})
 -- {{{ CPU
 vicious.cache(vicious.widgets.cpu)
 local widget_cpu = wibox.layout.fixed.horizontal()
-local widget_cpu_icon = mwidget_icon("◈")
+local widget_cpu_icon = mwidget_icon("◈", "top")
 local widget_cpu_text = wibox.widget.textbox()
 local widget_cpu_graph = awful.widget.graph()
 local tooltip_cpu
@@ -65,7 +65,7 @@ widget_cpu:add(widget_cpu_graph)
 -- {{{ MEM
 vicious.cache(vicious.widgets.mem)
 local widget_mem = wibox.layout.fixed.horizontal()
-local widget_mem_icon = mwidget_icon("◌")
+local widget_mem_icon = mwidget_icon("◌", "top")
 local widget_mem_text = wibox.widget.textbox()
 local widget_mem_graph = awful.widget.graph()
 local tooltip_mem
@@ -114,7 +114,8 @@ for p = 1, #partitions do
   vicious.register(widget_hdd_bar[p], vicious.widgets.fs,
     function (widget, args)
       return args["{"..partitions[p].." used_p}"]
-  end, timeout_long)
+    end,
+  timeout_long)
   widget_hdd_bars:add(widget_hdd_bar[p])
   widget_hdd_bars:add(widget_sep)
 end
@@ -147,7 +148,7 @@ widget_hdd:add(widget_hdd_bars)
 if not BAT then
   vicious.cache(vicious.widgets.mpd)
   widget_mpd = wibox.layout.fixed.horizontal()
-  local widget_mpd_icon = mwidget_icon(" ▸ ")
+  local widget_mpd_icon = mwidget_icon("▸")
   local widget_mpd_text = wibox.widget.textbox()
   local tooltip_mpd
 
@@ -158,15 +159,16 @@ if not BAT then
   vicious.register(widget_mpd_text, vicious.widgets.mpd,
     function (widget, args)
       if args["{state}"] == "Stop" then
-        widget_mpd_icon:set_text(" ▹ ")
+        widget_mpd_icon:set_text("▹")
         return " - "
       elseif args["{state}"] == "Pause" then
-        widget_mpd_icon:set_text(" ▹ ")
+        widget_mpd_icon:set_text("▹")
       else
-        widget_mpd_icon:set_text(" ▸ ")
+        widget_mpd_icon:set_text("▸")
       end
       return args["{Artist}"].." - "..args["{Title}"]
-  end, timeout_medium)
+    end,
+  timeout_medium)
 
   tooltip_mpd = awful.tooltip({ objects = { widget_mpd }, timeout = timeout_tooltip, timer_function = function()
     local info_mpd = vicious.widgets.mpd()
@@ -199,12 +201,9 @@ end
 -- {{{ VOLUME
 vicious.cache(vicious.widgets.volume)
 local widget_vol = wibox.layout.fixed.horizontal()
-widget_vol_icon = wibox.widget.textbox()
+widget_vol_icon = mwidget_icon("♫")
 widget_vol_bar = awful.widget.progressbar()
 local tooltip_vol
-
-widget_vol_icon.fit = function() return 25, 8 end
-widget_vol_icon:set_font("Anonymous Pro for Powerline 14")
 
 widget_vol_bar:set_vertical(true)
 widget_vol_bar:set_height(18)
@@ -244,14 +243,13 @@ end})
 
 widget_vol:add(widget_vol_icon)
 widget_vol:add(widget_vol_bar)
-widget_vol:add(widget_sep)
 -- }}} VOLUME
 
 -- {{{ BATTERY
 local widget_bat = wibox.layout.fixed.horizontal()
 if BAT then
   vicious.cache(vicious.widgets.bat)
-  local widget_bat_icon = mwidget_icon("⚡ ")
+  local widget_bat_icon = mwidget_icon("⚡")
   local widget_bat_text = wibox.widget.textbox()
   local tooltip_bat
 
@@ -303,47 +301,52 @@ mypromptbox = {}
 mylayoutbox = {}
 mytaglist = {}
 mytaglist.buttons = awful.util.table.join(
-                    awful.button({ }, 1, awful.tag.viewonly),
-                    awful.button({ modkey }, 1, awful.client.movetotag),
-                    awful.button({ }, 3, awful.tag.viewtoggle),
-                    awful.button({ modkey }, 3, awful.client.toggletag),
-                    awful.button({ }, 4, function(t) awful.tag.viewnext(awful.tag.getscreen(t)) end),
-                    awful.button({ }, 5, function(t) awful.tag.viewprev(awful.tag.getscreen(t)) end)
-                    )
+    awful.button({ }, 1, awful.tag.viewonly),
+    awful.button({ modkey }, 1, awful.client.movetotag),
+    awful.button({ }, 3, awful.tag.viewtoggle),
+    awful.button({ modkey }, 3, awful.client.toggletag),
+    awful.button({ }, 4, function(t) awful.tag.viewnext(awful.tag.getscreen(t)) end),
+    awful.button({ }, 5, function(t) awful.tag.viewprev(awful.tag.getscreen(t)) end)
+  )
 mytasklist = {}
 mytasklist.buttons = awful.util.table.join(
-                     awful.button({ }, 1, function (c)
-                                              if c == client.focus then
-                                                  c.minimized = true
-                                              else
-                                                  -- Without this, the following
-                                                  -- :isvisible() makes no sense
-                                                  c.minimized = false
-                                                  if not c:isvisible() then
-                                                      awful.tag.viewonly(c:tags()[1])
-                                                  end
-                                                  -- This will also un-minimize
-                                                  -- the client, if needed
-                                                  client.focus = c
-                                                  c:raise()
-                                              end
-                                          end),
-                     awful.button({ }, 3, function ()
-                                              if instance then
-                                                  instance:hide()
-                                                  instance = nil
-                                              else
-                                                  instance = awful.menu.clients({ width=250 })
-                                              end
-                                          end),
-                     awful.button({ }, 4, function ()
-                                              awful.client.focus.byidx(1)
-                                              if client.focus then client.focus:raise() end
-                                          end),
-                     awful.button({ }, 5, function ()
-                                              awful.client.focus.byidx(-1)
-                                              if client.focus then client.focus:raise() end
-                                          end))
+    awful.button({ }, 1,
+      function (c)
+        if c == client.focus then
+            c.minimized = true
+        else
+            -- Without this, the following
+            -- :isvisible() makes no sense
+            c.minimized = false
+            if not c:isvisible() then
+                awful.tag.viewonly(c:tags()[1])
+            end
+            -- This will also un-minimize
+            -- the client, if needed
+            client.focus = c
+            c:raise()
+        end
+      end),
+    awful.button({ }, 3,
+      function ()
+        if instance then
+          instance:hide()
+          instance = nil
+        else
+          instance = awful.menu.clients({ width=250 })
+        end
+      end),
+    awful.button({ }, 4,
+      function ()
+        awful.client.focus.byidx(1)
+        if client.focus then client.focus:raise() end
+      end),
+    awful.button({ }, 5,
+      function ()
+        awful.client.focus.byidx(-1)
+        if client.focus then client.focus:raise() end
+      end)
+  )
 
 for s = 1, screen.count() do
     -- Create a promptbox for each screen
@@ -368,7 +371,6 @@ for s = 1, screen.count() do
     -- Widgets that are aligned to the left
     local left_layout = wibox.layout.fixed.horizontal()
     left_layout:add(mylauncher)
-    left_layout:add(widget_sep)
     left_layout:add(mytaglist[s])
     left_layout:add(mwidget_arrow({"⮀"}, {beautiful.bg_normal}, {beautiful.fg_focus}))
     left_layout:add(mwidget_bg(beautiful.fg_focus, mypromptbox[s]))
@@ -381,7 +383,6 @@ for s = 1, screen.count() do
     if s == 1 then
       right_layout:add(widget_sep_arrow)
       right_layout:add(wibox.widget.systray())
-      right_layout:add(widget_sep)
     end
     right_layout:add(widget_sep_arrow)
     right_layout:add(widget_clock)
