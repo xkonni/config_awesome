@@ -1,9 +1,14 @@
 -- create an arrow as transition between fg and bg color
-function mwidget_arrow(arrow, fg, bg)
+function mwidget_arrow(arrow, fg, bg, sep)
   -- ⮃ ⮁ ⮂ ⮀
   local widget_arrow = wibox.layout.fixed.horizontal()
   local widget_fg = {}
   local widget_bg = {}
+  if sep then
+    widget_sep = wibox.widget.base.empty_widget()
+    widget_sep.fit = function() return sep, 8 end
+    widget_arrow:add(widget_sep)
+  end
   for w = 1, #arrow do
     widget_fg[w] = wibox.widget.textbox()
     widget_bg[w] = wibox.widget.background()
@@ -14,14 +19,20 @@ function mwidget_arrow(arrow, fg, bg)
     widget_bg[w]:set_widget(widget_fg[w])
     widget_arrow:add(widget_bg[w])
   end
+  if sep then widget_arrow:add(widget_sep) end
   return widget_arrow
 end
 
-function mwidget_icon(symbol)
-  local mwidget_icon = wibox.widget.textbox()
-  mwidget_icon:set_font("Anonymous Pro for Powerline 14")
-  mwidget_icon:set_markup(symbol)
-  return mwidget_icon
+function mwidget_icon(symbol, valign)
+  local widget_icon = wibox.widget.textbox()
+  widget_icon.fit = function() return 25, 8 end
+  widget_icon:set_font("Anonymous Pro for Powerline 14")
+  widget_icon:set_align("center")
+  if valign then
+    widget_icon:set_valign(valign)
+  end
+  widget_icon:set_text(symbol)
+  return widget_icon
 end
 
 -- color the background of a widget
