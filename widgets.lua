@@ -248,9 +248,9 @@ widget_vol:add(widget_sep)
 -- }}} VOLUME
 
 -- {{{ BATTERY
+local widget_bat = wibox.layout.fixed.horizontal()
 if BAT then
   vicious.cache(vicious.widgets.bat)
-  local widget_bat = wibox.layout.fixed.horizontal()
   local widget_bat_icon = mwidget_icon("⚡ ")
   local widget_bat_text = wibox.widget.textbox()
   local tooltip_bat
