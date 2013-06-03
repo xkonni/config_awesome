@@ -18,9 +18,10 @@ local tooltip_clock = awful.tooltip({ objects = { widget_clock }, timeout = time
   local text
   text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
          " "..string.rep("-", len).." \n"
-  local day = os.date("%d")
-  local date = awful.util.pread("cal | sed '1d;s/^/   /;s/$/ /;s:"..day..":<span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..day.."</span>:'")
-  text = text.." "..date.." "
+  local day = os.date("%e")
+  local date = awful.util.pread("cal | sed '1d;s:^:    :;s:$:  :'")
+  date = string.gsub(date, day, "<span color=\""..beautiful.fg_normal.."\">"..day.."</span>")
+  text = text..date.." "
   return text
 end})
 
