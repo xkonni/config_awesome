@@ -145,7 +145,7 @@ widget_hdd:add(widget_hdd_bars)
 -- }}} HDD
 
 -- {{{ MUSIC
-if not BAT then
+if MPD then
   vicious.cache(vicious.widgets.mpd)
   widget_mpd = wibox.layout.fixed.horizontal()
   local widget_mpd_icon = mwidget_icon("▸")
@@ -168,10 +168,10 @@ if not BAT then
       end
       return args["{Artist}"].." - "..args["{Title}"]
     end,
-  timeout_medium)
+  timeout_medium, MPD)
 
   tooltip_mpd = awful.tooltip({ objects = { widget_mpd }, timeout = timeout_tooltip, timer_function = function()
-    local info_mpd = vicious.widgets.mpd()
+    local info_mpd = vicious.widgets.mpd(MPD)
     local title = "music information"
     local tlen = string.len(title)+2
     local len = math.max(string.len(info_mpd["{Artist}"]), string.len(info_mpd["{Album}"]), string.len(info_mpd["{Title}"]), 10)
@@ -279,7 +279,7 @@ end
 -- }}} BATTERY
 
 -- Put stats widget together
-if not BAT then
+if MPD then
   widget_stats:add(widget_mpd)
   widget_stats:add(widget_sep_arrow)
 end

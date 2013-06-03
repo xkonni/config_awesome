@@ -55,7 +55,7 @@ timeout_tooltip = 1
 timeout_short   = 3
 timeout_medium  = 15
 timeout_long    = 120
-partitions = { "/", "/home"}
+partitions = { "/" }
 
 -- Default modkey.
 modkey = "Mod4"
@@ -84,6 +84,7 @@ if host == "silence" then
   local timeout_medium  = 20
   partitions = { "/", "/home", "/extra"}
 elseif host == "annoyance" then
+  MPD = { nil, localhost, nil }
   timeout_short   = 2
   timeout_medium  = 5
   partitions = { "/", "/home", "/extra", "/extra/src"}
