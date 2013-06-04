@@ -14,10 +14,10 @@ local widget_clock = awful.widget.textclock(" %d %b %Y %H:%M ")
 -- clock tooltip
 local tooltip_clock = awful.tooltip({ objects = { widget_clock }, timeout = timeout_tooltip, timer_function = function()
   local title = os.date("%A %d %B %Y")
-  local len = string.len(title)+2
+  local tlen = string.len(title)
   local text
   text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
-         " "..string.rep("-", len).." \n"
+         " <span weight=\"bold\">"..string.rep("-", tlen).."</span> \n"
   local day = os.date("%e")
   local date = awful.util.pread("cal | sed '1d;s:^:    :;s:$:  :'")
   date = string.gsub(date, day, "<span color=\""..beautiful.fg_normal.."\">"..day.."</span>")
@@ -45,10 +45,10 @@ vicious.register(widget_cpu_graph, vicious.widgets.cpu, "$1", timeout_medium)
 tooltip_cpu = awful.tooltip({ objects = { widget_cpu }, timeout = timeout_tooltip, timer_function = function()
   info_cpu = vicious.widgets.cpu()
   local title = "cpu usage"
-  local len = string.len(title)+2
+  local tlen = string.len(title)
   local text
   text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
-         " "..string.rep("-", len).." \n"
+         " <span weight=\"bold\">"..string.rep("-", tlen).."</span> \n"
   for core = 2, #info_cpu do
     text = text.." ◈ core"..(core-1).." <span color=\""..beautiful.fg_normal.."\">"..info_cpu[core].."</span> % "
     if core < #info_cpu then
@@ -83,10 +83,10 @@ vicious.register(widget_mem_graph, vicious.widgets.mem, "$1", timeout_medium)
 tooltip_mem = awful.tooltip({ objects = { widget_mem }, timeout = timeout_tooltip, timer_function = function()
   local info_mem = vicious.widgets.mem()
   local title = "memory &amp; swap usage"
-  local tlen = string.len(title)+2-4
+  local tlen = string.len(title)-4
   local text
   text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
-         " "..string.rep("-", tlen).." \n"..
+         " <span weight=\"bold\">"..string.rep("-", tlen).."</span> \n"..
          " ◌ memory <span color=\""..beautiful.fg_normal.."\">"..formatstring(info_mem[2], 5).."/"..formatstring(info_mem[3], 5).."</span> MB \n"..
          " ○ swap   <span color=\""..beautiful.fg_normal.."\">"..formatstring(info_mem[6], 5).."/"..formatstring(info_mem[7], 5).."</span> MB "
    return text
@@ -124,10 +124,10 @@ end
 tooltip_hdd = awful.tooltip({ objects = { widget_hdd } , timeout = timeout_tooltip, timer_function = function()
   info_hdd = vicious.widgets.fs()
   local title = "harddisk information"
-  local tlen = string.len(title)+2
+  local tlen = string.len(title)
   local text
     text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
-           " "..string.rep("-", tlen).." \n"
+           " <span weight=\"bold\">"..string.rep("-", tlen).."</span> \n"
     for p = 1, #partitions do
       text = text.." ⛁ on "..
                formatstring(partitions[p], 10).." <span color=\""..beautiful.fg_normal.."\">"..
@@ -174,11 +174,11 @@ if MPD then
   tooltip_mpd = awful.tooltip({ objects = { widget_mpd }, timeout = timeout_tooltip, timer_function = function()
     local info_mpd = vicious.widgets.mpd(MPD)
     local title = "music information"
-    local tlen = string.len(title)+2
+    local tlen = string.len(title)
     local len = math.max(string.len(info_mpd["{Artist}"]), string.len(info_mpd["{Album}"]), string.len(info_mpd["{Title}"]), 10)
     local text
     text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
-           " "..string.rep("-", tlen).." \n"
+           " <span weight=\"bold\">"..string.rep("-", tlen).."</span> \n"
     if info_mpd["{state}"] == "Stop" then
       text = text.." Status <span color=\""..beautiful.fg_normal.."\">"..formatstring("stopped", len).." </span>"
     else
@@ -229,10 +229,10 @@ timeout_medium, "Master")
 tooltip_vol = awful.tooltip({ objects = { widget_vol }, timeout = timeout_tooltip, timer_function = function()
   local info_vol = vicious.widgets.volume(widget, "Master")
   local title = "volume information"
-  local tlen = string.len(title)+2
+  local tlen = string.len(title)
   local text
   text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
-         " "..string.rep("-", tlen).." \n"
+         " <span weight=\"bold\">"..string.rep("-", tlen).."</span> \n"
   if info_vol[2] == "♫" then
     text = text.." state  <span color=\""..beautiful.fg_normal.."\">"..formatstring("on", 3).." </span>\n"
   else
@@ -260,10 +260,10 @@ if BAT then
   tooltip_bat = awful.tooltip({ objects = { widget_bat }, timeout = timeout_tooltip, timer_function = function()
     local info_bat = vicious.widgets.bat(widget, BAT)
     local title = "battery information"
-    local tlen = string.len(title)+2
+    local tlen = string.len(title)
     local text
     text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
-           " "..string.rep("-", tlen).." \n"
+           " <span weight=\"bold\">"..string.rep("-", tlen).."</span> \n"
     if info_bat[1] == "-" then
       text = text.." ⚫ status    <span color=\""..beautiful.fg_normal.."\">"..formatstring("discharging", 12).." </span>\n"
     else
