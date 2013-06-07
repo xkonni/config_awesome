@@ -97,33 +97,51 @@ function titlebar_disable(c)
 end
 
 function resize(c)
+  local n
   if awful.client.floating.get(c) then
+    n = naughty.notify({title="resize floating", timeout=0})
     grabber = awful.keygrabber.run(
       function(mod, key, event)
         if event == "release" then return end
 
+        local g = c:geometry()
+        local w = screen[c.screen].workarea
+        m = 50
+        local p = {
+          w.x + w.width - (g.x + g.width) - 2*beautiful.border_width,
+          w.y + w.height - (g.y + g.height) - 2*beautiful.border_width
+        }
+        for i=1, #p do
+          if p[i] > m then p[i] = m end
+        end
+
         if     key == 'h'       then awful.client.moveresize(0, 0, -50, 0, c)
-        elseif key == 'j'       then awful.client.moveresize(0, 0, 0, 50, c)
+        elseif key == 'j'       then awful.client.moveresize(0, 0, 0, p[2], c)
         elseif key == 'k'       then awful.client.moveresize(0, 0, 0, -50, c)
-        elseif key == 'l'       then awful.client.moveresize(0, 0, 50, 0, c)
+        elseif key == 'l'       then awful.client.moveresize(0, 0, p[1], 0, c)
         else                         awful.keygrabber.stop(grabber)
+                                     naughty.destroy(n)
         end
       end)
-    else
-      grabber = awful.keygrabber.run(
+  else
+    n = naughty.notify({title="resize tiling"})
+    grabber = awful.keygrabber.run(
       function(mod, key, event)
         if event == "release" then return end
 
         if     key == 'h'       then awful.tag.incmwfact(-0.05)
         elseif key == 'l'       then awful.tag.incmwfact(0.05)
         else                         awful.keygrabber.stop(grabber)
+                                     naughty.destroy(n)
         end
       end)
     end
 end
 
 function move(c)
+  local n
   if awful.client.floating.get(c) then
+    n = naughty.notify({title="move floating", timeout=0})
     grabber = awful.keygrabber.run(
       function(mod, key, event)
         if event == "release" then return end
@@ -134,8 +152,8 @@ function move(c)
         local p = {
           g.x - w.x,
           g.y - w.y,
-          w.width - (g.x + g.width) - 2*beautiful.border_width,
-          w.height - (g.y + g.height) - 2*beautiful.border_width
+          w.x + w.width - (g.x + g.width) - 2*beautiful.border_width,
+          w.y + w.height - (g.y + g.height) - 2*beautiful.border_width
         }
         for i=1, #p do
           if p[i] > m then p[i] = m end
@@ -146,6 +164,7 @@ function move(c)
         elseif key == 'k'       then awful.client.moveresize(0, -p[2], 0, 0, c)
         elseif key == 'l'       then awful.client.moveresize(p[3], 0, 0, 0, c)
         else                         awful.keygrabber.stop(grabber)
+                                     naughty.destroy(n)
         end
       end)
     end
