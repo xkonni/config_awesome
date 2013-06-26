@@ -244,6 +244,12 @@ end})
 
 widget_vol:add(widget_vol_icon)
 widget_vol:add(widget_vol_bar)
+widget_vol:buttons(
+  awful.util.table.join(
+    awful.button({ }, 1, function() set_volume("toggle") end),
+    awful.button({ }, 4, function() set_volume("increase") end),
+    awful.button({ }, 5, function() set_volume("decrease") end)
+))
 -- }}} VOLUME
 
 -- {{{ BATTERY
