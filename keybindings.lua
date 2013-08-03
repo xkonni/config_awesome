@@ -131,9 +131,9 @@ clientkeys = awful.util.table.join(
             c.maximized_horizontal = not c.maximized_horizontal
             c.maximized_vertical   = not c.maximized_vertical
         end),
-
-    awful.key({ modkey, "Shift" }, "t", function (c)
-      titlebar_disable(c)
+    -- enable/distable titlebar
+    awful.key({ modkey,         }, "t", function (c)
+      titlebar_toggle(c)
     end),
     awful.key({ modkey, "Control" }, "t", function (c)
       c.sticky =  not c.sticky

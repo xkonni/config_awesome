@@ -103,6 +103,15 @@ function titlebar_disable(c)
   awful.titlebar(c, {size=0})
 end
 
+function titlebar_toggle(c)
+  _, size = c:titlebar_top()
+  if size > 0 then
+    titlebar_disable(c)
+  else
+    titlebar_enable(c)
+  end
+end
+
 function resize(c)
   local n
   local border = 2*beautiful.border_width
