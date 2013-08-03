@@ -33,6 +33,9 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "Firefox", role="Manager" },
       properties = { floating = true } },
+    { rule = { class = "Plugin-container" },
+      properties = { floating = true }
+    },
     { rule = { class = "Gimp", role="gimp-toolbox" },
       properties = {
         floating = true,
