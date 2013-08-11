@@ -215,7 +215,7 @@ function set_volume(action)
   local text
   local icon
   local info_vol = vicious.widgets.volume(widget, "Master")
-  local stats_grad = { type = "linear", from = { 0, 0 }, to = { 0, 20 }, stops = { { 0, "#dc322f" }, { 0.5, "#808000" }, { 1, "#859900" }}}
+  local stats_vol = { type = "linear", from = { 0, 0 }, to = { 0, 18 }, stops = { { 0, "#859900" }, { 0.5, "#566600" }, { 1, "#426600" }}}
 
   if (action == "toggle") then
     if info_vol[2] == "♫" then info_vol[2] = "♩"
@@ -228,7 +228,7 @@ function set_volume(action)
   end
 
   if info_vol[2] == "♫" then
-    widget_vol_bar:set_color(stats_grad)
+    widget_vol_bar:set_color(stats_vol)
     text = "["..info_vol[1].."%] [on]"
     icon = "♫ "
   else

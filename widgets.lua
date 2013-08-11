@@ -2,6 +2,7 @@
 local widget_stats = wibox.layout.fixed.horizontal()
 -- "from" and "to" define coordinates of  a line along which the gradient spreads
 local stats_grad = { type = "linear", from = { 0, 0 }, to = { 0, 18 }, stops = { { 0, "#dc322f" }, { 0.5, "#808000" }, { 1, "#859900" }}}
+local stats_vol = { type = "linear", from = { 0, 0 }, to = { 0, 18 }, stops = { { 0, "#859900" }, { 0.5, "#566600" }, { 1, "#426600" }}}
 
 -- invisible widget_separator with fixed width
 local widget_sep = wibox.widget.base.empty_widget()
@@ -210,12 +211,12 @@ widget_vol_bar:set_vertical(true)
 widget_vol_bar:set_height(18)
 widget_vol_bar:set_width(6)
 widget_vol_bar:set_background_color(beautiful.bg_normal)
-widget_vol_bar:set_color(stats_grad)
+widget_vol_bar:set_color(stats_vol)
 widget_vol_bar:set_border_color(beautiful.bg_normal)
 vicious.register(widget_vol_bar, vicious.widgets.volume,
   function(widget, args)
     if args[2] == "♫" then
-      widget_vol_bar:set_color(stats_grad)
+      widget_vol_bar:set_color(stats_vol)
       icon = "♫ "
     else
       widget_vol_bar:set_color(beautiful.fg_normal .. "40")
