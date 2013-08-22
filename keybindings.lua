@@ -120,9 +120,9 @@ clientkeys = awful.util.table.join(
         function (c)
             awful.client.floating.toggle()
             if awful.client.floating.get(c) then
-                titlebar_enable(c)
+                awful.titlebar.show(c)
             else
-                titlebar_disable(c)
+                awful.titlebar.hide(c)
             end
         end),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster())  end),
@@ -139,9 +139,9 @@ clientkeys = awful.util.table.join(
             c.maximized_horizontal = not c.maximized_horizontal
             c.maximized_vertical   = not c.maximized_vertical
         end),
-    -- enable/distable titlebar
+    -- enable/disable titlebar
     awful.key({ modkey,         }, "t", function (c)
-      titlebar_toggle(c)
+      awful.titlebar.toggle(c)
     end),
     awful.key({ modkey, "Control" }, "t", function (c)
       c.sticky =  not c.sticky

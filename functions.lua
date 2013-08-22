@@ -55,15 +55,6 @@ function formatstring(str, length)
   return str
 end
 
-function titlebar_toggle(c)
-  _, size = c:titlebar_top()
-  if size > 0 then
-    c:titlebar_top(0)
-  else
-    awful.titlebar(c)
-  end
-end
-
 function resize(c)
   local n
   local border = 2*beautiful.border_width
