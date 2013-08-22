@@ -112,22 +112,22 @@ globalkeys = awful.util.table.join(
 )
 
 clientkeys = awful.util.table.join(
-    awful.key({ modkey, "Shift"   }, "r",      function (c) resize(c)  end),
-    awful.key({ modkey, "Shift"   }, "m",      function (c) move(c)  end),
-    awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen  end),
-    awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end),
+    awful.key({ modkey, "Shift"   }, "r",      function (c) resize(c)                         end),
+    awful.key({ modkey, "Shift"   }, "m",      function (c) move(c)                           end),
+    awful.key({ modkey,           }, "f",      function (c) c.fullscreen = not c.fullscreen   end),
+    awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                          end),
     awful.key({ modkey, "Control" }, "space",
-              function (c)
-                  awful.client.floating.toggle()
-                  if awful.client.floating.get(c) then
-                    titlebar_enable(c)
-                  else
-                    titlebar_disable(c)
-                  end
-              end),
-    awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end),
-    awful.key({ modkey,           }, "o",      awful.client.movetoscreen                        ),
-    awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop            end),
+        function (c)
+            awful.client.floating.toggle()
+            if awful.client.floating.get(c) then
+                titlebar_enable(c)
+            else
+                titlebar_disable(c)
+            end
+        end),
+    awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster())  end),
+    awful.key({ modkey,           }, "o",      awful.client.movetoscreen                         ),
+    awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop             end),
     awful.key({ modkey,           }, "n",
         function (c)
             -- The client currently has the input focus, so it cannot be
