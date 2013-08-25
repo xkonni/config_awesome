@@ -45,8 +45,8 @@ config= awful.util.getdir("config")
 beautiful.init(config .. "/themes/solarized/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
-terminal = 'urxvt'
-terminal_class = 'URxvt'
+terminal = 'termite'
+terminal_class = 'Termite'
 editor = os.getenv("EDITOR") or "vim"
 editor_cmd = terminal .. " -e " .. editor
 browser = 'dwb'
