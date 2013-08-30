@@ -7,6 +7,7 @@ wibox = require("wibox")
 beautiful = require("beautiful")
 naughty = require("naughty")
 menubar = require("menubar")
+scratch = require("scratch")
 vicious = require("vicious")
 
 -- {{{ Error handling

@@ -103,7 +103,12 @@ globalkeys = awful.util.table.join(
                   awful.util.getdir("cache") .. "/history_eval")
               end),
     -- Menubar
-    awful.key({ modkey }, "p", function() menubar.show() end)
+    awful.key({ modkey }, "p", function() menubar.show() end),
+    -- Scratchpad
+    -- scratch.pad.toggle(screen)
+    awful.key({ modkey }, "s", function () scratch.pad.toggle(mouse.screen) end),
+    -- scratch.pad.drop(prog, vert, horiz, width, height, sticky, screen)
+    awful.key({ modkey }, "c", function () scratch.drop(terminal, "bottom", "center", 0.7, 0.45, false, mouse.screen) end)
 )
 
 clientkeys = awful.util.table.join(
@@ -140,7 +145,10 @@ clientkeys = awful.util.table.join(
     end),
     awful.key({ modkey, "Control" }, "t", function (c)
       c.sticky =  not c.sticky
-    end)
+    end),
+    -- Scratchpad
+    -- scratch.pad.set(c, width, height, sticky) end)
+    awful.key({ modkey }, "d", function (c) scratch.pad.set(c, 0.50, 0.50, true) end)
 )
 
 -- Compute the maximum number of digit we need, limited to 9
