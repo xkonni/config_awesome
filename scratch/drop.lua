@@ -93,7 +93,7 @@ function toggle(prog, vert, horiz, width, height, sticky, screen)
             c.above = true
             c.skip_taskbar = true
             if sticky then c.sticky = true end
-            if c.titlebar then awful.titlebar.remove(c) end
+            awful.titlebar.hide(c)
 
             c:raise()
             capi.client.focus = c
