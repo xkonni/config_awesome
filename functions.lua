@@ -154,6 +154,17 @@ function move(c)
     end
 end
 
+function messages(args)
+  if (args.action == 'reset') then
+    widget_msg_count = 0
+    widget_msg_text:set_text("-")
+  else
+    widget_msg_count = widget_msg_count + 1
+    widget_msg_text:set_markup("<span color=\"#859900\">".. widget_msg_count .."</span>")
+    naughty.notify({timeout=args.timeout, title=args.title, text=args.text})
+  end
+end
+
 function set_volume(action)
   local text
   local icon

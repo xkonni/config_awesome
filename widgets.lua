@@ -286,6 +286,16 @@ if BAT then
 end
 -- }}} BATTERY
 
+-- {{{ MESSAGES
+local widget_msg = wibox.layout.fixed.horizontal()
+local widget_msg_icon = mwidget_icon("✉ ")
+widget_msg_count = 0
+widget_msg_text = wibox.widget.textbox()
+widget_msg_text:set_text("-")
+widget_msg:add(widget_msg_icon)
+widget_msg:add(widget_msg_text)
+-- }}} MESSAGES
+
 -- Put stats widget together
 if MPD then
   widget_stats:add(widget_mpd)
@@ -302,6 +312,8 @@ if BAT then
   widget_stats:add(widget_sep_arrow)
   widget_stats:add(widget_bat)
 end
+widget_stats:add(widget_sep_arrow)
+widget_stats:add(widget_msg)
 
 -- Create a wibox for each screen and add it
 mywibox = {}
