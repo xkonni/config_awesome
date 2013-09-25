@@ -289,11 +289,37 @@ end
 -- {{{ MESSAGES
 local widget_msg = wibox.layout.fixed.horizontal()
 local widget_msg_icon = mwidget_icon("✉ ")
-widget_msg_count = 0
+local tooltip_msg
+messages = {}
+messages.count = 0
+
+local tooltip_msg = awful.tooltip({ objects = { widget_msg }, timeout = timeout_tooltip, timer_function = function()
+  local title = "messages"
+  local tlen = string.len(title)
+  local text
+  text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
+         " <span weight=\"bold\">"..string.rep("-", tlen).."</span> \n"
+  if (messages.count > 0) then
+    for m=1, messages.count do
+      text = text .."<span color=\"".. beautiful.fg_normal .."\">".. messages[m].name ..": </span>".. messages[m].text
+      if (m < messages.count) then
+        text = text .."\n"
+      end
+    end
+  else
+    text = text .."no messages"
+  end
+  return text
+end})
+
 widget_msg_text = wibox.widget.textbox()
 widget_msg_text:set_text("-")
 widget_msg:add(widget_msg_icon)
 widget_msg:add(widget_msg_text)
+widget_msg:buttons(
+  awful.util.table.join(
+    awful.button({ }, 1, function() message({action='reset'}) end)
+))
 -- }}} MESSAGES
 
 -- Put stats widget together

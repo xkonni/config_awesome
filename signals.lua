@@ -76,7 +76,7 @@ end)
 
 client.connect_signal("focus", function(c)
   if (c.name == 'mirssi') then
-    messages({action='reset'})
+    message({action='reset'})
   end
   c.border_color = beautiful.border_focus
 end)

@@ -154,13 +154,16 @@ function move(c)
     end
 end
 
-function messages(args)
+function message(args)
   if (args.action == 'reset') then
-    widget_msg_count = 0
+    messages.count = 0
     widget_msg_text:set_text("-")
   else
-    widget_msg_count = widget_msg_count + 1
-    widget_msg_text:set_markup("<span color=\"#859900\">".. widget_msg_count .."</span>")
+    messages.count = messages.count + 1
+    messages[messages.count] = {}
+    messages[messages.count].name = args.title
+    messages[messages.count].text = args.text
+    widget_msg_text:set_markup("<span color=\"#859900\">".. messages.count .."</span>")
     naughty.notify({timeout=args.timeout, title=args.title, text=args.text})
   end
 end
