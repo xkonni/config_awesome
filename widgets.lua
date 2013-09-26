@@ -20,7 +20,7 @@ local tooltip_clock = awful.tooltip({ objects = { widget_clock }, timeout = time
   text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
          " <span weight=\"bold\">"..string.rep("-", tlen).."</span> \n"
   local day = os.date("%e")
-  local date = awful.util.pread("cal | sed '1d;s:^:    :;s:$:  :'")
+  local date = awful.util.pread("cal | col -bx | sed '1d;s:^:    :;s:$:  :'")
   date = string.gsub(date, day, "<span color=\""..beautiful.fg_normal.."\">"..day.."</span>")
   text = text..date.." "
   return text
