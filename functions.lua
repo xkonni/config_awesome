@@ -164,7 +164,9 @@ function message(args)
     messages[messages.count].name = args.title
     messages[messages.count].text = args.text
     widget_msg_text:set_markup("<span color=\"#859900\">".. messages.count .."</span>")
-    naughty.notify({timeout=args.timeout, title=args.title, text=args.text})
+    if (args.active ~= 1) then
+      naughty.notify({timeout=args.timeout, title=args.title, text=args.text})
+    end
   end
 end
 
