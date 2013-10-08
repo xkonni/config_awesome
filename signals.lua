@@ -82,5 +82,8 @@ client.connect_signal("focus", function(c)
 end)
 
 client.connect_signal("unfocus", function(c)
+  if (c.name == 'mirssi') then
+    message({action='reset'})
+  end
   c.border_color = beautiful.border_normal
 end)
