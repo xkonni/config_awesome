@@ -108,7 +108,7 @@ globalkeys = awful.util.table.join(
     -- scratch.pad.toggle(screen)
     awful.key({ modkey }, "s", function () scratch.pad.toggle(mouse.screen) end),
     -- scratch.pad.drop(prog, vert, horiz, width, height, sticky, screen)
-    awful.key({ modkey }, "c", function () scratch.drop(terminal, "bottom", "center", 0.7, 0.45, false, mouse.screen) end)
+    awful.key({ modkey }, "c", function () scratch.drop(terminal, "bottom", "center", 0.7, 0.45, false, 1) end)
 )
 
 clientkeys = awful.util.table.join(

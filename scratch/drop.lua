@@ -74,7 +74,7 @@ function toggle(prog, vert, horiz, width, height, sticky, screen)
             awful.client.floating.set(c, true)
 
             -- Client geometry and placement
-            local screengeom = capi.screen[screen].workarea
+            local screengeom = capi.screen[capi.mouse.screen].workarea
 
             if width  <= 1 then width  = screengeom.width  * width  end
             if height <= 1 then height = screengeom.height * height end
@@ -109,7 +109,7 @@ function toggle(prog, vert, horiz, width, height, sticky, screen)
 
         -- Switch the client to the current workspace
         if c:isvisible() == false then c.hidden = true
-            awful.client.movetotag(awful.tag.selected(screen), c)
+            awful.client.movetotag(awful.tag.selected(mouse.screen), c)
         end
 
         -- Focus and raise if hidden
