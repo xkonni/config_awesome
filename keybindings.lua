@@ -73,8 +73,14 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "n", awful.client.restore),
 
     -- Power
-    awful.key({                   }, "XF86Sleep",             function () awful.util.spawn("systemctl suspend") end),
-    awful.key({                   }, "XF86Suspend",           function () awful.util.spawn("systemctl hibernate") end),
+    awful.key({                   }, "XF86Sleep",             function ()
+        awful.util.spawn(home .. "/bin/powerswitch 1 0")
+        awful.util.spawn("systemctl suspend")
+      end),
+    awful.key({                   }, "XF86Suspend",           function ()
+        awful.util.spawn(home .. "/bin/powerswitch 1 0")
+        awful.util.spawn("systemctl hibernate")
+    end),
 
     -- Media
     awful.key({                   }, "XF86AudioMute",         function () set_volume("toggle")   end),
