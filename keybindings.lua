@@ -127,6 +127,10 @@ clientkeys = awful.util.table.join(
             awful.client.floating.toggle()
             if awful.client.floating.get(c) then
                 awful.titlebar.show(c)
+                if not c.size_hints.user_position and not c.size_hints.program_position then
+                    awful.placement.no_overlap(c)
+                    awful.placement.no_offscreen(c)
+                end
             else
                 awful.titlebar.hide(c)
             end
