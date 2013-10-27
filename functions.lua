@@ -58,7 +58,7 @@ function resize(c)
   local n
   local border = 2*beautiful.border_width
   if awful.client.floating.get(c) then
-    n = naughty.notify({title="resize floating", timeout=0})
+    n = naughty.notify({screen=mouse.screen, title="resize floating", timeout=0})
     grabber = awful.keygrabber.run(
       function(mod, key, event)
         if event == "release" then return end
@@ -95,7 +95,7 @@ function resize(c)
         end
       end)
   else
-    n = naughty.notify({title="resize foo tiling"})
+    n = naughty.notify({screen=mouse.screen, title="resize tiling"})
     grabber = awful.keygrabber.run(
       function(mod, key, event)
         if event == "release" then return end
@@ -113,7 +113,7 @@ function move(c)
   local n
   local border = 2*beautiful.border_width
   if awful.client.floating.get(c) then
-    n = naughty.notify({title="move floating", timeout=0})
+    n = naughty.notify({screen=mouse.screen, title="move floating", timeout=0})
     grabber = awful.keygrabber.run(
       function(mod, key, event)
         if event == "release" then return end
@@ -164,7 +164,7 @@ function message(args)
     messages[messages.count].text = args.text
     widget_msg_text:set_markup("<span color=\"#859900\">".. messages.count .."</span>")
     if (args.active ~= 1) then
-      naughty.notify({timeout=args.timeout, title=args.title, text=args.text})
+      naughty.notify({screen=screen.count(), timeout=args.timeout, title=args.title, text=args.text})
     end
   end
 end
@@ -198,5 +198,5 @@ function set_volume(action)
   widget_vol_icon:set_text(icon)
   widget_vol_bar:set_value(info_vol[1]/100)
   naughty.destroy(notify_volume)
-  notify_volume = naughty.notify({title="volume", text=text})
+  notify_volume = naughty.notify({screen=screen.count(), title="volume", text=text})
 end
