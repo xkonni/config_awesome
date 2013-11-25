@@ -56,7 +56,7 @@ timeout_tooltip = 1
 timeout_short   = 3
 timeout_medium  = 15
 timeout_long    = 120
-partitions = { "/" }
+HDD = { "/" }
 
 -- Default modkey.
 modkey = "Mod4"
@@ -83,12 +83,12 @@ if host == "silence" then
   BAT = "BAT1"
   local timeout_short   = 5
   local timeout_medium  = 20
-  partitions = { "/", "/home", "/extra"}
+  HDD = { "/", "/home", "/extra"}
 elseif host == "annoyance" then
   MPD = { nil, localhost, nil }
   timeout_short   = 2
   timeout_medium  = 5
-  partitions = { "/", "/home", "/extra", "/extra/src"}
+  HDD = { "/", "/home", "/extra", "/extra/src"}
 end
 -- }}}
 

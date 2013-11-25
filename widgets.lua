@@ -99,51 +99,54 @@ widget_mem:add(widget_mem_graph)
 -- }}} MEM
 
 -- {{{ HDD
-vicious.cache(vicious.widgets.fs)
-local widget_hdd = wibox.layout.fixed.horizontal()
-local widget_hdd_icon = mwidget_icon("⛁ ")
-local widget_hdd_bars = wibox.layout.fixed.horizontal()
-local widget_hdd_bar = {}
-local tooltip_hdd
+local widget_hdd
+if HDD then
+  widget_hdd = wibox.layout.fixed.horizontal()
+  vicious.cache(vicious.widgets.fs)
+  local widget_hdd_icon = mwidget_icon("⛁ ")
+  local widget_hdd_bars = wibox.layout.fixed.horizontal()
+  local widget_hdd_bar = {}
+  local tooltip_hdd
 
-for p = 1, #partitions do
-  widget_hdd_bar[p] = awful.widget.progressbar()
-  widget_hdd_bar[p]:set_vertical(true)
-  widget_hdd_bar[p]:set_height(20)
-  widget_hdd_bar[p]:set_width(5)
-  widget_hdd_bar[p]:set_background_color(beautiful.bg_normal)
-  widget_hdd_bar[p]:set_color(stats_grad)
-  vicious.register(widget_hdd_bar[p], vicious.widgets.fs,
-    function (widget, args)
-      return args["{"..partitions[p].." used_p}"]
-    end,
-  timeout_long)
-  widget_hdd_bars:add(widget_hdd_bar[p])
-  widget_hdd_bars:add(widget_sep)
-end
+  for p = 1, #HDD do
+    widget_hdd_bar[p] = awful.widget.progressbar()
+    widget_hdd_bar[p]:set_vertical(true)
+    widget_hdd_bar[p]:set_height(20)
+    widget_hdd_bar[p]:set_width(5)
+    widget_hdd_bar[p]:set_background_color(beautiful.bg_normal)
+    widget_hdd_bar[p]:set_color(stats_grad)
+    vicious.register(widget_hdd_bar[p], vicious.widgets.fs,
+      function (widget, args)
+        return args["{"..HDD[p].." used_p}"]
+      end,
+    timeout_long)
+    widget_hdd_bars:add(widget_hdd_bar[p])
+    widget_hdd_bars:add(widget_sep)
+  end
 
-tooltip_hdd = awful.tooltip({ objects = { widget_hdd } , timeout = timeout_tooltip, timer_function = function()
-  info_hdd = vicious.widgets.fs()
-  local title = "harddisk information"
-  local tlen = string.len(title)
-  local text
-    text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
-           " <span weight=\"bold\">"..string.rep("-", tlen).."</span> \n"
-    for p = 1, #partitions do
-      text = text.." ⛁ on "..
-               formatstring(partitions[p], 10).." <span color=\""..beautiful.fg_normal.."\">"..
-               formatstring(info_hdd["{"..partitions[p].." used_p}"], 3).."%  "..
-               formatstring(info_hdd["{"..partitions[p].." used_gb}"], 5).."/"..
-               formatstring(info_hdd["{"..partitions[p].." size_gb}"], 5).."</span> GB "
-      if p < #partitions then
-        text = text.."\n"
+  tooltip_hdd = awful.tooltip({ objects = { widget_hdd } , timeout = timeout_tooltip, timer_function = function()
+    info_hdd = vicious.widgets.fs()
+    local title = "harddisk information"
+    local tlen = string.len(title)
+    local text
+      text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
+             " <span weight=\"bold\">"..string.rep("-", tlen).."</span> \n"
+      for p = 1, #HDD do
+        text = text.." ⛁ on "..
+                 formatstring(HDD[p], 10).." <span color=\""..beautiful.fg_normal.."\">"..
+                 formatstring(info_hdd["{"..HDD[p].." used_p}"], 3).."%  "..
+                 formatstring(info_hdd["{"..HDD[p].." used_gb}"], 5).."/"..
+                 formatstring(info_hdd["{"..HDD[p].." size_gb}"], 5).."</span> GB "
+        if p < #HDD then
+          text = text.."\n"
+        end
       end
-    end
-  return text
-end})
+    return text
+  end})
 
-widget_hdd:add(widget_hdd_icon)
-widget_hdd:add(widget_hdd_bars)
+  widget_hdd:add(widget_hdd_icon)
+  widget_hdd:add(widget_hdd_bars)
+end
 -- }}} HDD
 
 -- {{{ MUSIC
@@ -254,8 +257,9 @@ widget_vol:buttons(
 -- }}} VOLUME
 
 -- {{{ BATTERY
-local widget_bat = wibox.layout.fixed.horizontal()
+local widget_bat
 if BAT then
+  widget_bat = wibox.layout.fixed.horizontal()
   vicious.cache(vicious.widgets.bat)
   local widget_bat_icon = mwidget_icon("⚡")
   local widget_bat_text = wibox.widget.textbox()
@@ -331,8 +335,10 @@ widget_stats:add(widget_cpu)
 widget_stats:add(widget_sep_arrow)
 widget_stats:add(widget_mem)
 widget_stats:add(widget_sep_arrow)
+if HDD then
 widget_stats:add(widget_hdd)
 widget_stats:add(widget_sep_arrow)
+end
 widget_stats:add(widget_vol)
 if BAT then
   widget_stats:add(widget_sep_arrow)
