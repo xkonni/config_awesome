@@ -150,7 +150,7 @@ clientkeys = awful.util.table.join(
             c.maximized_vertical   = not c.maximized_vertical
         end),
     -- enable/disable titlebar
-    awful.key({ modkey,         }, "t", function (c)
+    awful.key({ modkey,           }, "t", function (c)
       awful.titlebar.toggle(c)
     end),
     awful.key({ modkey, "Control" }, "t", function (c)
@@ -158,7 +158,7 @@ clientkeys = awful.util.table.join(
     end),
     -- Scratchpad
     -- scratch.pad.set(c, width, height, sticky) end)
-    awful.key({ modkey }, "d", function (c) scratch.pad.set(c, 0.50, 0.50, true) end)
+    awful.key({ modkey, "Shift"   }, "s", function (c) scratch.pad.set(c, 0.50, 0.50, true) end)
 )
 
 -- Compute the maximum number of digit we need, limited to 9
