@@ -73,11 +73,11 @@ globalkeys = awful.util.table.join(
     awful.key({ modkey, "Control" }, "n", awful.client.restore),
 
     -- Power
-    awful.key({                   }, "XF86Sleep",             function ()
+    awful.key({                   }, "XF86HomePage",             function ()
         awful.util.spawn(home .. "/bin/powerswitch 1 0")
         awful.util.spawn("systemctl suspend")
       end),
-    awful.key({                   }, "XF86Suspend",           function ()
+    awful.key({                   }, "XF86Mail",           function ()
         awful.util.spawn(home .. "/bin/powerswitch 1 0")
         awful.util.spawn("systemctl hibernate")
     end),
@@ -92,11 +92,13 @@ globalkeys = awful.util.table.join(
     awful.key({                   }, "XF86AudioStop",         function () awful.util.spawn(home .."/bin/notify_mpd stop") end),
     awful.key({                   }, "XF86AudioPrev",         function () awful.util.spawn(home .."/bin/notify_mpd prev") end),
 
-    awful.key({                   }, "XF86WebCam",            function () awful.util.spawn(home .."/bin/notify_mpd switch") end),
-    awful.key({                   }, "XF86Display",           function () awful.util.spawn(home .."/bin/notify_mpd") end),
+    awful.key({                   }, "XF86Eject",             function () awful.util.spawn(home .."/bin/notify_mpd switch") end),
+    awful.key({                   }, "XF86Tools",             function () awful.util.spawn(home .."/bin/notify_mpd") end),
 
-    awful.key({                   }, "XF86AudioMicMute",      function () awful.util.spawn(home .."/bin/powerswitch screen 0") end),
-    awful.key({                   }, "XF86Launch1",           function () awful.util.spawn(home .."/bin/powerswitch screen 1") end),
+    awful.key({ modkey,           }, "F1",                    function () awful.util.spawn(home .."/bin/powerswitch screen 1") end),
+    awful.key({ modkey, "Shift"   }, "F1",                    function () awful.util.spawn(home .."/bin/powerswitch screen 0") end),
+    awful.key({ modkey,           }, "F2",                    function () awful.util.spawn(home .."/bin/powerswitch desklight 1") end),
+    awful.key({ modkey, "Shift"   }, "F2",                    function () awful.util.spawn(home .."/bin/powerswitch desklight 0") end),
 
     -- Prompt
     awful.key({ modkey },            "r",                     function () mypromptbox[mouse.screen]:run() end),

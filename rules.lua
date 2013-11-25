@@ -31,27 +31,10 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "pinentry" },
       properties = { floating = true } },
-    { rule = { class = "Firefox", role="Manager" },
-      properties = { floating = true } },
     { rule = { class = "Plugin-container" },
-      properties = { floating = true }
-    },
-    { rule = { class = "Gimp", role="gimp-toolbox" },
-      properties = {
-        floating = true,
-      },
-      callback = function(c)
-        local w = screen[screen.count()].workarea
-        local strutwidth = 180
-        local g = c:geometry()
-          g.x = w.x + w.width - strutwidth
-          g.y = w.y
-          g.width = strutwidth
-          g.height = w.height/5*3
-        c:struts( { right = strutwidth } )
-        c:geometry(g)
-      end
-    },
+      properties = { floating = true } },
+    { rule = { class = "Wine" },
+      properties = { floating = true } },
     { rule = { class = "Pidgin", role="buddy_list" },
       properties = {
         floating = true,
