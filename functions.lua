@@ -101,6 +101,8 @@ function resize(c)
         if event == "release" then return end
 
         if     key == 'h'       then awful.tag.incmwfact(-0.05)
+        elseif key == 'j'       then awful.client.incwfact(0.05)
+        elseif key == 'k'       then awful.client.incwfact(-0.05)
         elseif key == 'l'       then awful.tag.incmwfact(0.05)
         else                         awful.keygrabber.stop(grabber)
                                      naughty.destroy(n)
