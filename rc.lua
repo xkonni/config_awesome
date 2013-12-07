@@ -111,4 +111,6 @@ require("signals")
 -- }}}
 
 -- Autorun programs
-awful.util.spawn(home .."/bin/autostart")
+-- TODO
+-- .xprofile
+--awful.util.spawn(home .."/bin/autostart")
