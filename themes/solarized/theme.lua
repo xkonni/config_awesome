@@ -19,9 +19,12 @@ theme.font                                      = "Inconsolata for Powerline 11"
 theme.fg_normal                                 = "#EEE8D5"
 theme.fg_focus                                  = "#268BD2"
 theme.fg_urgent                                 = "#268BD2"
+theme.fg_minimize                               = "#8A8A8A"
+
 theme.bg_normal                                 = "#3F3F3F"
 theme.bg_focus                                  = "#1C1C1C"
 theme.bg_urgent                                 = "#3F3F3F"
+theme.bg_minimize                               = theme.bg_normal
 theme.bg_systray                                = theme.bg_normal
 -- }}} Colors
 
@@ -83,7 +86,6 @@ theme.taglist_squares_unsel                     = config .. "/themes/solarized/t
 -- {{{ Misc
 theme.awesome_icon                              = config .. "/themes/solarized/awesome-icon.png"
 theme.menu_submenu_icon                         = config .. "/themes/solarized/submenu.png"
-theme.tasklist_floating_icon                    = config .. "/themes/solarized/tasklist/floatingw.png"
 -- }}} Misc
 
 -- {{{ Layout
