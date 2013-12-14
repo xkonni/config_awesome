@@ -326,6 +326,56 @@ widget_msg:buttons(
 ))
 -- }}} MESSAGES
 
+-- {{{ NETWORK
+local widget_net
+widget_net = wibox.layout.fixed.horizontal()
+vicious.cache(vicious.widgets.net)
+local widget_net_icon = mwidget_icon("⇅")
+local widget_net_graph = awful.widget.graph()
+local tooltip_net
+
+widget_net_graph:set_width(30)
+widget_net_graph:set_background_color(beautiful.bg_normal)
+widget_net_graph:set_color(stats_grad)
+widget_net_graph:set_border_color(beautiful.bg_normal)
+
+
+vicious.register(widget_net_graph, vicious.widgets.net,
+  function (widget, args)
+    for iface = 1, #NET do
+      if (args["{"..NET[iface].." carrier}"] == 1) then
+        return args["{" ..NET[iface].. " down_kb}"]
+      end
+    end
+    return "0"
+  end,
+timeout_medium)
+
+tooltip_net = awful.tooltip({ objects = { widget_net }, timeout = timeout_tooltip, timer_function = function()
+  local info_net = vicious.widgets.net(widget, net)
+  local title = "network information"
+  local tlen = string.len(title)
+  local text
+  text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
+         " <span weight=\"bold\">"..string.rep("-", tlen).."</span> \n"
+  for iface = 1, #NET do
+    if (info_net["{"..NET[iface].." carrier}"] == 1) then
+      text = text..
+        " ↑ "..fstring(NET[iface], 6)..fstring(" up ", 6).."<span color=\""..beautiful.fg_normal.."\">"..fstring(info_net["{"..NET[iface].." up_kb}"  ], 8).." </span> kb/s\n"..
+        fstring("sum ", 15).."<span color=\""..beautiful.fg_normal.."\">"..fstring(info_net["{"..NET[iface].." tx_mb}"  ], 8).." </span> MB\n"..
+        " ↓ "..fstring(NET[iface], 6)..fstring(" down ", 6).."<span color=\""..beautiful.fg_normal.."\">"..fstring(info_net["{"..NET[iface].." down_kb}"], 8).." </span> kb/s\n"..
+        fstring("sum ", 15).."<span color=\""..beautiful.fg_normal.."\">"..fstring(info_net["{"..NET[iface].." rx_mb}"  ], 8).." </span> MB\n"
+      return text
+    end
+  end
+  return ""
+end})
+
+widget_net:add(widget_net_icon)
+widget_net:add(widget_sep)
+widget_net:add(widget_net_graph)
+-- }}} NETWORK
+
 -- Put stats widget together
 if MPD then
   widget_stats:add(widget_mpd)
@@ -346,6 +396,8 @@ if BAT then
 end
 widget_stats:add(widget_sep_arrow)
 widget_stats:add(widget_msg)
+widget_stats:add(widget_sep_arrow)
+widget_stats:add(widget_net)
 
 -- Create a wibox for each screen and add it
 mywibox = {}

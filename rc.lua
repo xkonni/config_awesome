@@ -30,6 +30,7 @@ timeout_short   = 3
 timeout_medium  = 15
 timeout_long    = 120
 HDD = { "/" }
+NET = { "eth0", "lo" }
 
 -- Default modkey.
 modkey = "Mod4"
@@ -40,6 +41,7 @@ if host == "silence" then
   timeout_short   = 5
   timeout_medium  = 20
   HDD = { "/", "/home", "/extra"}
+  NET = { "wlan0", "eth0", "lo"}
 elseif host == "annoyance" then
   MPD = { nil, localhost, nil }
   timeout_short   = 2
