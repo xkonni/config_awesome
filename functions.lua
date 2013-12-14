@@ -44,7 +44,7 @@ end
 
 -- return a string with fixed length
 -- cut off at the end or filled with some character at the beginning
-function formatstring(str, length)
+function fstring(str, length)
   if string.len(str) > length then
     str=string.sub(str, 1, length-1)..string.len(str).."…"
   else
