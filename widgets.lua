@@ -330,17 +330,56 @@ widget_msg:buttons(
 local widget_net
 widget_net = wibox.layout.fixed.horizontal()
 vicious.cache(vicious.widgets.net)
-local widget_net_icon = mwidget_icon("⇅")
-local widget_net_graph = awful.widget.graph()
+local widget_net_icon_up = mwidget_icon("↑")
+local widget_net_text_up = wibox.widget.textbox()
+local widget_net_graph_up = awful.widget.graph()
+local widget_net_icon_down = mwidget_icon("↓")
+local widget_net_text_down = wibox.widget.textbox()
+local widget_net_graph_down = awful.widget.graph()
 local tooltip_net
 
-widget_net_graph:set_width(30)
-widget_net_graph:set_background_color(beautiful.bg_normal)
-widget_net_graph:set_color(stats_grad)
-widget_net_graph:set_border_color(beautiful.bg_normal)
+vicious.register(widget_net_text_up, vicious.widgets.net,
+  function (widget, args)
+    for iface = 1, #NET do
+      if (args["{"..NET[iface].." carrier}"] == 1) then
+        return args["{" ..NET[iface].. " up_kb}"].."kb/s"
+      end
+    end
+    return "0"
+  end,
+timeout_short)
 
+widget_net_graph_up:set_width(30)
+widget_net_graph_up:set_background_color(beautiful.bg_normal)
+widget_net_graph_up:set_color(stats_grad)
+widget_net_graph_up:set_border_color(beautiful.bg_normal)
+vicious.register(widget_net_graph_up, vicious.widgets.net,
+  function (widget, args)
+    for iface = 1, #NET do
+      if (args["{"..NET[iface].." carrier}"] == 1) then
+        return args["{" ..NET[iface].. " up_kb}"]
+      end
+    end
+    return "0"
+  end,
+timeout_short)
 
-vicious.register(widget_net_graph, vicious.widgets.net,
+vicious.register(widget_net_text_down, vicious.widgets.net,
+  function (widget, args)
+    for iface = 1, #NET do
+      if (args["{"..NET[iface].." carrier}"] == 1) then
+        return args["{" ..NET[iface].. " down_kb}"].."kb/s"
+      end
+    end
+    return "0"
+  end,
+timeout_short)
+
+widget_net_graph_down:set_width(30)
+widget_net_graph_down:set_background_color(beautiful.bg_normal)
+widget_net_graph_down:set_color(stats_grad)
+widget_net_graph_down:set_border_color(beautiful.bg_normal)
+vicious.register(widget_net_graph_down, vicious.widgets.net,
   function (widget, args)
     for iface = 1, #NET do
       if (args["{"..NET[iface].." carrier}"] == 1) then
@@ -349,7 +388,7 @@ vicious.register(widget_net_graph, vicious.widgets.net,
     end
     return "0"
   end,
-timeout_medium)
+timeout_short)
 
 tooltip_net = awful.tooltip({ objects = { widget_net }, timeout = timeout_tooltip, timer_function = function()
   local info_net = vicious.widgets.net(widget, net)
@@ -371,9 +410,14 @@ tooltip_net = awful.tooltip({ objects = { widget_net }, timeout = timeout_toolti
   return ""
 end})
 
-widget_net:add(widget_net_icon)
+widget_net:add(widget_net_icon_up)
+widget_net:add(widget_net_text_up)
 widget_net:add(widget_sep)
-widget_net:add(widget_net_graph)
+widget_net:add(widget_net_graph_up)
+widget_net:add(widget_net_icon_down)
+widget_net:add(widget_net_text_down)
+widget_net:add(widget_sep)
+widget_net:add(widget_net_graph_down)
 -- }}} NETWORK
 
 -- Put stats widget together
