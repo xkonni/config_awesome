@@ -37,16 +37,16 @@ modkey = "Mod4"
 
 -- host overrides
 if host == "silence" then
-  BAT = "BAT1"
   timeout_short   = 5
   timeout_medium  = 20
+  BAT = "BAT1"
   HDD = { "/", "/home", "/extra"}
   NET = { "wlan0", "eth0", "lo"}
 elseif host == "annoyance" then
-  MPD = { nil, localhost, nil }
   timeout_short   = 2
   timeout_medium  = 5
   HDD = { "/", "/home", "/extra", "/extra/src"}
+  MPD = { nil, localhost, nil }
 end
 -- }}}
 
