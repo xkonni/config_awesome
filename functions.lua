@@ -180,11 +180,11 @@ function set_volume(action)
   if (action == "toggle") then
     if info_vol[2] == "♫" then info_vol[2] = "♩"
     else info_vol[2] = "♫" end
-    awful.util.spawn(home .."/bin/set_volume toggle")
+    awful.util.spawn(home .."/bin/set_volume toggle", false)
   elseif (action == "decrease") then
-    awful.util.spawn(home .."/bin/set_volume decrease")
+    awful.util.spawn(home .."/bin/set_volume decrease", false)
   elseif (action == "increase") then
-    awful.util.spawn(home .."/bin/set_volume increase")
+    awful.util.spawn(home .."/bin/set_volume increase", false)
   end
 
   if info_vol[2] == "♫" then

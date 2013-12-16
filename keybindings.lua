@@ -54,8 +54,8 @@ globalkeys = awful.util.table.join(
         end),
 
     -- Standard program
-    awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal) end),
-    awful.key({ modkey, "Control" }, "s", function () awful.util.spawn(config .. "/i3lock") end),
+    awful.key({ modkey,           }, "Return", function () awful.util.spawn(terminal, false) end),
+    awful.key({ modkey, "Control" }, "s", function () awful.util.spawn(config .. "/i3lock", false) end),
     awful.key({ modkey, "Control" }, "r", awesome.restart),
     awful.key({ modkey, "Shift"   }, "q", awesome.quit),
 
@@ -74,12 +74,12 @@ globalkeys = awful.util.table.join(
 
     -- Power
     awful.key({                   }, "XF86HomePage",             function ()
-        awful.util.spawn(home .. "/bin/powerswitch 1 0")
-        awful.util.spawn("systemctl suspend")
+        awful.util.spawn(home .. "/bin/powerswitch 1 0", false)
+        awful.util.spawn("systemctl suspend", false)
       end),
     awful.key({                   }, "XF86Mail",           function ()
-        awful.util.spawn(home .. "/bin/powerswitch 1 0")
-        awful.util.spawn("systemctl hibernate")
+        awful.util.spawn(home .. "/bin/powerswitch 1 0", false)
+        awful.util.spawn("systemctl hibernate", false)
     end),
 
     -- Media
@@ -87,18 +87,18 @@ globalkeys = awful.util.table.join(
     awful.key({                   }, "XF86AudioLowerVolume",  function () set_volume("decrease") end),
     awful.key({                   }, "XF86AudioRaiseVolume",  function () set_volume("increase") end),
 
-    awful.key({                   }, "XF86AudioNext",         function () awful.util.spawn(home .."/bin/notify_mpd next") end),
-    awful.key({                   }, "XF86AudioPlay",         function () awful.util.spawn(home .."/bin/notify_mpd toggle") end),
-    awful.key({                   }, "XF86AudioStop",         function () awful.util.spawn(home .."/bin/notify_mpd stop") end),
-    awful.key({                   }, "XF86AudioPrev",         function () awful.util.spawn(home .."/bin/notify_mpd prev") end),
+    awful.key({                   }, "XF86AudioNext",         function () awful.util.spawn(home .."/bin/notify_mpd next", false) end),
+    awful.key({                   }, "XF86AudioPlay",         function () awful.util.spawn(home .."/bin/notify_mpd toggle", false) end),
+    awful.key({                   }, "XF86AudioStop",         function () awful.util.spawn(home .."/bin/notify_mpd stop", false) end),
+    awful.key({                   }, "XF86AudioPrev",         function () awful.util.spawn(home .."/bin/notify_mpd prev", false) end),
 
-    awful.key({                   }, "XF86Eject",             function () awful.util.spawn(home .."/bin/notify_mpd switch") end),
-    awful.key({                   }, "XF86Tools",             function () awful.util.spawn(home .."/bin/notify_mpd") end),
+    awful.key({                   }, "XF86Eject",             function () awful.util.spawn(home .."/bin/notify_mpd switch", false) end),
+    awful.key({                   }, "XF86Tools",             function () awful.util.spawn(home .."/bin/notify_mpd", false) end),
 
-    awful.key({ modkey,           }, "F1",                    function () awful.util.spawn(home .."/bin/powerswitch screen 1") end),
-    awful.key({ modkey, "Shift"   }, "F1",                    function () awful.util.spawn(home .."/bin/powerswitch screen 0") end),
-    awful.key({ modkey,           }, "F2",                    function () awful.util.spawn(home .."/bin/powerswitch desklight 1") end),
-    awful.key({ modkey, "Shift"   }, "F2",                    function () awful.util.spawn(home .."/bin/powerswitch desklight 0") end),
+    awful.key({ modkey,           }, "F1",                    function () awful.util.spawn(home .."/bin/powerswitch screen 1", false) end),
+    awful.key({ modkey, "Shift"   }, "F1",                    function () awful.util.spawn(home .."/bin/powerswitch screen 0", false) end),
+    awful.key({ modkey,           }, "F2",                    function () awful.util.spawn(home .."/bin/powerswitch desklight 1", false) end),
+    awful.key({ modkey, "Shift"   }, "F2",                    function () awful.util.spawn(home .."/bin/powerswitch desklight 0", false) end),
 
     -- Prompt
     awful.key({ modkey },            "r",                     function () mypromptbox[mouse.screen]:run() end),
