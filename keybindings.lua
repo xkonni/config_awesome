@@ -139,7 +139,10 @@ clientkeys = awful.util.table.join(
         end),
     awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster())  end),
     awful.key({ modkey,           }, "o",      awful.client.movetoscreen                         ),
-    awful.key({ modkey,           }, "t",      function (c) c.ontop = not c.ontop             end),
+    awful.key({ modkey, "Shift"   }, "t",      function (c) c.ontop = not c.ontop             end),
+    awful.key({ modkey, "Control" }, "t", function (c)
+      c.sticky =  not c.sticky
+    end),
     awful.key({ modkey,           }, "n",
         function (c)
             -- The client currently has the input focus, so it cannot be
@@ -154,9 +157,6 @@ clientkeys = awful.util.table.join(
     -- enable/disable titlebar
     awful.key({ modkey,           }, "t", function (c)
       awful.titlebar.toggle(c)
-    end),
-    awful.key({ modkey, "Control" }, "t", function (c)
-      c.sticky =  not c.sticky
     end),
     -- Scratchpad
     -- scratch.pad.set(c, width, height, sticky) end)
