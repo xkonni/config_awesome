@@ -328,8 +328,12 @@ widget_msg:buttons(
 
 -- {{{ NETWORK
 if NET then
+  iface = 0
+  iface_prev = 0
   widget_net = wibox.layout.fixed.horizontal()
   vicious.cache(vicious.widgets.net)
+  local widget_net_text_if = wibox.widget.textbox()
+  local widget_net_icon_if = mwidget_icon("⦰")
   local widget_net_icon_up = mwidget_icon("↑")
   local widget_net_text_up = wibox.widget.textbox()
   local widget_net_graph_up = awful.widget.graph()
@@ -338,55 +342,97 @@ if NET then
   local widget_net_graph_down = awful.widget.graph()
   local tooltip_net
 
-  vicious.register(widget_net_text_up, vicious.widgets.net,
+  widget_net:add(widget_net_icon_if)
+  widget_net:add(widget_sep)
+  widget_net:add(widget_net_text_if)
+
+  vicious.register(widget_net_text_if, vicious.widgets.net,
     function (widget, args)
-      for iface = 1, #NET do
-        if (args["{"..NET[iface].." carrier}"] == 1) then
-          return args["{" ..NET[iface].. " up_kb}"].."kb/s"
+      iface_prev = iface
+      iface = 0
+      for i = 1, #NET do
+        if (args["{"..NET[i].." carrier}"] == 1) then
+          iface = i
+          break
         end
       end
-      return "0"
+
+      if iface_prev ~= iface then
+        widget_net:reset()
+        if iface > 0 then
+          widget_net_icon_if:set_text("⦰")
+          widget_net:add(widget_net_icon_if)
+          widget_net:add(widget_sep)
+          widget_net:add(widget_net_text_if)
+          widget_net:add(widget_net_icon_up)
+          widget_net:add(widget_net_text_up)
+          widget_net:add(widget_sep)
+          widget_net:add(widget_net_graph_up)
+          widget_net:add(widget_net_icon_down)
+          widget_net:add(widget_net_text_down)
+          widget_net:add(widget_sep)
+          widget_net:add(widget_net_graph_down)
+        else
+          widget_net_icon_if:set_text("⦲")
+          widget_net:add(widget_net_icon_if)
+          widget_net:add(widget_sep)
+          widget_net:add(widget_net_text_if)
+        end
+      end
+      if iface > 0 then
+        return NET[iface]
+      else
+        return "-"
+      end
     end,
   timeout_short)
 
-  widget_net_graph_up:set_width(30)
+
+  vicious.register(widget_net_text_up, vicious.widgets.net,
+    function (widget, args)
+      if iface > 0 then
+        return args["{" ..NET[iface].. " up_kb}"].."kb"
+      else
+        return ""
+      end
+    end,
+  timeout_short)
+
+  widget_net_graph_up:set_width(20)
   widget_net_graph_up:set_background_color(beautiful.bg_normal)
   widget_net_graph_up:set_color(stats_grad)
   widget_net_graph_up:set_border_color(beautiful.bg_normal)
   vicious.register(widget_net_graph_up, vicious.widgets.net,
     function (widget, args)
-      for iface = 1, #NET do
-        if (args["{"..NET[iface].." carrier}"] == 1) then
-          return args["{" ..NET[iface].. " up_kb}"]
-        end
+      if iface > 0 then
+        return args["{" ..NET[iface].. " up_kb}"]
+      else
+        return 0
       end
-      return "0"
     end,
   timeout_short)
 
   vicious.register(widget_net_text_down, vicious.widgets.net,
     function (widget, args)
-      for iface = 1, #NET do
-        if (args["{"..NET[iface].." carrier}"] == 1) then
-          return args["{" ..NET[iface].. " down_kb}"].."kb/s"
-        end
+      if iface > 0 then
+        return args["{" ..NET[iface].. " down_kb}"].."kb"
+      else
+        return ""
       end
-      return "0"
     end,
   timeout_short)
 
-  widget_net_graph_down:set_width(30)
+  widget_net_graph_down:set_width(20)
   widget_net_graph_down:set_background_color(beautiful.bg_normal)
   widget_net_graph_down:set_color(stats_grad)
   widget_net_graph_down:set_border_color(beautiful.bg_normal)
   vicious.register(widget_net_graph_down, vicious.widgets.net,
     function (widget, args)
-      for iface = 1, #NET do
-        if (args["{"..NET[iface].." carrier}"] == 1) then
-          return args["{" ..NET[iface].. " down_kb}"]
-        end
+      if iface > 0 then
+        return args["{" ..NET[iface].. " down_kb}"]
+      else
+        return 0
       end
-      return "0"
     end,
   timeout_short)
 
@@ -395,29 +441,20 @@ if NET then
     local title = "network information"
     local tlen = string.len(title)
     local text
-    text = " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
-           " <span weight=\"bold\">"..string.rep("-", tlen).."</span> \n"
-    for iface = 1, #NET do
-      if (info_net["{"..NET[iface].." carrier}"] == 1) then
-        text = text..
-          " ↑ "..fstring(NET[iface], 6)..fstring(" up ", 6).."<span color=\""..beautiful.fg_normal.."\">"..fstring(info_net["{"..NET[iface].." up_kb}"  ], 8).." </span> kb/s\n"..
+    text =
+      " <span weight=\"bold\" color=\""..beautiful.fg_normal.."\">"..title.."</span> \n"..
+      " <span weight=\"bold\">"..string.rep("-", tlen).."</span> \n"
+      if iface > 0 then
+        text = text ..
+          " ↑ "..fstring(NET[iface], 6)..fstring(" up ", 6).."<span color=\""..beautiful.fg_normal.."\">"..fstring(info_net["{"..NET[iface].." up_kb}"  ], 8).." </span> kb\n"..
           fstring("sum ", 15).."<span color=\""..beautiful.fg_normal.."\">"..fstring(info_net["{"..NET[iface].." tx_mb}"  ], 8).." </span> MB\n"..
-          " ↓ "..fstring(NET[iface], 6)..fstring(" down ", 6).."<span color=\""..beautiful.fg_normal.."\">"..fstring(info_net["{"..NET[iface].." down_kb}"], 8).." </span> kb/s\n"..
+          " ↓ "..fstring(NET[iface], 6)..fstring(" down ", 6).."<span color=\""..beautiful.fg_normal.."\">"..fstring(info_net["{"..NET[iface].." down_kb}"], 8).." </span> kb\n"..
           fstring("sum ", 15).."<span color=\""..beautiful.fg_normal.."\">"..fstring(info_net["{"..NET[iface].." rx_mb}"  ], 8).." </span> MB\n"
-        return text
+      else
+        text = text .. "no connection available"
       end
-    end
-    return ""
+    return text
   end})
-
-  widget_net:add(widget_net_icon_up)
-  widget_net:add(widget_net_text_up)
-  widget_net:add(widget_sep)
-  widget_net:add(widget_net_graph_up)
-  widget_net:add(widget_net_icon_down)
-  widget_net:add(widget_net_text_down)
-  widget_net:add(widget_sep)
-  widget_net:add(widget_net_graph_down)
 end
 -- }}} NETWORK
 

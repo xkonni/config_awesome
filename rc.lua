@@ -27,7 +27,7 @@ editor_cmd = terminal .. " -e " .. editor
 
 timeout_tooltip = 1
 timeout_short   = 3
-timeout_medium  = 15
+timeout_medium  = 10
 timeout_long    = 120
 HDD = { "/" }
 
@@ -40,13 +40,13 @@ if host == "silence" then
   timeout_medium  = 20
   BAT = "BAT1"
   HDD = { "/", "/home", "/extra"}
-  NET = { "wlan0", "eth0", "lo"}
+  NET = { "wlan0", "eth0" }
 elseif host == "annoyance" then
   timeout_short   = 2
   timeout_medium  = 5
   HDD = { "/", "/home", "/extra", "/extra/src"}
   MPD = { nil, localhost, nil }
-  NET = { "eth0", "lo" }
+  NET = { "eth0" }
 end
 -- }}}
 
