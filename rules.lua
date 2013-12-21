@@ -34,7 +34,10 @@ awful.rules.rules = {
     { rule = { class = "Plugin-container" },
       properties = { floating = true } },
     { rule = { class = "Wine" },
-      properties = { floating = true } },
+      properties = {
+        floating = true,
+        full_screen = true }
+    },
     { rule = { class = "Pidgin", role="buddy_list" },
       properties = {
         floating = true,
