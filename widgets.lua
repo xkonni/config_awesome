@@ -37,7 +37,7 @@ local tooltip_cpu
 widget_cpu_text.fit = function() return 35, 8 end
 vicious.register(widget_cpu_text, vicious.widgets.cpu, " $1%", timeout_short)
 
-widget_cpu_graph:set_width(30)
+widget_cpu_graph:set_width(20)
 widget_cpu_graph:set_background_color(beautiful.bg_normal)
 widget_cpu_graph:set_color(stats_grad)
 widget_cpu_graph:set_border_color(beautiful.bg_normal)
@@ -75,7 +75,7 @@ local tooltip_mem
 widget_mem_text.fit = function() return 35, 8 end
 vicious.register(widget_mem_text, vicious.widgets.mem, " $1%", timeout_short)
 
-widget_mem_graph:set_width(30)
+widget_mem_graph:set_width(20)
 widget_mem_graph:set_background_color(beautiful.bg_normal)
 widget_mem_graph:set_color(stats_grad)
 widget_mem_graph:set_border_color(beautiful.bg_normal)
@@ -380,7 +380,8 @@ if NET then
         end
       end
       if iface > 0 then
-        return NET[iface]
+        local str = NET[iface]
+        return str:sub(1,1)
       else
         return "-"
       end
@@ -391,7 +392,7 @@ if NET then
   vicious.register(widget_net_text_up, vicious.widgets.net,
     function (widget, args)
       if iface > 0 then
-        return args["{" ..NET[iface].. " up_kb}"].."kb"
+        return math.floor(args["{" ..NET[iface].. " up_kb}"]).."kb"
       else
         return ""
       end
@@ -415,7 +416,7 @@ if NET then
   vicious.register(widget_net_text_down, vicious.widgets.net,
     function (widget, args)
       if iface > 0 then
-        return args["{" ..NET[iface].. " down_kb}"].."kb"
+        return math.floor(args["{" ..NET[iface].. " down_kb}"]).."kb"
       else
         return ""
       end
