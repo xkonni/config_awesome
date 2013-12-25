@@ -137,86 +137,144 @@ end
 
 -- {{{ Mouse bindings
 root.buttons(awful.util.table.join(
-  awful.button({ }, 3, function () mymainmenu:toggle() end),
-  awful.button({ }, 4, awful.tag.viewnext),
-  awful.button({ }, 5, awful.tag.viewprev)
+  awful.button({ }, 3, function () mymainmenu:toggle() end)
+  --awful.button({ }, 4, awful.tag.viewnext),
+  --awful.button({ }, 5, awful.tag.viewprev)
 ))
 -- }}}
 
 -- {{{ Key bindings
 globalkeys = awful.util.table.join(
-  awful.key({ settings.modkey,           }, "Left",   awful.tag.viewprev     ),
-  awful.key({ settings.modkey,           }, "Right",  awful.tag.viewnext     ),
-  awful.key({ settings.modkey,           }, "Escape", awful.tag.history.restore),
+  --awful.key({ settings.modkey,           }, "Left",   awful.tag.viewprev     ),
+  --awful.key({ settings.modkey,           }, "Right",  awful.tag.viewnext     ),
+  --awful.key({ settings.modkey,           }, "Escape", awful.tag.history.restore),
 
-  awful.key({ settings.modkey,           }, "j", function ()
-    awful.client.focus.byidx( 1)
-    if client.focus then client.focus:raise() end
-  end),
-  awful.key({ settings.modkey,           }, "k", function ()
-    awful.client.focus.byidx(-1)
-    if client.focus then client.focus:raise() end
-  end),
-  awful.key({ settings.modkey,           }, "w", function () mymainmenu:show() end),
-
-  -- Layout manipulation
-  awful.key({ settings.modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)  end),
-  awful.key({ settings.modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)  end),
-  awful.key({ settings.modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end),
-  awful.key({ settings.modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end),
+  -- focus by direction
+  awful.key({ settings.modkey,           }, "h",
+ function ()
+      awful.client.focus.global_bydirection("left")
+      if client.focus then client.focus:raise() end
+    end),
+  awful.key({ settings.modkey,           }, "j",
+ function ()
+      --awful.client.focus.byidx( 1)
+      awful.client.focus.global_bydirection("down")
+      if client.focus then client.focus:raise() end
+    end),
+  awful.key({ settings.modkey,           }, "k",
+ function ()
+      --awful.client.focus.byidx(-1)
+      awful.client.focus.global_bydirection("up")
+      if client.focus then client.focus:raise() end
+    end),
+  awful.key({ settings.modkey,           }, "l",
+ function ()
+      awful.client.focus.global_bydirection("right")
+      if client.focus then client.focus:raise() end
+    end),
+  -- focus urgent, focus next
   awful.key({ settings.modkey,           }, "u", awful.client.urgent.jumpto),
   awful.key({ settings.modkey,           }, "Tab", function ()
-    awful.client.focus.history.previous()
-    if client.focus then
-      client.focus:raise()
-    end
+    awful.client.focus.byidx(1)
+    if client.focus then client.focus:raise() end
   end),
+
+  -- Layout manipulation
+  awful.key({ settings.modkey, "Shift"   }, "h", function () awful.client.swap.bydirection("left")   end),
+  awful.key({ settings.modkey, "Shift"   }, "j", function () awful.client.swap.bydirection("down")   end),
+  awful.key({ settings.modkey, "Shift"   }, "k", function () awful.client.swap.bydirection("up")     end),
+  awful.key({ settings.modkey, "Shift"   }, "l", function () awful.client.swap.bydirection("right")  end),
+  awful.key({ settings.modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end),
+  awful.key({ settings.modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end),
+  awful.key({ settings.modkey,           }, "w", function () mymainmenu:toggle() end),
 
   -- Standard program
   awful.key({ settings.modkey,           }, "Return", function () awful.util.spawn(settings.terminal) end),
   awful.key({ settings.modkey, "Control" }, "r", awesome.restart),
   awful.key({ settings.modkey, "Shift"   }, "q", awesome.quit),
 
-  awful.key({ settings.modkey,           }, "l",   function () awful.tag.incmwfact( 0.05)  end),
-  awful.key({ settings.modkey,           }, "h",   function () awful.tag.incmwfact(-0.05)  end),
-  awful.key({ settings.modkey, "Shift"   }, "h",   function () awful.tag.incnmaster( 1)    end),
-  awful.key({ settings.modkey, "Shift"   }, "l",   function () awful.tag.incnmaster(-1)    end),
-  awful.key({ settings.modkey, "Control" }, "h",   function () awful.tag.incncol( 1)     end),
-  awful.key({ settings.modkey, "Control" }, "l",   function () awful.tag.incncol(-1)     end),
+  awful.key({ settings.modkey, "Control" }, "h", function () awful.tag.incnmaster( 1)      end),
+  awful.key({ settings.modkey, "Control" }, "l", function () awful.tag.incnmaster(-1)      end),
   awful.key({ settings.modkey,           }, "space", function () awful.layout.inc(settings.layouts,  1) end),
   awful.key({ settings.modkey, "Shift"   }, "space", function () awful.layout.inc(settings.layouts, -1) end),
 
   awful.key({ settings.modkey, "Control" }, "n", awful.client.restore),
 
   -- Prompt
-  awful.key({ settings.modkey            }, "r",   function () mypromptbox[mouse.screen]:run() end),
+  awful.key({ settings.modkey            }, "r", function () mypromptbox[mouse.screen]:run() end),
 
   awful.key({ settings.modkey            }, "x", function ()
-    awful.prompt.run({ prompt = "Run Lua code: " },
-    mypromptbox[mouse.screen].widget,
-    awful.util.eval, nil,
-    awful.util.getdir("cache") .. "/history_eval")
+    awful.prompt.run(
+      { prompt = "Run Lua code: " },
+      mypromptbox[mouse.screen].widget,
+      awful.util.eval, nil,
+      awful.util.getdir("cache") .. "/history_eval")
   end),
+
   -- Menubar
-  awful.key({ settings.modkey }, "p", function() menubar.show() end)
+  awful.key({ settings.modkey            }, "p", function () menubar.show() end),
+
+  -- Power
+  awful.key({ settings.modkey, "Control" }, "s", function () awful.util.spawn(config .. "/i3lock", false) end),
+  awful.key({                            }, "XF86HomePage", function ()
+      awful.util.spawn(home .. "/bin/powerswitch 1 0", false)
+      awful.util.spawn("systemctl suspend", false)
+    end),
+  awful.key({                            }, "XF86Mail", function ()
+      awful.util.spawn(home .. "/bin/powerswitch 1 0", false)
+      awful.util.spawn("systemctl hibernate", false)
+  end),
+
+  -- Media
+  awful.key({                            }, "XF86AudioMute",        function () functions.set_volume("toggle")   end),
+  awful.key({                            }, "XF86AudioLowerVolume", function () functions.set_volume("decrease") end),
+  awful.key({                            }, "XF86AudioRaiseVolume", function () functions.set_volume("increase") end),
+
+  awful.key({                            }, "XF86AudioNext", function () awful.util.spawn(home .."/bin/notify_mpd next", false) end),
+  awful.key({                            }, "XF86AudioPlay", function () awful.util.spawn(home .."/bin/notify_mpd toggle", false) end),
+  awful.key({                            }, "XF86AudioStop", function () awful.util.spawn(home .."/bin/notify_mpd stop", false) end),
+  awful.key({                            }, "XF86AudioPrev", function () awful.util.spawn(home .."/bin/notify_mpd prev", false) end),
+
+  awful.key({                            }, "XF86Eject", function () awful.util.spawn(home .."/bin/notify_mpd switch", false) end),
+  awful.key({                            }, "XF86Tools", function () awful.util.spawn(home .."/bin/notify_mpd", false) end),
+
+  awful.key({ settings.modkey,           }, "F1", function () awful.util.spawn(home .."/bin/powerswitch screen 1", false) end),
+  awful.key({ settings.modkey, "Shift"   }, "F1", function () awful.util.spawn(home .."/bin/powerswitch screen 0", false) end),
+  awful.key({ settings.modkey,           }, "F2", function () awful.util.spawn(home .."/bin/powerswitch desklight 1", false) end),
+  awful.key({ settings.modkey, "Shift"   }, "F2", function () awful.util.spawn(home .."/bin/powerswitch desklight 0", false) end),
+
+  -- Scratchpad
+  -- scratch.pad.toggle(screen)
+  awful.key({ settings.modkey,           }, "s", function ()
+    scratch.pad.toggle(mouse.screen)
+  end),
+  -- scratch.pad.drop(prog, vert, horiz, width, height, sticky, screen)
+  awful.key({ settings.modkey            }, "c", function ()
+    scratch.drop(settings.terminal, "bottom", "center", 0.7, 0.45, false, 1)
+  end)
 )
 
 clientkeys = awful.util.table.join(
-  awful.key({ settings.modkey,           }, "f",    function (c) c.fullscreen = not c.fullscreen  end),
-  awful.key({ settings.modkey, "Shift"   }, "c",    function (c) c:kill()             end),
+  awful.key({ settings.modkey,           }, "f", function (c) c.fullscreen = not c.fullscreen  end),
+  awful.key({ settings.modkey, "Shift"   }, "c", function (c) c:kill()             end),
   awful.key({ settings.modkey, "Control" }, "space",  awful.client.floating.toggle           ),
   awful.key({ settings.modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end),
   awful.key({ settings.modkey,           }, "o",    awful.client.movetoscreen            ),
-  awful.key({ settings.modkey,           }, "t",    function (c) c.ontop = not c.ontop      end),
+  awful.key({ settings.modkey,           }, "t", function (c) c.ontop = not c.ontop      end),
   awful.key({ settings.modkey,           }, "n", function (c)
     -- The client currently has the input focus, so it cannot be
     -- minimized, since minimized clients can't have the focus.
     c.minimized = true
   end),
-  awful.key({ settings.modkey,       }, "m", function (c)
+  awful.key({ settings.modkey,           }, "m", function (c)
     c.maximized_horizontal = not c.maximized_horizontal
     c.maximized_vertical   = not c.maximized_vertical
-  end) )
+  end),
+  -- Scratchpad
+  awful.key({ settings.modkey, "Shift" }, "s", function (c)
+    scratch.pad.set(c, 0.50, 0.50, true)
+  end)
+)
 
 -- Bind all key numbers to tags.
 -- Be careful: we use keycodes to make it works on any keyboard layout.
