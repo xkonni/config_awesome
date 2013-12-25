@@ -10,6 +10,7 @@ local beautiful = require("beautiful")
 -- Notification library
 local naughty = require("naughty")
 local menubar = require("menubar")
+local scratch = require("scratch")
 
 -- {{{ Error handling
 if awesome.startup_errors then

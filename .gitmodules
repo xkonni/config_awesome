@@ -1,0 +1,3 @@
+[submodule "scratch"]
+	path = scratch
+	url = git@github.com:xkonni/config_awesome_scratch.git
