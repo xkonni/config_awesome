@@ -1,3 +1,6 @@
 [submodule "scratch"]
 	path = scratch
 	url = git@github.com:xkonni/config_awesome_scratch.git
+[submodule "vicious"]
+	path = vicious
+	url = http://git.sysphere.org/vicious
