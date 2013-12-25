@@ -324,23 +324,54 @@ root.keys(globalkeys)
 
 -- {{{ Rules
 awful.rules.rules = {
-  -- All clients will match this rule.
-  { rule = { },
-    properties = {
-      border_width = beautiful.border_width,
-      border_color = beautiful.border_normal,
-      focus = awful.client.focus.filter,
-      keys = clientkeys,
-      buttons = clientbuttons } },
-  { rule = { class = "MPlayer" },
-    properties = { floating = true } },
-  { rule = { class = "pinentry" },
-    properties = { floating = true } },
-  { rule = { class = "gimp" },
-    properties = { floating = true } },
-  -- Set Firefox to always map on tags number 2 of screen 1.
-  -- { rule = { class = "Firefox" },
-  --   properties = { tag = tags[1][2] } },
+    -- All clients will match this rule.
+    { rule = { },
+      properties = { border_width = beautiful.border_width,
+                     border_color = beautiful.border_normal,
+                     focus = awful.client.focus.filter,
+                     keys = clientkeys,
+                     buttons = clientbuttons } },
+    -- Match all new clients, notify name and class
+    --{ rule = { },
+    --  properties = { },
+    --  callback = function(c)
+    --    local cname=c.name
+    --    local cclass=c.class
+    --    naughty.notify({title="new window", text="name: "..cname.." class: "..cclass})
+    --  end
+    --},
+    -- Struts
+    --{ rule = { class = "Pidgin", role="buddy_list" },
+    --  properties = {
+    --    floating = true,
+    --     tag = tags[screen.count()][2]
+    --  },
+    --  callback = function(c)
+    --    local w = screen[screen.count()].workarea
+    --    local g = c:geometry()
+    --      g.x = w.x + w.width - 150
+    --      g.y = w.y
+    --      g.width = 150
+    --      g.height = w.height
+    --    c:struts( { right = 150 } )
+    --    c:geometry(g)
+    --  end
+    --},
+    { rule = { class = "MPlayer" },
+      properties = { floating = true } },
+    { rule = { class = "mpv" },
+      properties = { floating = true } },
+    { rule = { class = "Pavucontrol" },
+      properties = { floating = true } },
+    { rule = { class = "feh" },
+      properties = { floating = true } },
+    { rule = { class = "Plugin-container" },
+      properties = { floating = true } },
+    { rule = { class = "Wine" },
+      properties = {
+        floating = true,
+        full_screen = true }
+    }
 }
 -- }}}
 
