@@ -270,9 +270,18 @@ globalkeys = awful.util.table.join(
   end),
 
   -- Media
-  awful.key({                            }, "XF86AudioMute",        function () functions.set_volume("toggle")   end),
-  awful.key({                            }, "XF86AudioLowerVolume", function () functions.set_volume("decrease") end),
-  awful.key({                            }, "XF86AudioRaiseVolume", function () functions.set_volume("increase") end),
+  awful.key({                            }, "XF86AudioMute",        function ()
+    local vol_info = functions.set_volume("toggle")
+    widgets.update_vol({volume=vol_info.volume, status=vol_info.status})
+  end),
+  awful.key({                            }, "XF86AudioLowerVolume", function ()
+    local vol_info = functions.set_volume("decrease")
+    widgets.update_vol({volume=vol_info.volume, status=vol_info.status})
+  end),
+  awful.key({                            }, "XF86AudioRaiseVolume", function ()
+    local vol_info = functions.set_volume("increase")
+    widgets.update_vol({volume=vol_info.volume, status=vol_info.status})
+  end),
 
   awful.key({                            }, "XF86AudioNext", function () awful.util.spawn(settings.home .."/bin/notify_mpd next", false) end),
   awful.key({                            }, "XF86AudioPlay", function () awful.util.spawn(settings.home .."/bin/notify_mpd toggle", false) end),

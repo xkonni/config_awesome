@@ -171,10 +171,20 @@ function widgets.mpd()
   return widget_mpd
 end
 
+function widgets.update_vol(args)
+  widget_vol_bar:set_value(args.volume)
+  widget_vol_bar:set_value(args.volume)
+  if args.status == 1 then
+    widget_vol_bar:set_color(widgets.fg)
+  else
+    widget_vol_bar:set_color(widgets.fg .. "40")
+  end
+end
+
 function widgets.vol()
   local widget_vol = wibox.layout.fixed.horizontal()
   local widget_vol_text = widgets.text_vert({text="VOL", color=widgets.focus})
-  local widget_vol_bar = awful.widget.progressbar()
+  widget_vol_bar = awful.widget.progressbar()
 
   widget_vol_bar:set_vertical(true)
   widget_vol_bar:set_height(15)

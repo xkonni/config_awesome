@@ -20,14 +20,15 @@ function functions.set_volume(action)
   local info_vol = vicious.widgets.volume(widget, "Master")
   if ((info_vol[2] == "♫" and action ~= "toggle") or
       (info_vol[2] ~= "♫" and action == "toggle")) then
-    --widget_vol_bar:set_color(stats_vol)
     text = "["..info_vol[1].."%] [on]"
+    info_vol[2] = 1
   else
-    --widget_vol_bar:set_color(beautiful.fg_normal .. "40")
     text = "["..info_vol[1].."%] [off]"
+    info_vol[2] = 0
   end
   naughty.destroy(notify_volume)
   notify_volume = naughty.notify({screen=screen.count(), title="volume", text=text})
+  return {volume=info_vol[1]/100, status=info_vol[2]}
 end
 
 return functions
