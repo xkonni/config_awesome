@@ -12,11 +12,19 @@ local naughty = require("naughty")
 local menubar = require("menubar")
 local scratch = require("scratch")
 local vicious = require("vicious")
+
+-- custom
+--local settings = require("settings")
+local settings = require("settings")
+local functions = require("functions")
+functions.home = settings.home
+local widgets = require("widgets")
+
+
 -- Error handling
 require("error")
 
 -- Settings
-settings = require("settings")
 -- Themes define colours, icons, and wallpapers
 beautiful.init(settings.theme)
 -- Wallpaper
@@ -45,7 +53,6 @@ menubar.utils.terminal = settings.terminal
 -- }}}
 
 -- {{{ Wibox
-widgets = require("widgets")
 -- Create a wibox for each screen and add it
 mywibox = {}
 mypromptbox = {}
@@ -266,13 +273,13 @@ globalkeys = awful.util.table.join(
   awful.key({ settings.modkey            }, "p", function () menubar.show() end),
 
   -- Power
-  awful.key({ settings.modkey, "Control" }, "s", function () awful.util.spawn(config .. "/i3lock", false) end),
+  awful.key({ settings.modkey, "Control" }, "s", function () awful.util.spawn(settings.config .. "/i3lock", false) end),
   awful.key({                            }, "XF86HomePage", function ()
-      awful.util.spawn(home .. "/bin/powerswitch 1 0", false)
+      awful.util.spawn(settings.home .. "/bin/powerswitch 1 0", false)
       awful.util.spawn("systemctl suspend", false)
     end),
   awful.key({                            }, "XF86Mail", function ()
-      awful.util.spawn(home .. "/bin/powerswitch 1 0", false)
+      awful.util.spawn(settings.home .. "/bin/powerswitch 1 0", false)
       awful.util.spawn("systemctl hibernate", false)
   end),
 
@@ -281,18 +288,18 @@ globalkeys = awful.util.table.join(
   awful.key({                            }, "XF86AudioLowerVolume", function () functions.set_volume("decrease") end),
   awful.key({                            }, "XF86AudioRaiseVolume", function () functions.set_volume("increase") end),
 
-  awful.key({                            }, "XF86AudioNext", function () awful.util.spawn(home .."/bin/notify_mpd next", false) end),
-  awful.key({                            }, "XF86AudioPlay", function () awful.util.spawn(home .."/bin/notify_mpd toggle", false) end),
-  awful.key({                            }, "XF86AudioStop", function () awful.util.spawn(home .."/bin/notify_mpd stop", false) end),
-  awful.key({                            }, "XF86AudioPrev", function () awful.util.spawn(home .."/bin/notify_mpd prev", false) end),
+  awful.key({                            }, "XF86AudioNext", function () awful.util.spawn(settings.home .."/bin/notify_mpd next", false) end),
+  awful.key({                            }, "XF86AudioPlay", function () awful.util.spawn(settings.home .."/bin/notify_mpd toggle", false) end),
+  awful.key({                            }, "XF86AudioStop", function () awful.util.spawn(settings.home .."/bin/notify_mpd stop", false) end),
+  awful.key({                            }, "XF86AudioPrev", function () awful.util.spawn(settings.home .."/bin/notify_mpd prev", false) end),
 
-  awful.key({                            }, "XF86Eject", function () awful.util.spawn(home .."/bin/notify_mpd switch", false) end),
-  awful.key({                            }, "XF86Tools", function () awful.util.spawn(home .."/bin/notify_mpd", false) end),
+  awful.key({                            }, "XF86Eject", function () awful.util.spawn(settings.home .."/bin/notify_mpd switch", false) end),
+  awful.key({                            }, "XF86Tools", function () awful.util.spawn(settings.home .."/bin/notify_mpd", false) end),
 
-  awful.key({ settings.modkey,           }, "F1", function () awful.util.spawn(home .."/bin/powerswitch screen 1", false) end),
-  awful.key({ settings.modkey, "Shift"   }, "F1", function () awful.util.spawn(home .."/bin/powerswitch screen 0", false) end),
-  awful.key({ settings.modkey,           }, "F2", function () awful.util.spawn(home .."/bin/powerswitch desklight 1", false) end),
-  awful.key({ settings.modkey, "Shift"   }, "F2", function () awful.util.spawn(home .."/bin/powerswitch desklight 0", false) end),
+  awful.key({ settings.modkey,           }, "F1", function () awful.util.spawn(settings.home .."/bin/powerswitch screen 1", false) end),
+  awful.key({ settings.modkey, "Shift"   }, "F1", function () awful.util.spawn(settings.home .."/bin/powerswitch screen 0", false) end),
+  awful.key({ settings.modkey,           }, "F2", function () awful.util.spawn(settings.home .."/bin/powerswitch desklight 1", false) end),
+  awful.key({ settings.modkey, "Shift"   }, "F2", function () awful.util.spawn(settings.home .."/bin/powerswitch desklight 0", false) end),
 
   -- Scratchpad
   -- scratch.pad.toggle(screen)
