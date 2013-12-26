@@ -1,10 +1,24 @@
 awful = require("awful")
+
 settings = {}
-settings.terminal     = "xterm"
-settings.editor       = os.getenv("EDITOR") or "nano"
+settings.config       = awful.util.getdir("config")
+settings.home         = awful.util.pread("echo $HOME | tr -d '\n'")
+settings.host         = awful.util.pread("hostname | tr -d '\n'")
+settings.terminal     = "termite"
+settings.editor       = "vim"
 settings.terminal_cmd = settings.terminal .. " -e "
 settings.modkey       = "Mod4"
-settings.theme        = "/usr/share/awesome/themes/default/theme.lua"
+settings.theme        = settings.config .. "/themes/solarized/theme.lua"
+settings.timeout      = 3
+settings.interface    = "eth0"
+
+-- host overrides
+if settings.host == "silence" then
+  settings.timeout = 5
+  settings.interface = "wlan0"
+end
+
+
 settings.layouts      = {
   --awful.layout.suit.floating,
   awful.layout.suit.tile,
