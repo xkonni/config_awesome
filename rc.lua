@@ -121,6 +121,40 @@ for s = 1, screen.count() do
 
   -- Widgets that are aligned to the right
   local right_layout = wibox.layout.fixed.horizontal()
+  right_layout:add(widgets.arrow({"|"}, {beautiful.fg_focus}, {beautiful.bg_normal}))
+  right_layout:add(widgets.stats({
+    text = "CPU",
+    vicious_module = vicious.widgets.cpu,
+    bg = beautiful.bg_normal,
+    border = beautiful.bg_normal,
+    id = {1},
+    string_pre = {""},
+    string_post = {"%"},
+    timeout = 1}
+  ))
+  right_layout:add(widgets.arrow({"|"}, {beautiful.fg_focus}, {beautiful.bg_normal}))
+  right_layout:add(widgets.stats({
+    text = "MEM",
+    vicious_module = vicious.widgets.mem,
+    bg = beautiful.bg_normal,
+    border = beautiful.bg_normal,
+    id = {1},
+    string_pre = {""},
+    string_post = {"%"},
+    timeout = 1}
+  ))
+  right_layout:add(widgets.arrow({"|"}, {beautiful.fg_focus}, {beautiful.bg_normal}))
+  right_layout:add(widgets.stats({
+    text = "NET",
+    vicious_module = vicious.widgets.net,
+    bg = beautiful.bg_normal,
+    border = beautiful.bg_normal,
+    id = {"{wlan0 up_kb}","{wlan0 down_kb}"},
+    string_pre = {"↑", "↓"},
+    string_post = {"kb","kb"},
+    timeout = 1}
+  ))
+  right_layout:add(widgets.arrow({"|"}, {beautiful.fg_focus}, {beautiful.bg_normal}))
   if s == 1 then right_layout:add(wibox.widget.systray()) end
   right_layout:add(widgets.textclock)
   right_layout:add(mylayoutbox[s])
@@ -446,3 +480,6 @@ end)
 client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
 client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
 -- }}}
+-- TODO
+local w = screen[screen.count()].workarea
+naughty.notify({text=w.height})
