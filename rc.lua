@@ -14,12 +14,9 @@ local scratch = require("scratch")
 local vicious = require("vicious")
 
 -- custom
---local settings = require("settings")
 local settings = require("settings")
 local functions = require("functions")
-functions.home = settings.home
 local widgets = require("widgets")
-
 
 -- Error handling
 require("error")
@@ -27,6 +24,15 @@ require("error")
 -- Settings
 -- Themes define colours, icons, and wallpapers
 beautiful.init(settings.theme)
+widgets.init({
+  fg = beautiful.fg_normal,
+  bg = beautiful.bg_normal,
+  focus = beautiful.fg_focus,
+  border = beautiful.bg_normal,
+  timeout = settings.timeout
+})
+functions.init({home = settings.home })
+
 -- Wallpaper
 if beautiful.wallpaper then
   for s = 1, screen.count() do
@@ -124,61 +130,41 @@ for s = 1, screen.count() do
   local left_layout = wibox.layout.fixed.horizontal()
   left_layout:add(mylauncher)
   left_layout:add(mytaglist[s])
-  left_layout:add(mypromptbox[s])
+  left_layout:add(widgets.sep({symbol="⮀", fg=beautiful.bg_normal, bg=beautiful.fg_focus}))
+  left_layout:add(widgets.background({widget=mypromptbox[s], bg=beautiful.fg_focus}))
+  left_layout:add(widgets.sep({symbol="⮀", fg=beautiful.fg_focus, bg=beautiful.bg_normal}))
 
   -- Widgets that are aligned to the right
   local right_layout = wibox.layout.fixed.horizontal()
-  right_layout:add(widgets.sep({symbol={"|"}, fg={beautiful.fg_focus}, bg={beautiful.bg_normal}, size={22000}}))
+  right_layout:add(widgets.sep({symbol="|"}))
   right_layout:add(widgets.stats({
     text = "CPU",
     vicious_module = vicious.widgets.cpu,
-    fg = beautiful.fg_normal,
-    bg = beautiful.bg_normal,
-    border = beautiful.bg_normal,
     id = {1},
     string_pre = {""},
-    string_post = {"%"},
-    timeout = settings.timeout
+    string_post = {"%"}
   }))
-  right_layout:add(widgets.sep({symbol={"|"}, fg={beautiful.fg_focus}, bg={beautiful.bg_normal}, size={22000}}))
+  right_layout:add(widgets.sep({symbol="|"}))
   right_layout:add(widgets.stats({
     text = "MEM",
     vicious_module = vicious.widgets.mem,
-    fg = beautiful.fg_normal,
-    bg = beautiful.bg_normal,
-    border = beautiful.bg_normal,
     id = {1},
     string_pre = {""},
-    string_post = {"%"},
-    timeout = settings.timeout
+    string_post = {"%"}
   }))
-  right_layout:add(widgets.sep({symbol={"|"}, fg={beautiful.fg_focus}, bg={beautiful.bg_normal}, size={22000}}))
+  right_layout:add(widgets.sep({symbol="|"}))
   right_layout:add(widgets.stats({
     text = "NET",
     vicious_module = vicious.widgets.net,
-    fg = beautiful.fg_normal,
-    bg = beautiful.bg_normal,
-    border = beautiful.bg_normal,
     id = {"{" .. settings.interface .. " up_kb}","{" .. settings.interface .. " down_kb}"},
     string_pre = {"↑", "↓"},
-    string_post = {"kb","kb"},
-    timeout = settings.timeout
+    string_post = {"kb","kb"}
   }))
-  right_layout:add(widgets.sep({symbol={"|"}, fg={beautiful.fg_focus}, bg={beautiful.bg_normal}, size={22000}}))
-  right_layout:add(widgets.mpd({
-    fg = beautiful.fg_normal,
-    bg = beautiful.bg_normal,
-    border = beautiful.bg_normal,
-    timeout = settings.timeout
-  }))
-  right_layout:add(widgets.sep({symbol={"|"}, fg={beautiful.fg_focus}, bg={beautiful.bg_normal}, size={22000}}))
-  right_layout:add(widgets.vol({
-    fg = beautiful.fg_normal,
-    bg = beautiful.bg_normal,
-    border = beautiful.bg_normal,
-    timeout = settings.timeout
-  }))
-  right_layout:add(widgets.sep({symbol={"|"}, fg={beautiful.fg_focus}, bg={beautiful.bg_normal}, size={22000}}))
+  right_layout:add(widgets.sep({symbol="|"}))
+  right_layout:add(widgets.mpd())
+  right_layout:add(widgets.sep({symbol="|"}))
+  right_layout:add(widgets.vol())
+  right_layout:add(widgets.sep({symbol="|"}))
   if s == 1 then right_layout:add(wibox.widget.systray()) end
   right_layout:add(widgets.textclock)
   right_layout:add(mylayoutbox[s])

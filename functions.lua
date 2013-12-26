@@ -2,6 +2,10 @@ local naughty = require("naughty")
 local vicious = require("vicious")
 
 functions = {}
+function functions.init(args)
+  functions.home = args.home
+end
+
 function functions.set_volume(action)
   local text
 

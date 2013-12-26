@@ -9,12 +9,27 @@ widgets.grad = {
   stops = { { 0, "#dc322f" }, { 0.5, "#808000" }, { 1, "#859900" }}
 }
 
+function widgets.init(args)
+  widgets.fg      = args.fg       or "#ffffff"
+  widgets.bg      = args.bg       or "#000000"
+  widgets.focus   = args.focus    or "#ff0000"
+  widgets.border  = args.border   or "#0000ff"
+  widgets.timeout = widgets.timeout  or 5
+end
+
+function widgets.background(args)
+  widget_bg = wibox.widget.background()
+  widget_bg:set_bg(args.bg)
+  widget_bg:set_widget(args.widget)
+  return widget_bg
+end
+
 -- create a separator
 -- e.g. an arrow as transition between fg and bg color
--- args = {[sep_left=px], [sep_right=px], [symbol{}, fg{}, bg{}, size{}]}
+-- args = {[sep_left=px], [sep_right=px], [symbol{}, [fg], [bg]]}
 -- ⮃ ⮁ ⮂ ⮀
 function widgets.sep(args)
-  local widget_sep = wibox.layout.fixed.horizontal()
+  widget_sep = wibox.layout.fixed.horizontal()
 
   local sep_left = args.sep_left or 3
   widget_sep_left = wibox.widget.base.empty_widget()
@@ -30,16 +45,14 @@ function widgets.sep(args)
   end
 
   if args.symbol then
-    local widget_fg = {}
-    local widget_bg = {}
-    for w = 1, #args.symbol do
-      widget_fg[w] = wibox.widget.textbox()
-      widget_bg[w] = wibox.widget.background()
-      widget_fg[w]:set_markup("<span size=\"".. args.size[w] .."\" color=\"".. args.fg[w] .. "\">".. args.symbol[w] .."</span>")
-      widget_bg[w]:set_bg(args.bg[w])
-      widget_bg[w]:set_widget(widget_fg[w])
-      widget_sep:add(widget_bg[w])
-    end
+    local fg = args.fg or widgets.focus
+    local bg = args.bg or widgets.bg
+    widget_fg = wibox.widget.textbox()
+    widget_bg = wibox.widget.background()
+    widget_fg:set_markup("<span size=\"22000\" color=\"".. fg .. "\">".. args.symbol .."</span>")
+    widget_bg:set_bg(bg)
+    widget_bg:set_widget(widget_fg)
+    widget_sep:add(widget_bg)
   end
 
   -- right spacing
@@ -52,7 +65,7 @@ end
 
 -- create widget with a single, large symbol
 function widgets.icon(symbol, valign)
-  local widget_icon = wibox.widget.textbox()
+  widget_icon = wibox.widget.textbox()
   widget_icon.fit = function() return 25, 8 end
   widget_icon:set_font("Anonymous Pro for Powerline 14")
   widget_icon:set_align("center")
@@ -63,13 +76,13 @@ function widgets.icon(symbol, valign)
   return widget_icon
 end
 
-function widgets.text_vert(text)
-  local widget_text = wibox.layout.align.vertical()
+function widgets.text_vert(args)
+  widget_text = wibox.layout.align.vertical()
   local widget_texts = {}
   for i=1,3 do
     widget_texts[i] = wibox.widget.textbox()
     widget_texts[i]:set_font("Inconsolata for Powerline 7")
-    widget_texts[i]:set_text(text:sub(i,i))
+    widget_texts[i]:set_markup("<span weight=\"bold\" color=\"" .. args.color .. "\">" .. args.text:sub(i,i) .. "</span>")
   end
   widget_text:set_first (widget_texts[1])
   widget_text:set_second(widget_texts[2])
@@ -78,8 +91,8 @@ function widgets.text_vert(text)
 end
 
 function widgets.stats(args)
-  local widget_stats = wibox.layout.fixed.horizontal()
-  local widget_text = widgets.text_vert(args.text)
+  widget_stats = wibox.layout.fixed.horizontal()
+  local widget_text = widgets.text_vert({text=args.text, color=widgets.focus})
   local widget_info = widgets.info(args)
 
   widget_stats:add(widget_text)
@@ -97,17 +110,17 @@ function widgets.info(args)
     widget_info_text:set_font("Inconsolata for Powerline 7")
     vicious.register(widget_info_text, args.vicious_module, function(widget, wargs)
       return string.format("%06s", args.string_pre[i] .. " " .. math.floor(wargs[args.id[i]])) .. args.string_post[i]
-    end, args.timeout)
+    end, widgets.timeout)
     -- graph
     local widget_info_graph = awful.widget.graph()
     widget_info_graph:set_width(20)
     widget_info_graph:set_height(15)
-    widget_info_graph:set_background_color(args.bg)
+    widget_info_graph:set_background_color(widgets.bg)
     widget_info_graph:set_color(widgets.grad)
-    widget_info_graph:set_border_color(args.border)
+    widget_info_graph:set_border_color(widgets.border)
     vicious.register(widget_info_graph, args.vicious_module, function(widget, wargs)
       return wargs[args.id[i]]
-    end, args.timeout)
+    end, widgets.timeout)
 
     widget_info_align:set_first(widget_info_text)
     widget_info_align:set_second(widget_info_graph)
@@ -120,10 +133,10 @@ function widgets.info(args)
 end
 
 -- preconfigured widgets
-function widgets.mpd(args)
+function widgets.mpd()
   vicious.cache(vicious.widgets.mpd)
   local widget_mpd = wibox.layout.fixed.horizontal()
-  local widget_mpd_text = widgets.text_vert("MPD")
+  local widget_mpd_text = widgets.text_vert({text="MPD", color=widgets.focus})
   local widget_mpd_info = wibox.layout.align.vertical()
 
   local widget_mpd_infos = {}
@@ -144,9 +157,9 @@ function widgets.mpd(args)
           return ""
         end
       else
-        return "<span size=\"small\">" .. strings[i].icon .. "</span>".. string.format("%20s", wargs[strings[i].id])
+        return "<span size=\"medium\">" .. strings[i].icon .. "</span>".. string.format("%15s", wargs[strings[i].id])
       end
-    end, args.timeout)
+    end, widgets.timeout)
   end
 
   widget_mpd_info:set_first (widget_mpd_infos[1])
@@ -158,29 +171,30 @@ function widgets.mpd(args)
   return widget_mpd
 end
 
-function widgets.vol(args)
+function widgets.vol()
   local widget_vol = wibox.layout.fixed.horizontal()
-  local widget_vol_text = widgets.text_vert("VOL")
+  local widget_vol_text = widgets.text_vert({text="VOL", color=widgets.focus})
   local widget_vol_bar = awful.widget.progressbar()
 
   widget_vol_bar:set_vertical(true)
   widget_vol_bar:set_height(15)
   widget_vol_bar:set_width(5)
-  widget_vol_bar:set_background_color(args.bg)
-  widget_vol_bar:set_color(stats_vol)
-  widget_vol_bar:set_border_color(args.border)
+  widget_vol_bar:set_background_color(widgets.bg)
+  widget_vol_bar:set_color(widgets.fg)
+  widget_vol_bar:set_border_color(widgets.border)
+  widget_vol_bar:set_ticks(true)
+  widget_vol_bar:set_ticks_gap(1)
+  widget_vol_bar:set_ticks_size(2)
   vicious.register(widget_vol_bar, vicious.widgets.volume,
     function(widget, wargs)
       if wargs[2] == "♫" then
-        widget_vol_bar:set_color(args.fg)
-        icon = "♫ "
+        widget_vol_bar:set_color(widgets.fg)
       else
-        widget_vol_bar:set_color(args.fg .. "40")
-        icon = " ♯ "
+        widget_vol_bar:set_color(widgets.fg .. "40")
       end
       return wargs[1]
     end,
-  args.timeout, "Master")
+  widgets.timeout, "Master")
 
   widget_vol:add(widget_vol_text)
   widget_vol:add(widgets.sep({sep_left=3}))
