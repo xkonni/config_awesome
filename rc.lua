@@ -319,7 +319,11 @@ for i = 1, 9 do
       local screen = mouse.screen
       local tag = awful.tag.gettags(screen)[i]
       if tag then
-         awful.tag.viewonly(tag)
+          if tag.selected then
+              awful.tag.history.restore(screen)
+          else
+           awful.tag.viewonly(tag)
+         end
       end
     end),
     awful.key({ settings.modkey, "Control" }, "#" .. i + 9, function ()
