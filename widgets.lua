@@ -96,20 +96,22 @@ function widgets.stats(args)
   local widget_info = widgets.info(args)
 
   widget_stats:add(widget_text)
-  widget_stats:add(widgets.sep({sep_left=3}))
+  widget_stats:add(widgets.sep({sep_left=5}))
   widget_stats:add(widget_info)
   return widget_stats
 end
 
 function widgets.info(args)
-  vicious.cache(args.vicious_module)
+  local string_post = args.string_post or ""
+  local string_pre = args.string_pre or ""
+  local id = args.id or 1
   widget_info = wibox.layout.fixed.horizontal()
-  for i=1,#args.id do
     local widget_info_align = wibox.layout.align.vertical()
+    -- textbox
     local widget_info_text = wibox.widget.textbox()
     widget_info_text:set_font("Inconsolata for Powerline 7")
     vicious.register(widget_info_text, args.vicious_module, function(widget, wargs)
-      return string.format("%06s", args.string_pre[i] .. " " .. math.floor(wargs[args.id[i]])) .. args.string_post[i]
+      return string.format("%07s", string_pre .. " " .. math.floor(wargs[id])) .. string_post
     end, widgets.timeout)
     -- graph
     local widget_info_graph = awful.widget.graph()
@@ -119,20 +121,98 @@ function widgets.info(args)
     widget_info_graph:set_color(widgets.grad)
     widget_info_graph:set_border_color(widgets.border)
     vicious.register(widget_info_graph, args.vicious_module, function(widget, wargs)
-      return wargs[args.id[i]]
+      return wargs[id]
     end, widgets.timeout)
 
     widget_info_align:set_first(widget_info_text)
     widget_info_align:set_second(widget_info_graph)
     widget_info:add(widget_info_align)
-
-    widget_info:add(widgets.sep({sep_left=3}))
-  end
+    widget_info:add(widgets.sep({sep_left=5}))
 
   return widget_info
 end
 
 -- preconfigured widgets
+function widgets.bat()
+  vicious.cache(vicious.widgets.bat)
+  local widget_bat = wibox.layout.fixed.horizontal()
+  local widget_bat_text = widgets.text_vert({text="BAT", color=widgets.focus})
+  local widget_bat_info_align = wibox.layout.align.vertical()
+
+  -- textbox
+  local widget_bat_info_text = wibox.widget.textbox()
+  widget_bat_info_text:set_font("Inconsolata for Powerline 7")
+  vicious.register(widget_bat_info_text, vicious.widgets.bat, function(widget, wargs)
+    return string.format("%10s", wargs[1] .. wargs[2] .. "% " .. wargs[3])
+  end, widgets.timeout, "BAT1")
+
+  -- progressbar
+  local widget_bat_info_bar = awful.widget.progressbar()
+  widget_bat_info_bar:set_height(6)
+  widget_bat_info_bar:set_width(15)
+  widget_bat_info_bar:set_background_color(widgets.bg)
+  widget_bat_info_bar:set_color(widgets.fg)
+  widget_bat_info_bar:set_border_color(widgets.border)
+  widget_bat_info_bar:set_ticks(true)
+  widget_bat_info_bar:set_ticks_gap(1)
+  widget_bat_info_bar:set_ticks_size(2)
+  vicious.register(widget_bat_info_bar, vicious.widgets.bat, "$2", widgets.timeout, "BAT1")
+
+  widget_bat_info_align:set_first (widget_bat_info_text)
+  widget_bat_info_align:set_second (widget_bat_info_bar)
+
+  widget_bat:add(widget_bat_text)
+  widget_bat:add(widgets.sep({sep_left=5}))
+  widget_bat:add(widget_bat_info_align)
+  return widget_bat
+end
+
+function widgets.cpu()
+  vicious.cache(vicious.widgets.cpu)
+  widget_cpu = widgets.stats({
+    text = "CPU",
+    vicious_module = vicious.widgets.cpu,
+    string_pre = "",
+    string_post = "%"
+  })
+  return widget_cpu
+end
+
+function widgets.mem()
+  vicious.cache(vicious.widgets.mem)
+  widget_mem = widgets.stats({
+    text = "MEM",
+    vicious_module = vicious.widgets.mem,
+    --id = 1,
+    string_pre = "",
+    string_post = "%"
+  })
+  return widget_mem
+end
+
+function widgets.net()
+  vicious.cache(vicious.widgets.net)
+  widget_net = wibox.layout.fixed.horizontal()
+  widget_net_text = widgets.text_vert({text="NET", color=widgets.focus})
+  widget_net_up = widgets.info({
+    vicious_module = vicious.widgets.net,
+    id = "{" .. settings.interface .. " up_kb}",
+    string_pre = "↑",
+    string_post = "kb"
+  })
+  widget_net_down = widgets.info({
+    vicious_module = vicious.widgets.net,
+    id = "{" .. settings.interface .. " down_kb}",
+    string_pre = "↓",
+    string_post = "kb"
+  })
+
+  widget_net:add(widget_net_text)
+  widget_net:add(widget_net_up)
+  widget_net:add(widget_net_down)
+  return widget_net
+end
+
 function widgets.mpd()
   vicious.cache(vicious.widgets.mpd)
   local widget_mpd = wibox.layout.fixed.horizontal()
@@ -166,7 +246,7 @@ function widgets.mpd()
   widget_mpd_info:set_second(widget_mpd_infos[2])
   widget_mpd_info:set_third (widget_mpd_infos[3])
   widget_mpd:add(widget_mpd_text)
-  widget_mpd:add(widgets.sep({sep_left=3}))
+  widget_mpd:add(widgets.sep({sep_left=5}))
   widget_mpd:add(widget_mpd_info)
   return widget_mpd
 end
@@ -182,13 +262,15 @@ function widgets.update_vol(args)
 end
 
 function widgets.vol()
+  vicious.cache(vicious.widgets.volume)
   local widget_vol = wibox.layout.fixed.horizontal()
   local widget_vol_text = widgets.text_vert({text="VOL", color=widgets.focus})
   widget_vol_bar = awful.widget.progressbar()
 
+  -- progressbar
   widget_vol_bar:set_vertical(true)
   widget_vol_bar:set_height(15)
-  widget_vol_bar:set_width(5)
+  widget_vol_bar:set_width(6)
   widget_vol_bar:set_background_color(widgets.bg)
   widget_vol_bar:set_color(widgets.fg)
   widget_vol_bar:set_border_color(widgets.border)
@@ -207,7 +289,7 @@ function widgets.vol()
   widgets.timeout, "Master")
 
   widget_vol:add(widget_vol_text)
-  widget_vol:add(widgets.sep({sep_left=3}))
+  widget_vol:add(widgets.sep({sep_left=5}))
   widget_vol:add(widget_vol_bar)
   return widget_vol
 end

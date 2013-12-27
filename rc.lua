@@ -137,31 +137,15 @@ for s = 1, screen.count() do
   -- Widgets that are aligned to the right
   local right_layout = wibox.layout.fixed.horizontal()
   right_layout:add(widgets.sep({symbol="|"}))
-  right_layout:add(widgets.stats({
-    text = "CPU",
-    vicious_module = vicious.widgets.cpu,
-    id = {1},
-    string_pre = {""},
-    string_post = {"%"}
-  }))
-  right_layout:add(widgets.sep({symbol="|"}))
-  right_layout:add(widgets.stats({
-    text = "MEM",
-    vicious_module = vicious.widgets.mem,
-    id = {1},
-    string_pre = {""},
-    string_post = {"%"}
-  }))
-  right_layout:add(widgets.sep({symbol="|"}))
-  right_layout:add(widgets.stats({
-    text = "NET",
-    vicious_module = vicious.widgets.net,
-    id = {"{" .. settings.interface .. " up_kb}","{" .. settings.interface .. " down_kb}"},
-    string_pre = {"↑", "↓"},
-    string_post = {"kb","kb"}
-  }))
-  right_layout:add(widgets.sep({symbol="|"}))
   right_layout:add(widgets.mpd())
+  right_layout:add(widgets.sep({symbol="|"}))
+  right_layout:add(widgets.cpu())
+  right_layout:add(widgets.sep({symbol="|"}))
+  right_layout:add(widgets.mem())
+  right_layout:add(widgets.sep({symbol="|"}))
+  right_layout:add(widgets.net())
+  right_layout:add(widgets.sep({symbol="|"}))
+  right_layout:add(widgets.bat())
   right_layout:add(widgets.sep({symbol="|"}))
   right_layout:add(widgets.vol())
   right_layout:add(widgets.sep({symbol="|"}))
