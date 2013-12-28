@@ -147,6 +147,8 @@ for s = 1, screen.count() do
   right_layout:add(widgets.sep({symbol="|"}))
   right_layout:add(widgets.bat())
   right_layout:add(widgets.sep({symbol="|"}))
+  right_layout:add(widgets.msg())
+  right_layout:add(widgets.sep({symbol="|"}))
   right_layout:add(widgets.vol())
   right_layout:add(widgets.sep({symbol="|"}))
   if s == 1 then right_layout:add(wibox.widget.systray()) end
@@ -256,15 +258,15 @@ globalkeys = awful.util.table.join(
   -- Media
   awful.key({                            }, "XF86AudioMute",        function ()
     local vol_info = functions.set_volume("toggle")
-    widgets.update_vol({volume=vol_info.volume, status=vol_info.status})
+    widgets.vol_update({volume=vol_info.volume, status=vol_info.status})
   end),
   awful.key({                            }, "XF86AudioLowerVolume", function ()
     local vol_info = functions.set_volume("decrease")
-    widgets.update_vol({volume=vol_info.volume, status=vol_info.status})
+    widgets.vol_update({volume=vol_info.volume, status=vol_info.status})
   end),
   awful.key({                            }, "XF86AudioRaiseVolume", function ()
     local vol_info = functions.set_volume("increase")
-    widgets.update_vol({volume=vol_info.volume, status=vol_info.status})
+    widgets.vol_update({volume=vol_info.volume, status=vol_info.status})
   end),
 
   awful.key({                            }, "XF86AudioNext", function () awful.util.spawn(settings.home .."/bin/notify_mpd next", false) end),
@@ -509,14 +511,14 @@ end)
 
 client.connect_signal("focus", function(c)
   if (c.name == 'mirssi') then
-    message({action='reset'})
+    widgets.msg_update({action='reset'})
   end
   c.border_color = beautiful.border_focus
 end)
 
 client.connect_signal("unfocus", function(c)
   if (c.name == 'mirssi') then
-    message({action='reset'})
+    widgets.msg_update({action='reset'})
   end
   c.border_color = beautiful.border_normal
 end)
@@ -524,7 +526,3 @@ end)
 -- TODO
 local w = screen[screen.count()].workarea
 naughty.notify({text=w.height})
-
-function message(args)
--- TODO
-end

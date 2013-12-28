@@ -1,4 +1,5 @@
 local awful = require("awful")
+local naughty = require("naughty")
 local wibox = require("wibox")
 local vicious = require("vicious")
 widgets = {}
@@ -251,7 +252,43 @@ function widgets.mpd()
   return widget_mpd
 end
 
-function widgets.update_vol(args)
+function widgets.msg_update(args)
+  if (args.action == 'reset') then
+    widgets.msg_count = 0
+    widget_msg_info_icon:set_markup("<span color=\"" .. widgets.fg .. "\">✉ </span>")
+    widget_msg_info_text:set_text("")
+  else
+    widgets.msg_count = widgets.msg_count + 1
+    widget_msg_info_icon:set_markup("<span color=\"#859900\">✉ </span>")
+    widget_msg_info_text:set_text(widgets.msg_count)
+    if (args.active ~= 1) then
+      naughty.notify({screen=screen.count(), timeout=args.timeout, title=args.title, text=args.text})
+    end
+  end
+end
+
+function widgets.msg()
+  widgets.msg_count = 0
+  local widget_msg = wibox.layout.fixed.horizontal()
+  local widget_msg_text = widgets.text_vert({text="MSG", color=widgets.focus})
+  local widget_msg_info = wibox.layout.align.vertical()
+  widget_msg_info_icon = wibox.widget.textbox()
+  widget_msg_info_icon:set_font("Inconsolata for Powerline 7")
+  widget_msg_info_icon:set_markup("<span color=\"" .. widgets.fg .. "\">✉ </span>")
+  widget_msg_info_text = wibox.widget.textbox()
+  widget_msg_info_text:set_font("Inconsolata for Powerline 7")
+  widget_msg_info_text:set_text("")
+
+  widget_msg_info:set_first(widget_msg_info_icon)
+  widget_msg_info:set_second(widget_msg_info_text)
+
+  widget_msg:add(widget_msg_text)
+  widget_msg:add(widgets.sep({sep_left=5}))
+  widget_msg:add(widget_msg_info)
+  return widget_msg
+end
+
+function widgets.vol_update(args)
   widget_vol_bar:set_value(args.volume)
   widget_vol_bar:set_value(args.volume)
   if args.status == 1 then
