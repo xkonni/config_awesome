@@ -296,10 +296,27 @@ clientkeys = awful.util.table.join(
   awful.key({ settings.modkey, "Shift"   }, "m", function (c) functions.move(c) end),
   awful.key({ settings.modkey,           }, "f", function (c) c.fullscreen = not c.fullscreen  end),
   awful.key({ settings.modkey, "Shift"   }, "c", function (c) c:kill()             end),
-  awful.key({ settings.modkey, "Control" }, "space",  awful.client.floating.toggle           ),
+  awful.key({ settings.modkey, "Control" }, "space", function(c)
+    awful.client.floating.toggle()
+    if awful.client.floating.get(c) then
+      awful.titlebar.show(c)
+      if not c.size_hints.user_position and not c.size_hints.program_position then
+        awful.placement.no_overlap(c)
+        awful.placement.no_offscreen(c)
+      end
+    else
+      awful.titlebar.hide(c)
+    end
+  end),
   awful.key({ settings.modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end),
-  awful.key({ settings.modkey,           }, "o",    awful.client.movetoscreen            ),
-  awful.key({ settings.modkey,           }, "t", function (c) c.ontop = not c.ontop      end),
+  awful.key({ settings.modkey,           }, "o", awful.client.movetoscreen ),
+  awful.key({ settings.modkey,           }, "t", function (c)
+    awful.titlebar.toggle(c)
+  end),
+  awful.key({ settings.modkey, "Shift"   }, "t", function (c) c.ontop = not c.ontop end),
+  awful.key({ settings.modkey, "Control" }, "t", function (c)
+    c.sticky =  not c.sticky
+  end),
   awful.key({ settings.modkey,           }, "n", function (c)
     -- The client currently has the input focus, so it cannot be
     -- minimized, since minimized clients can't have the focus.
@@ -432,7 +449,7 @@ client.connect_signal("manage", function (c, startup)
   if not startup then
     -- Set the windows at the slave,
     -- i.e. put it at the end of others instead of setting it master.
-    -- awful.client.setslave(c)
+    awful.client.setslave(c)
 
     -- Put windows in a smart way, only if they does not set an initial position.
     if not c.size_hints.user_position and not c.size_hints.program_position then
@@ -441,53 +458,68 @@ client.connect_signal("manage", function (c, startup)
     end
   end
 
-  local titlebars_enabled = false
-  if titlebars_enabled and (c.type == "normal" or c.type == "dialog") then
-    -- buttons for the titlebar
-    local buttons = awful.util.table.join(
-      awful.button({ }, 1, function()
-        client.focus = c
-        c:raise()
-        awful.mouse.client.move(c)
-      end),
-      awful.button({ }, 3, function()
-        client.focus = c
-        c:raise()
-        awful.mouse.client.resize(c)
-      end) )
+  -- Create titlebar for all windows, then hide it for most windows
+  -- necessary to toggle the titlebar
+  -- buttons for the titlebar
+  local buttons = awful.util.table.join(
+    awful.button({ }, 1, function()
+      client.focus = c
+      c:raise()
+      awful.mouse.client.move(c)
+    end),
+    awful.button({ }, 3, function()
+      client.focus = c
+      c:raise()
+      awful.mouse.client.resize(c)
+    end) )
 
-    -- Widgets that are aligned to the left
-    local left_layout = wibox.layout.fixed.horizontal()
-    left_layout:add(awful.titlebar.widget.iconwidget(c))
-    left_layout:buttons(buttons)
+  -- Widgets that are aligned to the left
+  local left_layout = wibox.layout.fixed.horizontal()
+  left_layout:add(awful.titlebar.widget.iconwidget(c))
+  left_layout:buttons(buttons)
 
-    -- Widgets that are aligned to the right
-    local right_layout = wibox.layout.fixed.horizontal()
-    right_layout:add(awful.titlebar.widget.floatingbutton(c))
-    right_layout:add(awful.titlebar.widget.maximizedbutton(c))
-    right_layout:add(awful.titlebar.widget.stickybutton(c))
-    right_layout:add(awful.titlebar.widget.ontopbutton(c))
-    right_layout:add(awful.titlebar.widget.closebutton(c))
+  -- Widgets that are aligned to the right
+  local right_layout = wibox.layout.fixed.horizontal()
+  right_layout:add(awful.titlebar.widget.floatingbutton(c))
+  right_layout:add(awful.titlebar.widget.maximizedbutton(c))
+  right_layout:add(awful.titlebar.widget.stickybutton(c))
+  right_layout:add(awful.titlebar.widget.ontopbutton(c))
+  right_layout:add(awful.titlebar.widget.closebutton(c))
 
-    -- The title goes in the middle
-    local middle_layout = wibox.layout.flex.horizontal()
-    local title = awful.titlebar.widget.titlewidget(c)
-    title:set_align("center")
-    middle_layout:add(title)
-    middle_layout:buttons(buttons)
+  -- The title goes in the middle
+  local middle_layout = wibox.layout.flex.horizontal()
+  local title = awful.titlebar.widget.titlewidget(c)
+  title:set_align("center")
+  middle_layout:add(title)
+  middle_layout:buttons(buttons)
 
-    -- Now bring it all together
-    local layout = wibox.layout.align.horizontal()
-    layout:set_left(left_layout)
-    layout:set_right(right_layout)
-    layout:set_middle(middle_layout)
+  -- Now bring it all together
+  local layout = wibox.layout.align.horizontal()
+  layout:set_left(left_layout)
+  layout:set_right(right_layout)
+  layout:set_middle(middle_layout)
 
-    awful.titlebar(c):set_widget(layout)
+  awful.titlebar(c):set_widget(layout)
+
+  -- Hide it for most clients
+  if (c.type ~= "dialog") then
+    awful.titlebar.hide(c)
   end
 end)
 
-client.connect_signal("focus", function(c) c.border_color = beautiful.border_focus end)
-client.connect_signal("unfocus", function(c) c.border_color = beautiful.border_normal end)
+client.connect_signal("focus", function(c)
+  if (c.name == 'mirssi') then
+    message({action='reset'})
+  end
+  c.border_color = beautiful.border_focus
+end)
+
+client.connect_signal("unfocus", function(c)
+  if (c.name == 'mirssi') then
+    message({action='reset'})
+  end
+  c.border_color = beautiful.border_normal
+end)
 -- }}}
 -- TODO
 local w = screen[screen.count()].workarea
