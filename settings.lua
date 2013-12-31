@@ -16,6 +16,7 @@ settings.interface    = "eth0"
 if settings.host == "silence" then
   settings.timeout = 5
   settings.interface = "wlan0"
+  settings.battery  = "BAT1"
 end
 
 

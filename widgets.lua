@@ -134,7 +134,7 @@ function widgets.info(args)
 end
 
 -- preconfigured widgets
-function widgets.bat()
+function widgets.bat(bat)
   vicious.cache(vicious.widgets.bat)
   local widget_bat = wibox.layout.fixed.horizontal()
   local widget_bat_text = widgets.text_vert({text="BAT", color=widgets.focus})
@@ -145,7 +145,7 @@ function widgets.bat()
   widget_bat_info_text:set_font("Inconsolata for Powerline 7")
   vicious.register(widget_bat_info_text, vicious.widgets.bat, function(widget, wargs)
     return string.format("%10s", wargs[1] .. wargs[2] .. "% " .. wargs[3])
-  end, widgets.timeout, "BAT1")
+  end, widgets.timeout, bat)
 
   -- progressbar
   local widget_bat_info_bar = awful.widget.progressbar()
@@ -157,7 +157,7 @@ function widgets.bat()
   widget_bat_info_bar:set_ticks(true)
   widget_bat_info_bar:set_ticks_gap(1)
   widget_bat_info_bar:set_ticks_size(2)
-  vicious.register(widget_bat_info_bar, vicious.widgets.bat, "$2", widgets.timeout, "BAT1")
+  vicious.register(widget_bat_info_bar, vicious.widgets.bat, "$2", widgets.timeout, bat)
 
   widget_bat_info_align:set_first (widget_bat_info_text)
   widget_bat_info_align:set_second (widget_bat_info_bar)
