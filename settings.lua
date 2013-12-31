@@ -10,9 +10,11 @@ settings.terminal_cmd = settings.terminal .. " -e "
 settings.modkey       = "Mod4"
 settings.theme        = settings.config .. "/themes/solarized/theme.lua"
 settings.timeout      = 3
-settings.interface    = "eth0"
 
 -- host overrides
+if settings.host == "annoyance" then
+  settings.interface    = "eth0"
+end
 if settings.host == "silence" then
   settings.timeout = 5
   settings.interface = "wlan0"

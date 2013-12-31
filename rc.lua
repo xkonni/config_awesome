@@ -143,8 +143,10 @@ for s = 1, screen.count() do
   right_layout:add(widgets.sep({symbol="|"}))
   right_layout:add(widgets.mem())
   right_layout:add(widgets.sep({symbol="|"}))
-  right_layout:add(widgets.net())
-  right_layout:add(widgets.sep({symbol="|"}))
+  if settings.interface then
+    right_layout:add(widgets.net(settings.interface))
+    right_layout:add(widgets.sep({symbol="|"}))
+  end
   if settings.battery then
     right_layout:add(widgets.bat(settings.battery))
     right_layout:add(widgets.sep({symbol="|"}))

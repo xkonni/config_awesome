@@ -191,19 +191,19 @@ function widgets.mem()
   return widget_mem
 end
 
-function widgets.net()
+function widgets.net(interface)
   vicious.cache(vicious.widgets.net)
   widget_net = wibox.layout.fixed.horizontal()
   widget_net_text = widgets.text_vert({text="NET", color=widgets.focus})
   widget_net_up = widgets.info({
     vicious_module = vicious.widgets.net,
-    id = "{" .. settings.interface .. " up_kb}",
+    id = "{" .. interface .. " up_kb}",
     string_pre = "↑",
     string_post = "kb"
   })
   widget_net_down = widgets.info({
     vicious_module = vicious.widgets.net,
-    id = "{" .. settings.interface .. " down_kb}",
+    id = "{" .. interface .. " down_kb}",
     string_pre = "↓",
     string_post = "kb"
   })
