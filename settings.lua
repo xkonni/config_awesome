@@ -15,13 +15,11 @@ settings.timeout      = 3
 if settings.host == "annoyance" then
   settings.interface    = "eth0"
   settings.mpd = 1
-end
-if settings.host == "silence" then
+elseif settings.host == "silence" then
   settings.timeout = 5
   settings.interface = "wlan0"
   settings.battery  = "BAT1"
-end
-if settings.host == "ns3knecht" then
+elseif settings.host == "ns3knecht" then
   settings.timeout = 1
 end
 
