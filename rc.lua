@@ -368,9 +368,9 @@ for i = 1, 9 do
       local tag = awful.tag.gettags(screen)[i]
       if tag then
           if tag.selected then
-              awful.tag.history.restore(screen)
+            awful.tag.history.restore(screen)
           else
-           awful.tag.viewonly(tag)
+            awful.tag.viewonly(tag)
          end
       end
     end),
