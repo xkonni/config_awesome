@@ -104,7 +104,25 @@ mytasklist.buttons = awful.util.table.join(
   awful.button({ }, 5, function ()
     awful.client.focus.byidx(-1)
     if client.focus then client.focus:raise() end
-  end))
+  end)
+)
+
+-- Create widgets
+local mywidgets = {}
+mywidgets.sep = widgets.sep({symbol="|"})
+if settings.mpd then
+  mywidgets.mpd = widgets.mpd()
+end
+mywidgets.cpu = widgets.cpu()
+mywidgets.mem = widgets.mem()
+if settings.interface then
+  mywidgets.net = widgets.net(settings.interface)
+end
+if settings.battery then
+  mywidgets.bat = widgets.bat(settings.battery)
+end
+mywidgets.msg = widgets.msg()
+mywidgets.vol = widgets.vol()
 
 for s = 1, screen.count() do
   -- Create a promptbox for each screen
@@ -136,25 +154,27 @@ for s = 1, screen.count() do
 
   -- Widgets that are aligned to the right
   local right_layout = wibox.layout.fixed.horizontal()
-  right_layout:add(widgets.sep({symbol="|"}))
-  right_layout:add(widgets.mpd())
-  right_layout:add(widgets.sep({symbol="|"}))
-  right_layout:add(widgets.cpu())
-  right_layout:add(widgets.sep({symbol="|"}))
-  right_layout:add(widgets.mem())
-  right_layout:add(widgets.sep({symbol="|"}))
-  if settings.interface then
-    right_layout:add(widgets.net(settings.interface))
-    right_layout:add(widgets.sep({symbol="|"}))
+  if mywidgets.mpd then
+    right_layout:add(mywidgets.sep)
+    right_layout:add(mywidgets.mpd)
   end
-  if settings.battery then
-    right_layout:add(widgets.bat(settings.battery))
-    right_layout:add(widgets.sep({symbol="|"}))
+    right_layout:add(mywidgets.sep)
+  right_layout:add(mywidgets.cpu)
+    right_layout:add(mywidgets.sep)
+  right_layout:add(mywidgets.mem)
+    right_layout:add(mywidgets.sep)
+  if mywidgets.net then
+    right_layout:add(mywidgets.net)
+    right_layout:add(mywidgets.sep)
   end
-  right_layout:add(widgets.msg())
-  right_layout:add(widgets.sep({symbol="|"}))
-  right_layout:add(widgets.vol())
-  right_layout:add(widgets.sep({symbol="|"}))
+  if mywidgets.bat then
+    right_layout:add(mywidgets.bat)
+    right_layout:add(mywidgets.sep)
+  end
+  right_layout:add(mywidgets.msg)
+  right_layout:add(mywidgets.sep)
+  right_layout:add(mywidgets.vol)
+  right_layout:add(mywidgets.sep)
   if s == 1 then right_layout:add(wibox.widget.systray()) end
   right_layout:add(widgets.textclock)
   right_layout:add(mylayoutbox[s])

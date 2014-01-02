@@ -290,7 +290,6 @@ end
 
 function widgets.vol_update(args)
   widget_vol_bar:set_value(args.volume)
-  widget_vol_bar:set_value(args.volume)
   if args.status == 1 then
     widget_vol_bar:set_color(widgets.fg)
   else
