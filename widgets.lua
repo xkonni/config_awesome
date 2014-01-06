@@ -64,36 +64,34 @@ function widgets.sep(args)
   return widget_sep
 end
 
--- create widget with a single, large symbol
-function widgets.icon(symbol, valign)
-  widget_icon = wibox.widget.textbox()
-  widget_icon.fit = function() return 25, 8 end
-  widget_icon:set_font("Anonymous Pro for Powerline 14")
-  widget_icon:set_align("center")
-  if valign then
-    widget_icon:set_valign(valign)
+function widgets.textbox(args)
+  local widget = wibox.widget.textbox()
+  widget:set_font("Inconsolata for Powerline 7")
+
+  if args then
+    local text = "<span "
+    if args.color then text = text .. "color=\"" .. args.color .. "\"" end
+    if args.weight then text = text .. "weight=\"" .. args.weight .. "\"" end
+    text = text .. ">"
+    if args.text then text = text .. args.text end
+    text = text .. "</span>"
+    widget:set_markup(text)
   end
-  widget_icon:set_text(symbol)
-  return widget_icon
+
+  return widget
 end
 
-function widgets.text_vert(args)
-  widget_text = wibox.layout.align.vertical()
-  local widget_texts = {}
-  for i=1,3 do
-    widget_texts[i] = wibox.widget.textbox()
-    widget_texts[i]:set_font("Inconsolata for Powerline 7")
-    widget_texts[i]:set_markup("<span weight=\"bold\" color=\"" .. args.color .. "\">" .. args.text:sub(i,i) .. "</span>")
-  end
-  widget_text:set_first (widget_texts[1])
-  widget_text:set_second(widget_texts[2])
-  widget_text:set_third (widget_texts[3])
-  return widget_text
+function widgets.text_vertical(args)
+  widget = wibox.layout.align.vertical()
+  widget:set_first (widgets.textbox({color=args.color, weight=bold, text=args.text:sub(1,1)}))
+  widget:set_second(widgets.textbox({color=args.color, weight=bold, text=args.text:sub(2,2)}))
+  widget:set_third (widgets.textbox({color=args.color, weight=bold, text=args.text:sub(3,3)}))
+  return widget
 end
 
 function widgets.stats(args)
   widget_stats = wibox.layout.fixed.horizontal()
-  local widget_text = widgets.text_vert({text=args.text, color=widgets.focus})
+  local widget_text = widgets.text_vertical({text=args.text, color=widgets.focus})
   local widget_info = widgets.info(args)
 
   widget_stats:add(widget_text)
@@ -109,8 +107,7 @@ function widgets.info(args)
   widget_info = wibox.layout.fixed.horizontal()
     local widget_info_align = wibox.layout.align.vertical()
     -- textbox
-    local widget_info_text = wibox.widget.textbox()
-    widget_info_text:set_font("Inconsolata for Powerline 7")
+    local widget_info_text = widgets.textbox()
     vicious.register(widget_info_text, args.vicious_module, function(widget, wargs)
       return string.format("%07s", string_pre .. " " .. math.floor(wargs[id])) .. string_post
     end, widgets.timeout)
@@ -137,12 +134,11 @@ end
 function widgets.bat(bat)
   vicious.cache(vicious.widgets.bat)
   local widget_bat = wibox.layout.fixed.horizontal()
-  local widget_bat_text = widgets.text_vert({text="BAT", color=widgets.focus})
+  local widget_bat_text = widgets.text_vertical({text="BAT", color=widgets.focus})
   local widget_bat_info_align = wibox.layout.align.vertical()
 
   -- textbox
-  local widget_bat_info_text = wibox.widget.textbox()
-  widget_bat_info_text:set_font("Inconsolata for Powerline 7")
+  local widget_bat_info_text = widgets.textbox()
   vicious.register(widget_bat_info_text, vicious.widgets.bat, function(widget, wargs)
     return string.format("%10s", wargs[1] .. wargs[2] .. "% " .. wargs[3])
   end, widgets.timeout, bat)
@@ -194,7 +190,7 @@ end
 function widgets.net(interface)
   vicious.cache(vicious.widgets.net)
   widget_net = wibox.layout.fixed.horizontal()
-  widget_net_text = widgets.text_vert({text="NET", color=widgets.focus})
+  widget_net_text = widgets.text_vertical({text="NET", color=widgets.focus})
   widget_net_up = widgets.info({
     vicious_module = vicious.widgets.net,
     id = "{" .. interface .. " up_kb}",
@@ -217,7 +213,7 @@ end
 function widgets.mpd()
   vicious.cache(vicious.widgets.mpd)
   local widget_mpd = wibox.layout.fixed.horizontal()
-  local widget_mpd_text = widgets.text_vert({text="MPD", color=widgets.focus})
+  local widget_mpd_text = widgets.text_vertical({text="MPD", color=widgets.focus})
   local widget_mpd_info = wibox.layout.align.vertical()
 
   local widget_mpd_infos = {}
@@ -227,8 +223,7 @@ function widgets.mpd()
     {icon="♫ ", id="{Title}"}
   }
   for i =1,3 do
-    widget_mpd_infos[i] = wibox.widget.textbox()
-    widget_mpd_infos[i]:set_font("Inconsolata for Powerline 7")
+    widget_mpd_infos[i] = widgets.textbox()
 
     vicious.register(widget_mpd_infos[i], vicious.widgets.mpd, function (widget, wargs)
       if wargs["{state}"] == "Stop" then
@@ -270,14 +265,10 @@ end
 function widgets.msg()
   widgets.msg_count = 0
   local widget_msg = wibox.layout.fixed.horizontal()
-  local widget_msg_text = widgets.text_vert({text="MSG", color=widgets.focus})
+  local widget_msg_text = widgets.text_vertical({text="MSG", color=widgets.focus})
   local widget_msg_info = wibox.layout.align.vertical()
-  widget_msg_info_icon = wibox.widget.textbox()
-  widget_msg_info_icon:set_font("Inconsolata for Powerline 7")
-  widget_msg_info_icon:set_markup("<span color=\"" .. widgets.fg .. "\">✉ </span>")
-  widget_msg_info_text = wibox.widget.textbox()
-  widget_msg_info_text:set_font("Inconsolata for Powerline 7")
-  widget_msg_info_text:set_text("")
+  widget_msg_info_icon = widgets.textbox({color=widgets.fg, text="✉ "})
+  widget_msg_info_text = widgets.textbox()
 
   widget_msg_info:set_first(widget_msg_info_icon)
   widget_msg_info:set_second(widget_msg_info_text)
@@ -300,7 +291,7 @@ end
 function widgets.vol()
   vicious.cache(vicious.widgets.volume)
   local widget_vol = wibox.layout.fixed.horizontal()
-  local widget_vol_text = widgets.text_vert({text="VOL", color=widgets.focus})
+  local widget_vol_text = widgets.text_vertical({text="VOL", color=widgets.focus})
   widget_vol_bar = awful.widget.progressbar()
 
   -- progressbar
