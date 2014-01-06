@@ -212,50 +212,40 @@ end
 
 function widgets.mpd()
   vicious.cache(vicious.widgets.mpd)
-  local widget_mpd = wibox.layout.fixed.horizontal()
-  local widget_mpd_text = widgets.text_vertical({text="MPD", color=widgets.focus})
-  local widget_mpd_info = wibox.layout.align.vertical()
+  local widget = wibox.layout.fixed.horizontal()
+  local widget_text = widgets.text_vertical({text="MPD", color=widgets.focus})
+  local widget_info = wibox.layout.align.vertical()
 
-  local widget_mpd_infos = {}
-  local strings = {
-    {icon="★ ", id="{Artist}"},
-    {icon="⚫ ", id="{Album}"},
-    {icon="♫ ", id="{Title}"}
-  }
-  for i =1,3 do
-    widget_mpd_infos[i] = widgets.textbox()
+  local widget_artist = widgets.textbox()
+  local widget_title  = widgets.textbox()
+  vicious.register(widget_title, vicious.widgets.mpd, function (widget, wargs)
+    if wargs["{state}"] == "Stop" then
+      widget_artist:set_text("")
+      return " - "
+    else
 
-    vicious.register(widget_mpd_infos[i], vicious.widgets.mpd, function (widget, wargs)
-      if wargs["{state}"] == "Stop" then
-        if i == 2 then
-          return " - "
-        else
-          return ""
-        end
-      else
-        return "<span size=\"medium\">" .. strings[i].icon .. "</span>".. string.format("%15s", wargs[strings[i].id])
-      end
-    end, widgets.timeout)
-  end
+      widget_artist:set_text("★ " .. wargs["{Artist}"] .. " ⚫ " .. wargs["{Album}"])
+      return "♫ " .. wargs["{Title}"]
+    end
+  end, widgets.timeout)
+  widget_info:set_first (widget_artist)
+  widget_info:set_second(widget_title)
 
-  widget_mpd_info:set_first (widget_mpd_infos[1])
-  widget_mpd_info:set_second(widget_mpd_infos[2])
-  widget_mpd_info:set_third (widget_mpd_infos[3])
-  widget_mpd:add(widget_mpd_text)
-  widget_mpd:add(widgets.sep({sep_left=5}))
-  widget_mpd:add(widget_mpd_info)
-  return widget_mpd
+  widget:add(widget_text)
+  widget:add(widgets.sep({sep_left=5}))
+  widget:add(widget_info)
+  return widget
 end
 
 function widgets.msg_update(args)
   if (args.action == 'reset') then
     widgets.msg_count = 0
-    widget_msg_info_icon:set_markup("<span color=\"" .. widgets.fg .. "\">✉ </span>")
-    widget_msg_info_text:set_text("")
+    widgets.msg_icon:set_markup("<span color=\"" .. widgets.fg .. "\">✉ </span>")
+    widgets.msg_text:set_text("")
   else
     widgets.msg_count = widgets.msg_count + 1
-    widget_msg_info_icon:set_markup("<span color=\"#859900\">✉ </span>")
-    widget_msg_info_text:set_text(widgets.msg_count)
+    widgets.msg_icon:set_markup("<span color=\"#859900\">✉ </span>")
+    widgets.msg_text:set_text(widgets.msg_count)
     if (args.active ~= 1) then
       naughty.notify({screen=screen.count(), timeout=args.timeout, title=args.title, text=args.text})
     end
@@ -264,61 +254,61 @@ end
 
 function widgets.msg()
   widgets.msg_count = 0
-  local widget_msg = wibox.layout.fixed.horizontal()
-  local widget_msg_text = widgets.text_vertical({text="MSG", color=widgets.focus})
-  local widget_msg_info = wibox.layout.align.vertical()
-  widget_msg_info_icon = widgets.textbox({color=widgets.fg, text="✉ "})
-  widget_msg_info_text = widgets.textbox()
+  local widget = wibox.layout.fixed.horizontal()
+  local widget_text = widgets.text_vertical({text="MSG", color=widgets.focus})
+  local widget_info = wibox.layout.align.vertical()
+  widgets.msg_icon = widgets.textbox({color=widgets.fg, text="✉ "})
+  widgets.msg_text = widgets.textbox()
 
-  widget_msg_info:set_first(widget_msg_info_icon)
-  widget_msg_info:set_second(widget_msg_info_text)
+  widget_info:set_first(widgets.msg_icon)
+  widget_info:set_second(widgets.msg_text)
 
-  widget_msg:add(widget_msg_text)
-  widget_msg:add(widgets.sep({sep_left=5}))
-  widget_msg:add(widget_msg_info)
-  return widget_msg
+  widget:add(widget_text)
+  widget:add(widgets.sep({sep_left=5}))
+  widget:add(widget_info)
+  return widget
 end
 
 function widgets.vol_update(args)
-  widget_vol_bar:set_value(args.volume)
+  widgets.vol_bar:set_value(args.volume)
   if args.status == 1 then
-    widget_vol_bar:set_color(widgets.fg)
+    widgets.vol_bar:set_color(widgets.fg)
   else
-    widget_vol_bar:set_color(widgets.fg .. "40")
+    widgets.vol_bar:set_color(widgets.fg .. "40")
   end
 end
 
 function widgets.vol()
   vicious.cache(vicious.widgets.volume)
-  local widget_vol = wibox.layout.fixed.horizontal()
-  local widget_vol_text = widgets.text_vertical({text="VOL", color=widgets.focus})
-  widget_vol_bar = awful.widget.progressbar()
+  local widget = wibox.layout.fixed.horizontal()
+  local widget_text = widgets.text_vertical({text="VOL", color=widgets.focus})
+  widgets.vol_bar = awful.widget.progressbar()
 
   -- progressbar
-  widget_vol_bar:set_vertical(true)
-  widget_vol_bar:set_height(15)
-  widget_vol_bar:set_width(6)
-  widget_vol_bar:set_background_color(widgets.bg)
-  widget_vol_bar:set_color(widgets.fg)
-  widget_vol_bar:set_border_color(widgets.border)
-  widget_vol_bar:set_ticks(true)
-  widget_vol_bar:set_ticks_gap(1)
-  widget_vol_bar:set_ticks_size(2)
-  vicious.register(widget_vol_bar, vicious.widgets.volume,
+  widgets.vol_bar:set_vertical(true)
+  widgets.vol_bar:set_height(15)
+  widgets.vol_bar:set_width(6)
+  widgets.vol_bar:set_background_color(widgets.bg)
+  widgets.vol_bar:set_color(widgets.fg)
+  widgets.vol_bar:set_border_color(widgets.border)
+  widgets.vol_bar:set_ticks(true)
+  widgets.vol_bar:set_ticks_gap(1)
+  widgets.vol_bar:set_ticks_size(2)
+  vicious.register(widgets.vol_bar, vicious.widgets.volume,
     function(widget, wargs)
       if wargs[2] == "♫" then
-        widget_vol_bar:set_color(widgets.fg)
+        widgets.vol_bar:set_color(widgets.fg)
       else
-        widget_vol_bar:set_color(widgets.fg .. "40")
+        widgets.vol_bar:set_color(widgets.fg .. "40")
       end
       return wargs[1]
     end,
   widgets.timeout, "Master")
 
-  widget_vol:add(widget_vol_text)
-  widget_vol:add(widgets.sep({sep_left=5}))
-  widget_vol:add(widget_vol_bar)
-  return widget_vol
+  widget:add(widget_text)
+  widget:add(widgets.sep({sep_left=5}))
+  widget:add(widgets.vol_bar)
+  return widget
 end
 
 --tooltip_cpu = awful.tooltip({ objects = { widget_cpu }, timeout = timeout_tooltip, timer_function = function()
