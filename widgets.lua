@@ -281,6 +281,12 @@ end
 function widgets.vol()
   vicious.cache(vicious.widgets.volume)
   local widget = wibox.layout.fixed.horizontal()
+  widget:buttons(
+    awful.util.table.join(
+      awful.button({ }, 1, function() functions.set_volume("toggle") end),
+      awful.button({ }, 4, function() functions.set_volume("increase") end),
+      awful.button({ }, 5, function() functions.set_volume("decrease") end)
+  ))
   local widget_text = widgets.text_vertical({text="VOL", color=widgets.focus})
   widgets.vol_bar = awful.widget.progressbar()
 
