@@ -234,12 +234,10 @@ globalkeys = awful.util.table.join(
   end),
 
   -- Layout manipulation
-  awful.key({ settings.modkey, "Shift"   }, "h", function () awful.client.swap.bydirection("left")   end),
-  awful.key({ settings.modkey, "Shift"   }, "j", function () awful.client.swap.bydirection("down")   end),
-  awful.key({ settings.modkey, "Shift"   }, "k", function () awful.client.swap.bydirection("up")     end),
-  awful.key({ settings.modkey, "Shift"   }, "l", function () awful.client.swap.bydirection("right")  end),
-  awful.key({ settings.modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end),
-  awful.key({ settings.modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end),
+  awful.key({ settings.modkey, "Shift"   }, "h", function () awful.client.swap.global_bydirection("left")   end),
+  awful.key({ settings.modkey, "Shift"   }, "j", function () awful.client.swap.global_bydirection("down")   end),
+  awful.key({ settings.modkey, "Shift"   }, "k", function () awful.client.swap.global_bydirection("up")     end),
+  awful.key({ settings.modkey, "Shift"   }, "l", function () awful.client.swap.global_bydirection("right")  end),
   awful.key({ settings.modkey,           }, "w", function () mymainmenu:toggle() end),
 
   -- Standard program
