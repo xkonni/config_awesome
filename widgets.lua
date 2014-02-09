@@ -2,14 +2,84 @@ local awful = require("awful")
 local naughty = require("naughty")
 local wibox = require("wibox")
 local vicious = require("vicious")
-widgets = {}
 
+-- attributes & variables
+widgets = {}
 widgets.grad = {
   type = "linear",
   from = { 0, 0 }, to = { 0, 12 },
   stops = { { 0, "#dc322f" }, { 0.5, "#808000" }, { 1, "#859900" }}
 }
 
+-- local helper functions
+local function _textbox(args)
+  local widget = wibox.widget.textbox()
+  widget:set_font("Inconsolata for Powerline 7")
+
+  if args then
+    local text = "<span "
+    if args.color then text = text .. "color=\"" .. args.color .. "\"" end
+    if args.weight then text = text .. "weight=\"" .. args.weight .. "\"" end
+    text = text .. ">"
+    if args.text then text = text .. args.text end
+    text = text .. "</span>"
+    widget:set_markup(text)
+  end
+
+  return widget
+end
+
+local function _text_vertical(args)
+  widget = wibox.layout.align.vertical()
+  widget:set_first (_textbox({color=args.color, weight=bold, text=args.text:sub(1,1)}))
+  widget:set_second(_textbox({color=args.color, weight=bold, text=args.text:sub(2,2)}))
+  widget:set_third (_textbox({color=args.color, weight=bold, text=args.text:sub(3,3)}))
+  return widget
+end
+
+local function _info(args)
+  local string_post = args.string_post or ""
+  local string_pre = args.string_pre or ""
+  local id = args.id or 1
+  widget_info = wibox.layout.fixed.horizontal()
+    local widget_info_align = wibox.layout.align.vertical()
+    -- textbox
+    local widget_info_text = _textbox()
+    vicious.register(widget_info_text, args.vicious_module, function(widget, wargs)
+      return string.format("%07s", string_pre .. " " .. math.floor(wargs[id])) .. string_post
+    end, widgets.timeout)
+    -- graph
+    local widget_info_graph = awful.widget.graph()
+    widget_info_graph:set_width(20)
+    widget_info_graph:set_height(15)
+    widget_info_graph:set_background_color(widgets.bg)
+    widget_info_graph:set_color(widgets.grad)
+    widget_info_graph:set_border_color(widgets.border)
+    vicious.register(widget_info_graph, args.vicious_module, function(widget, wargs)
+      return wargs[id]
+    end, widgets.timeout)
+
+    widget_info_align:set_first(widget_info_text)
+    widget_info_align:set_second(widget_info_graph)
+    widget_info:add(widget_info_align)
+    widget_info:add(widgets.sep({sep_left=5}))
+
+  return widget_info
+end
+
+local function _stats(args)
+  widget_stats = wibox.layout.fixed.horizontal()
+  local widget_text = _text_vertical({text=args.text, color=widgets.focus})
+  local widget_info = _info(args)
+
+  widget_stats:add(widget_text)
+  widget_stats:add(widgets.sep({sep_left=5}))
+  widget_stats:add(widget_info)
+  return widget_stats
+end
+-- end
+
+-- public functions
 function widgets.init(args)
   widgets.fg      = args.fg       or "#ffffff"
   widgets.bg      = args.bg       or "#000000"
@@ -63,82 +133,17 @@ function widgets.sep(args)
 
   return widget_sep
 end
-
-function widgets.textbox(args)
-  local widget = wibox.widget.textbox()
-  widget:set_font("Inconsolata for Powerline 7")
-
-  if args then
-    local text = "<span "
-    if args.color then text = text .. "color=\"" .. args.color .. "\"" end
-    if args.weight then text = text .. "weight=\"" .. args.weight .. "\"" end
-    text = text .. ">"
-    if args.text then text = text .. args.text end
-    text = text .. "</span>"
-    widget:set_markup(text)
-  end
-
-  return widget
-end
-
-function widgets.text_vertical(args)
-  widget = wibox.layout.align.vertical()
-  widget:set_first (widgets.textbox({color=args.color, weight=bold, text=args.text:sub(1,1)}))
-  widget:set_second(widgets.textbox({color=args.color, weight=bold, text=args.text:sub(2,2)}))
-  widget:set_third (widgets.textbox({color=args.color, weight=bold, text=args.text:sub(3,3)}))
-  return widget
-end
-
-function widgets.stats(args)
-  widget_stats = wibox.layout.fixed.horizontal()
-  local widget_text = widgets.text_vertical({text=args.text, color=widgets.focus})
-  local widget_info = widgets.info(args)
-
-  widget_stats:add(widget_text)
-  widget_stats:add(widgets.sep({sep_left=5}))
-  widget_stats:add(widget_info)
-  return widget_stats
-end
-
-function widgets.info(args)
-  local string_post = args.string_post or ""
-  local string_pre = args.string_pre or ""
-  local id = args.id or 1
-  widget_info = wibox.layout.fixed.horizontal()
-    local widget_info_align = wibox.layout.align.vertical()
-    -- textbox
-    local widget_info_text = widgets.textbox()
-    vicious.register(widget_info_text, args.vicious_module, function(widget, wargs)
-      return string.format("%07s", string_pre .. " " .. math.floor(wargs[id])) .. string_post
-    end, widgets.timeout)
-    -- graph
-    local widget_info_graph = awful.widget.graph()
-    widget_info_graph:set_width(20)
-    widget_info_graph:set_height(15)
-    widget_info_graph:set_background_color(widgets.bg)
-    widget_info_graph:set_color(widgets.grad)
-    widget_info_graph:set_border_color(widgets.border)
-    vicious.register(widget_info_graph, args.vicious_module, function(widget, wargs)
-      return wargs[id]
-    end, widgets.timeout)
-
-    widget_info_align:set_first(widget_info_text)
-    widget_info_align:set_second(widget_info_graph)
-    widget_info:add(widget_info_align)
-    widget_info:add(widgets.sep({sep_left=5}))
-
-  return widget_info
-end
+-- end
 
 -- preconfigured widgets
 function widgets.bat(bat)
   vicious.cache(vicious.widgets.bat)
   local widget_bat = wibox.layout.fixed.horizontal()
-  local widget_bat_text = widgets.text_vertical({text="BAT", color=widgets.focus})
+  local widget_bat_text = _text_vertical({text="BAT", color=widgets.focus})
   local widget_bat_info_align = wibox.layout.align.vertical()
 
   -- textbox
-  local widget_bat_info_text = widgets.textbox()
+  local widget_bat_info_text = _textbox()
   vicious.register(widget_bat_info_text, vicious.widgets.bat, function(widget, wargs)
     return string.format("%10s", wargs[1] .. wargs[2] .. "% " .. wargs[3])
   end, widgets.timeout, bat)
@@ -166,7 +171,7 @@ end
 
 function widgets.cpu()
   vicious.cache(vicious.widgets.cpu)
-  widget_cpu = widgets.stats({
+  widget_cpu = _stats({
     text = "CPU",
     vicious_module = vicious.widgets.cpu,
     string_pre = "",
@@ -177,7 +182,7 @@ end
 
 function widgets.mem()
   vicious.cache(vicious.widgets.mem)
-  widget_mem = widgets.stats({
+  widget_mem = _stats({
     text = "MEM",
     vicious_module = vicious.widgets.mem,
     --id = 1,
@@ -190,14 +195,14 @@ end
 function widgets.net(interface)
   vicious.cache(vicious.widgets.net)
   widget_net = wibox.layout.fixed.horizontal()
-  widget_net_text = widgets.text_vertical({text="NET", color=widgets.focus})
-  widget_net_up = widgets.info({
+  widget_net_text = _text_vertical({text="NET", color=widgets.focus})
+  widget_net_up = _info({
     vicious_module = vicious.widgets.net,
     id = "{" .. interface .. " up_kb}",
     string_pre = "↑",
     string_post = "kb"
   })
-  widget_net_down = widgets.info({
+  widget_net_down = _info({
     vicious_module = vicious.widgets.net,
     id = "{" .. interface .. " down_kb}",
     string_pre = "↓",
@@ -213,11 +218,11 @@ end
 function widgets.mpd()
   vicious.cache(vicious.widgets.mpd)
   local widget = wibox.layout.fixed.horizontal()
-  local widget_text = widgets.text_vertical({text="MPD", color=widgets.focus})
+  local widget_text = _text_vertical({text="MPD", color=widgets.focus})
   local widget_info = wibox.layout.align.vertical()
 
-  local widget_artist = widgets.textbox()
-  local widget_title  = widgets.textbox()
+  local widget_artist = _textbox()
+  local widget_title  = _textbox()
   vicious.register(widget_title, vicious.widgets.mpd, function (widget, wargs)
     if wargs["{state}"] == "Stop" then
       widget_artist:set_text("")
@@ -237,15 +242,14 @@ function widgets.mpd()
   return widget
 end
 
-
 function widgets.msg()
   msg = {}
   msg.count = 0
 
-  msg.title = widgets.text_vertical({text="MSG", color=widgets.focus})
+  msg.title = _text_vertical({text="MSG", color=widgets.focus})
   msg.info = wibox.layout.align.vertical()
-  msg.icon = widgets.textbox({color=widgets.fg, text="✉ "})
-  msg.text = widgets.textbox()
+  msg.icon = _textbox({color=widgets.fg, text="✉ "})
+  msg.text = _textbox()
   msg.info:set_first(msg.icon)
   msg.info:set_second(msg.text)
 
@@ -276,7 +280,7 @@ function widgets.vol()
   vol = {}
   vol.level = 0
 
-  vol.title = widgets.text_vertical({text="VOL", color=widgets.focus})
+  vol.title = _text_vertical({text="VOL", color=widgets.focus})
   vol.widget = wibox.layout.fixed.horizontal()
   vol.bar = awful.widget.progressbar()
   vol.notify = nil
@@ -362,6 +366,7 @@ function widgets.vol()
   vol.widget:add(vol.bar)
   return vol
 end
+-- end
 
 --tooltip_cpu = awful.tooltip({ objects = { widget_cpu }, timeout = timeout_tooltip, timer_function = function()
 --  info_cpu = vicious.widgets.cpu()
