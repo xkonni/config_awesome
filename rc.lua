@@ -108,21 +108,20 @@ mytasklist.buttons = awful.util.table.join(
 )
 
 -- Create widgets
-local mywidgets = {}
-mywidgets.sep = widgets.sep({symbol="|"})
+widget_sep = widgets.sep({symbol="|"})
 if settings.mpd then
-  mywidgets.mpd = widgets.mpd()
+  widget_mpd = widgets.mpd()
 end
-mywidgets.cpu = widgets.cpu()
-mywidgets.mem = widgets.mem()
+widget_cpu = widgets.cpu()
+widget_mem = widgets.mem()
 if settings.interface then
-  mywidgets.net = widgets.net(settings.interface)
+  widget_net = widgets.net(settings.interface)
 end
 if settings.battery then
-  mywidgets.bat = widgets.bat(settings.battery)
+  widget_bat = widgets.bat(settings.battery)
 end
-mywidgets.msg = widgets.msg()
-mywidgets.vol = widgets.vol()
+widget_msg = widgets.msg()
+widget_vol = widgets.vol()
 
 for s = 1, screen.count() do
   -- Create a promptbox for each screen
@@ -154,27 +153,27 @@ for s = 1, screen.count() do
 
   -- Widgets that are aligned to the right
   local right_layout = wibox.layout.fixed.horizontal()
-  if mywidgets.mpd then
-    right_layout:add(mywidgets.sep)
-    right_layout:add(mywidgets.mpd)
+  if widget_mpd then
+    right_layout:add(widget_sep)
+    right_layout:add(widget_mpd)
   end
-    right_layout:add(mywidgets.sep)
-  right_layout:add(mywidgets.cpu)
-    right_layout:add(mywidgets.sep)
-  right_layout:add(mywidgets.mem)
-    right_layout:add(mywidgets.sep)
-  if mywidgets.net then
-    right_layout:add(mywidgets.net)
-    right_layout:add(mywidgets.sep)
+    right_layout:add(widget_sep)
+  right_layout:add(widget_cpu)
+    right_layout:add(widget_sep)
+  right_layout:add(widget_mem)
+    right_layout:add(widget_sep)
+  if widget_net then
+    right_layout:add(widget_net)
+    right_layout:add(widget_sep)
   end
-  if mywidgets.bat then
-    right_layout:add(mywidgets.bat)
-    right_layout:add(mywidgets.sep)
+  if widget_bat then
+    right_layout:add(widget_bat)
+    right_layout:add(widget_sep)
   end
-  right_layout:add(mywidgets.msg)
-  right_layout:add(mywidgets.sep)
-  right_layout:add(mywidgets.vol)
-  right_layout:add(mywidgets.sep)
+  right_layout:add(widget_msg.widget)
+  right_layout:add(widget_sep)
+  right_layout:add(widget_vol.widget)
+  right_layout:add(widget_sep)
   if s == 1 then right_layout:add(wibox.widget.systray()) end
   right_layout:add(widgets.textclock)
   right_layout:add(mylayoutbox[s])
@@ -278,18 +277,9 @@ globalkeys = awful.util.table.join(
   end),
 
   -- Media
-  awful.key({                            }, "XF86AudioMute",        function ()
-    local vol_info = functions.set_volume("toggle")
-    widgets.vol_update({volume=vol_info.volume, status=vol_info.status})
-  end),
-  awful.key({                            }, "XF86AudioLowerVolume", function ()
-    local vol_info = functions.set_volume("decrease")
-    widgets.vol_update({volume=vol_info.volume, status=vol_info.status})
-  end),
-  awful.key({                            }, "XF86AudioRaiseVolume", function ()
-    local vol_info = functions.set_volume("increase")
-    widgets.vol_update({volume=vol_info.volume, status=vol_info.status})
-  end),
+  awful.key({                            }, "XF86AudioMute",        function () widget_vol.toggle() end),
+  awful.key({                            }, "XF86AudioLowerVolume", function () widget_vol.decrease() end),
+  awful.key({                            }, "XF86AudioRaiseVolume", function () widget_vol.increase() end),
 
   awful.key({                            }, "XF86AudioNext", function () awful.util.spawn(settings.home .."/bin/notify_mpd next", false) end),
   awful.key({                            }, "XF86AudioPlay", function () awful.util.spawn(settings.home .."/bin/notify_mpd toggle", false) end),
@@ -533,14 +523,14 @@ end)
 
 client.connect_signal("focus", function(c)
   if (c.name == 'mirssi') then
-    widgets.msg_update({action='reset'})
+    widget_msg.update({action='reset'})
   end
   c.border_color = beautiful.border_focus
 end)
 
 client.connect_signal("unfocus", function(c)
   if (c.name == 'mirssi') then
-    widgets.msg_update({action='reset'})
+    widget_msg.update({action='reset'})
   end
   c.border_color = beautiful.border_normal
 end)

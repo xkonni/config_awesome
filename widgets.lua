@@ -30,7 +30,7 @@ end
 -- args = {[sep_left=px], [sep_right=px], [symbol{}, [fg], [bg]]}
 -- ⮃ ⮁ ⮂ ⮀
 function widgets.sep(args)
-  widget_sep = wibox.layout.fixed.horizontal()
+  local widget_sep = wibox.layout.fixed.horizontal()
 
   local sep_left = args.sep_left or 3
   widget_sep_left = wibox.widget.base.empty_widget()
@@ -237,84 +237,130 @@ function widgets.mpd()
   return widget
 end
 
-function widgets.msg_update(args)
-  if (args.action == 'reset') then
-    widgets.msg_count = 0
-    widgets.msg_icon:set_markup("<span color=\"" .. widgets.fg .. "\">✉ </span>")
-    widgets.msg_text:set_text("")
-  else
-    widgets.msg_count = widgets.msg_count + 1
-    widgets.msg_icon:set_markup("<span color=\"#859900\">✉ </span>")
-    widgets.msg_text:set_text(widgets.msg_count)
-    if (args.active ~= 1) then
-      naughty.notify({screen=screen.count(), timeout=args.timeout, title=args.title, text=args.text})
-    end
-  end
-end
 
 function widgets.msg()
-  widgets.msg_count = 0
-  local widget = wibox.layout.fixed.horizontal()
-  local widget_text = widgets.text_vertical({text="MSG", color=widgets.focus})
-  local widget_info = wibox.layout.align.vertical()
-  widgets.msg_icon = widgets.textbox({color=widgets.fg, text="✉ "})
-  widgets.msg_text = widgets.textbox()
+  msg = {}
+  msg.count = 0
 
-  widget_info:set_first(widgets.msg_icon)
-  widget_info:set_second(widgets.msg_text)
+  msg.title = widgets.text_vertical({text="MSG", color=widgets.focus})
+  msg.info = wibox.layout.align.vertical()
+  msg.icon = widgets.textbox({color=widgets.fg, text="✉ "})
+  msg.text = widgets.textbox()
+  msg.info:set_first(msg.icon)
+  msg.info:set_second(msg.text)
 
-  widget:add(widget_text)
-  widget:add(widgets.sep({sep_left=5}))
-  widget:add(widget_info)
-  return widget
-end
+  msg.widget = wibox.layout.fixed.horizontal()
 
-function widgets.vol_update(args)
-  widgets.vol_bar:set_value(args.volume)
-  if args.status == 1 then
-    widgets.vol_bar:set_color(widgets.fg)
-  else
-    widgets.vol_bar:set_color(widgets.fg .. "40")
+  function msg.update(args)
+    if (args.action == 'reset') then
+      msg.count = 0
+      msg.icon:set_markup("<span color=\"" .. widgets.fg .. "\">✉ </span>")
+      msg.text:set_text("")
+    else
+      msg.count = msg.count + 1
+      msg.icon:set_markup("<span color=\"#859900\">✉ </span>")
+      msg.text:set_text(msg.count)
+      if (args.active ~= 1) then
+        naughty.notify({screen=screen.count(), timeout=args.timeout, title=args.title, text=args.text})
+      end
+    end
   end
+
+  msg.widget:add(msg.title)
+  msg.widget:add(widgets.sep({sep_left=5}))
+  msg.widget:add(msg.info)
+  return msg
 end
 
 function widgets.vol()
+  vol = {}
+  vol.level = 0
+
+  vol.title = widgets.text_vertical({text="VOL", color=widgets.focus})
+  vol.widget = wibox.layout.fixed.horizontal()
+  vol.bar = awful.widget.progressbar()
+  vol.notify = nil
+
+  function vol.increase()
+    awful.util.spawn(functions.home .."/bin/set_volume increase", false)
+    naughty.destroy(vol.notify)
+    local info_vol = vicious.widgets.volume(widget, "Master")
+    local text
+    if info_vol[2] == "♫" then
+      text = "["..info_vol[1].."%] [on]"
+    else
+      text = "["..info_vol[1].."%] [off]"
+    end
+
+    vol.bar:set_value(info_vol[1]/100)
+    vol.notify = naughty.notify({screen=screen.count(), title="volume", text=text})
+  end
+
+  function vol.decrease()
+    awful.util.spawn(functions.home .."/bin/set_volume decrease", false)
+    naughty.destroy(vol.notify)
+    local info_vol = vicious.widgets.volume(widget, "Master")
+    local text
+
+    if info_vol[2] == "♫" then
+      text = "["..info_vol[1].."%] [on]"
+    else
+      text = "["..info_vol[1].."%] [off]"
+    end
+
+    vol.bar:set_value(info_vol[1]/100)
+    vol.notify = naughty.notify({screen=screen.count(), title="volume", text=text})
+  end
+
+  function vol.toggle()
+    awful.util.spawn(functions.home .."/bin/set_volume toggle", false)
+    naughty.destroy(vol.notify)
+    local info_vol = vicious.widgets.volume(widget, "Master")
+    local text
+    if info_vol[2] ~= "♫" then
+      text = "["..info_vol[1].."%] [on]"
+      vol.bar:set_color(widgets.fg)
+    else
+      text = "["..info_vol[1].."%] [off]"
+      vol.bar:set_color(widgets.fg .. "40")
+    end
+
+    vol.notify = naughty.notify({screen=screen.count(), title="volume", text=text})
+  end
+
   vicious.cache(vicious.widgets.volume)
-  local widget = wibox.layout.fixed.horizontal()
   widget:buttons(
     awful.util.table.join(
-      awful.button({ }, 1, function() functions.set_volume("toggle") end),
-      awful.button({ }, 4, function() functions.set_volume("increase") end),
-      awful.button({ }, 5, function() functions.set_volume("decrease") end)
+      awful.button({ }, 1, function() vol.toggle() end),
+      awful.button({ }, 4, function() vol.increase() end),
+      awful.button({ }, 5, function() vol.decrease() end)
   ))
-  local widget_text = widgets.text_vertical({text="VOL", color=widgets.focus})
-  widgets.vol_bar = awful.widget.progressbar()
 
   -- progressbar
-  widgets.vol_bar:set_vertical(true)
-  widgets.vol_bar:set_height(15)
-  widgets.vol_bar:set_width(6)
-  widgets.vol_bar:set_background_color(widgets.bg)
-  widgets.vol_bar:set_color(widgets.fg)
-  widgets.vol_bar:set_border_color(widgets.border)
-  widgets.vol_bar:set_ticks(true)
-  widgets.vol_bar:set_ticks_gap(1)
-  widgets.vol_bar:set_ticks_size(2)
-  vicious.register(widgets.vol_bar, vicious.widgets.volume,
+  vol.bar:set_vertical(true)
+  vol.bar:set_height(15)
+  vol.bar:set_width(6)
+  vol.bar:set_background_color(widgets.bg)
+  vol.bar:set_color(widgets.fg)
+  vol.bar:set_border_color(widgets.border)
+  vol.bar:set_ticks(true)
+  vol.bar:set_ticks_gap(1)
+  vol.bar:set_ticks_size(2)
+  vicious.register(vol.bar, vicious.widgets.volume,
     function(widget, wargs)
       if wargs[2] == "♫" then
-        widgets.vol_bar:set_color(widgets.fg)
+        vol.bar:set_color(widgets.fg)
       else
-        widgets.vol_bar:set_color(widgets.fg .. "40")
+        vol.bar:set_color(widgets.fg .. "40")
       end
       return wargs[1]
     end,
   widgets.timeout, "Master")
 
-  widget:add(widget_text)
-  widget:add(widgets.sep({sep_left=5}))
-  widget:add(widgets.vol_bar)
-  return widget
+  vol.widget:add(vol.title)
+  vol.widget:add(widgets.sep({sep_left=5}))
+  vol.widget:add(vol.bar)
+  return vol
 end
 
 --tooltip_cpu = awful.tooltip({ objects = { widget_cpu }, timeout = timeout_tooltip, timer_function = function()
