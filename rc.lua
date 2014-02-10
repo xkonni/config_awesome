@@ -441,9 +441,16 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "Plugin-container" },
       properties = { floating = true } },
+    { rule = { class = "Gvim"},
+      properties = { opacity = 0.8 }
+    },
     { rule = { class = "Wine" },
       properties = {
         floating = true,
+        full_screen = true }
+    },
+    { rule = { class = "VirtualBox" },
+      properties = {
         full_screen = true }
     }
 }
