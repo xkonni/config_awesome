@@ -86,6 +86,7 @@ function widgets.init(args)
   widgets.focus   = args.focus    or "#ff0000"
   widgets.border  = args.border   or "#0000ff"
   widgets.timeout = widgets.timeout  or 5
+  widgets.notify  = args.notify   or 0
 end
 
 function widgets.background(args)
@@ -264,7 +265,7 @@ function widgets.msg()
       msg.count = msg.count + 1
       msg.icon:set_markup("<span color=\"#859900\">✉ </span>")
       msg.text:set_text(msg.count)
-      if (args.active ~= 1) then
+      if ((args.active ~= 1) and (widgets.notify)) then
         naughty.notify({screen=screen.count(), timeout=args.timeout, title=args.title, text=args.text})
       end
     end

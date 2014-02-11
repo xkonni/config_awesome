@@ -10,6 +10,7 @@ settings.terminal_cmd = settings.terminal .. " -e "
 settings.modkey       = "Mod4"
 settings.theme        = settings.config .. "/themes/solarized/theme.lua"
 settings.timeout      = 3
+settings.notify       = 1
 
 -- host overrides
 if settings.host == "annoyance" then
@@ -21,6 +22,7 @@ elseif settings.host == "silence" then
   settings.battery  = "BAT1"
 elseif settings.host == "ns3knecht" then
   settings.timeout = 1
+  settings.notify = 0
 end
 
 

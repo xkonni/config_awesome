@@ -29,7 +29,8 @@ widgets.init({
   bg = beautiful.bg_normal,
   focus = beautiful.fg_focus,
   border = beautiful.bg_normal,
-  timeout = settings.timeout
+  timeout = settings.timeout,
+  notify = settings.notify
 })
 functions.init({home = settings.home })
 
