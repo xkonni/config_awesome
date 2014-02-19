@@ -29,11 +29,10 @@ local function _textbox(args)
   return widget
 end
 
-local function _text_vertical(args)
-  widget = wibox.layout.align.vertical()
-  widget:set_first (_textbox({color=args.color, weight=bold, text=args.text:sub(1,1)}))
-  widget:set_second(_textbox({color=args.color, weight=bold, text=args.text:sub(2,2)}))
-  widget:set_third (_textbox({color=args.color, weight=bold, text=args.text:sub(3,3)}))
+local function _imagebox(args)
+  local widget = wibox.widget.imagebox()
+  widget:set_image(args.image)
+
   return widget
 end
 
@@ -62,18 +61,16 @@ local function _info(args)
     widget_info_align:set_first(widget_info_text)
     widget_info_align:set_second(widget_info_graph)
     widget_info:add(widget_info_align)
-    widget_info:add(widgets.sep({sep_left=5}))
 
   return widget_info
 end
 
 local function _stats(args)
   widget_stats = wibox.layout.fixed.horizontal()
-  local widget_text = _text_vertical({text=args.text, color=widgets.focus})
-  local widget_info = _info(args)
+  local widget_icon = _imagebox({image=args.icon})
+  widget_stats:add(widget_icon)
 
-  widget_stats:add(widget_text)
-  widget_stats:add(widgets.sep({sep_left=5}))
+  local widget_info = _info(args)
   widget_stats:add(widget_info)
   return widget_stats
 end
@@ -85,8 +82,15 @@ function widgets.init(args)
   widgets.bg      = args.bg       or "#000000"
   widgets.focus   = args.focus    or "#ff0000"
   widgets.border  = args.border   or "#0000ff"
-  widgets.timeout = widgets.timeout  or 5
   widgets.notify  = args.notify   or 0
+  widgets.timeout = args.timeout  or 5
+  widgets.bat_icon = args.bat_icon
+  widgets.cpu_icon = args.cpu_icon
+  widgets.mem_icon = args.mem_icon
+  widgets.mpd_icon = args.mpd_icon
+  widgets.msg_icon = args.msg_icon
+  widgets.net_icon = args.net_icon
+  widgets.vol_icon = args.vol_icon
 end
 
 function widgets.background(args)
@@ -140,7 +144,7 @@ end
 function widgets.bat(bat)
   vicious.cache(vicious.widgets.bat)
   local widget_bat = wibox.layout.fixed.horizontal()
-  local widget_bat_text = _text_vertical({text="BAT", color=widgets.focus})
+  local widget_bat_icon = _imagebox({image=widgets.bat_icon})
   local widget_bat_info_align = wibox.layout.align.vertical()
 
   -- textbox
@@ -164,8 +168,7 @@ function widgets.bat(bat)
   widget_bat_info_align:set_first (widget_bat_info_text)
   widget_bat_info_align:set_second (widget_bat_info_bar)
 
-  widget_bat:add(widget_bat_text)
-  widget_bat:add(widgets.sep({sep_left=5}))
+  widget_bat:add(widget_bat_icon)
   widget_bat:add(widget_bat_info_align)
   return widget_bat
 end
@@ -173,7 +176,7 @@ end
 function widgets.cpu()
   vicious.cache(vicious.widgets.cpu)
   widget_cpu = _stats({
-    text = "CPU",
+    icon = widgets.cpu_icon,
     vicious_module = vicious.widgets.cpu,
     string_pre = "",
     string_post = "%"
@@ -184,7 +187,7 @@ end
 function widgets.mem()
   vicious.cache(vicious.widgets.mem)
   widget_mem = _stats({
-    text = "MEM",
+    icon = widgets.mem_icon,
     vicious_module = vicious.widgets.mem,
     --id = 1,
     string_pre = "",
@@ -196,7 +199,7 @@ end
 function widgets.net(interface)
   vicious.cache(vicious.widgets.net)
   widget_net = wibox.layout.fixed.horizontal()
-  widget_net_text = _text_vertical({text="NET", color=widgets.focus})
+  widget_net_icon = _imagebox({image=widgets.net_icon})
   widget_net_up = _info({
     vicious_module = vicious.widgets.net,
     id = "{" .. interface .. " up_kb}",
@@ -210,7 +213,7 @@ function widgets.net(interface)
     string_post = "kb"
   })
 
-  widget_net:add(widget_net_text)
+  widget_net:add(widget_net_icon)
   widget_net:add(widget_net_up)
   widget_net:add(widget_net_down)
   return widget_net
@@ -219,7 +222,7 @@ end
 function widgets.mpd()
   vicious.cache(vicious.widgets.mpd)
   local widget = wibox.layout.fixed.horizontal()
-  local widget_text = _text_vertical({text="MPD", color=widgets.focus})
+  local widget_icon = _imagebox({image=widgets.mpd_icon})
   local widget_info = wibox.layout.align.vertical()
 
   local widget_artist = _textbox()
@@ -237,8 +240,7 @@ function widgets.mpd()
   widget_info:set_first (widget_artist)
   widget_info:set_second(widget_title)
 
-  widget:add(widget_text)
-  widget:add(widgets.sep({sep_left=5}))
+  widget:add(widget_icon)
   widget:add(widget_info)
   return widget
 end
@@ -247,11 +249,11 @@ function widgets.msg()
   msg = {}
   msg.count = 0
 
-  msg.title = _text_vertical({text="MSG", color=widgets.focus})
+  msg.icon = _imagebox({image=widgets.msg_icon})
   msg.info = wibox.layout.align.vertical()
-  msg.icon = _textbox({color=widgets.fg, text="✉ "})
+  msg.indicator = _textbox({color=widgets.fg, text="✉ "})
   msg.text = _textbox()
-  msg.info:set_first(msg.icon)
+  msg.info:set_first(msg.indicator)
   msg.info:set_second(msg.text)
 
   msg.widget = wibox.layout.fixed.horizontal()
@@ -259,11 +261,11 @@ function widgets.msg()
   function msg.update(args)
     if (args.action == 'reset') then
       msg.count = 0
-      msg.icon:set_markup("<span color=\"" .. widgets.fg .. "\">✉ </span>")
+      msg.indicator:set_markup("<span color=\"" .. widgets.fg .. "\">✉ </span>")
       msg.text:set_text("")
     else
       msg.count = msg.count + 1
-      msg.icon:set_markup("<span color=\"#859900\">✉ </span>")
+      msg.indicator:set_markup("<span color=\"#859900\">✉ </span>")
       msg.text:set_text(msg.count)
       if ((args.active ~= 1) and (widgets.notify)) then
         naughty.notify({screen=screen.count(), timeout=args.timeout, title=args.title, text=args.text})
@@ -271,8 +273,7 @@ function widgets.msg()
     end
   end
 
-  msg.widget:add(msg.title)
-  msg.widget:add(widgets.sep({sep_left=5}))
+  msg.widget:add(msg.icon)
   msg.widget:add(msg.info)
   return msg
 end
@@ -281,8 +282,8 @@ function widgets.vol()
   vol = {}
   vol.level = 0
 
-  vol.title = _text_vertical({text="VOL", color=widgets.focus})
   vol.widget = wibox.layout.fixed.horizontal()
+  vol.icon = _imagebox({image=widgets.vol_icon})
   vol.bar = awful.widget.progressbar()
   vol.notify = nil
 
@@ -334,7 +335,7 @@ function widgets.vol()
   end
 
   vicious.cache(vicious.widgets.volume)
-  widget:buttons(
+  vol.widget:buttons(
     awful.util.table.join(
       awful.button({ }, 1, function() vol.toggle() end),
       awful.button({ }, 4, function() vol.increase() end),
@@ -362,8 +363,7 @@ function widgets.vol()
     end,
   widgets.timeout, "Master")
 
-  vol.widget:add(vol.title)
-  vol.widget:add(widgets.sep({sep_left=5}))
+  vol.widget:add(vol.icon)
   vol.widget:add(vol.bar)
   return vol
 end

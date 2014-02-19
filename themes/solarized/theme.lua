@@ -10,10 +10,17 @@
 config                                          = awful.util.getdir("config")
 theme                                           = {}
 theme.wallpaper                                 = config .. "/themes/solarized/awesome-background.png"
+theme.bat_icon                                  = config .. "/themes/solarized/widgets/bat.png"
+theme.cpu_icon                                  = config .. "/themes/solarized/widgets/cpu.png"
+theme.mem_icon                                  = config .. "/themes/solarized/widgets/mem.png"
+theme.mpd_icon                                  = config .. "/themes/solarized/widgets/mpd.png"
+theme.msg_icon                                  = config .. "/themes/solarized/widgets/msg.png"
+theme.net_icon                                  = config .. "/themes/solarized/widgets/net.png"
+theme.vol_icon                                  = config .. "/themes/solarized/widgets/vol.png"
 -- }}} Main
 
 -- {{{ Styles
-theme.font                                      = "Inconsolata for Powerline 11"
+theme.font                                      = "Inconsolata for Powerline 10"
 -- }}} Styles
 
 -- {{{ Colors
@@ -36,9 +43,11 @@ theme.border_focus                              = "#268bd2"
 theme.border_marked                             = "#00ff00"
 -- }}} Borders
 
+
 -- {{{ Titlebars
 --theme.titlebar_bg_focus  = "#3F3F3F"
 --theme.titlebar_bg_normal = "#3F3F3F"
+theme.titlebar_close_button                     = "true"
 -- }}}
 
 -- {{{ Override
@@ -54,6 +63,7 @@ theme.border_marked                             = "#00ff00"
 
 -- taglist
 theme.taglist_bg_focus                          = theme.bg_normal
+theme.taglist_squares                           = "true"
 
 -- tasklist
 theme.tasklist_bg_focus                         = theme.bg_normal
@@ -63,11 +73,7 @@ theme.tasklist_bg_focus                         = theme.bg_normal
 -- You can add as many variables as
 -- you wish and access them by using
 -- beautiful.variable in your rc.lua
---theme.fg_widget                                 = "#AECF96"
---theme.fg_center_widget                          = "#88A175"
---theme.fg_end_widget                             = "#FF5656"
 --theme.bg_widget                                 = "#494B4F"
---theme.border_widget                             = "#3F3F3F"
 -- }}} Widgets
 
 -- {{{ Mouse finder

@@ -30,7 +30,14 @@ widgets.init({
   focus = beautiful.fg_focus,
   border = beautiful.bg_normal,
   timeout = settings.timeout,
-  notify = settings.notify
+  notify = settings.notify,
+  bat_icon = beautiful.bat_icon,
+  cpu_icon = beautiful.cpu_icon,
+  mem_icon = beautiful.mem_icon,
+  mpd_icon = beautiful.mpd_icon,
+  msg_icon = beautiful.msg_icon,
+  net_icon = beautiful.net_icon,
+  vol_icon = beautiful.vol_icon
 })
 functions.init({home = settings.home })
 
