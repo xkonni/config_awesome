@@ -274,7 +274,10 @@ globalkeys = awful.util.table.join(
   awful.key({ settings.modkey            }, "p", function () menubar.show() end),
 
   -- Power
-  awful.key({ settings.modkey, "Control" }, "s", function () awful.util.spawn(settings.config .. "/i3lock", false) end),
+  awful.key({ settings.modkey, "Control" }, "Pause", function ()
+    awful.util.spawn(settings.bin .. "/lock", false)
+    awful.util.spawn("systemctl suspend", false)
+  end),
   awful.key({                            }, "XF86HomePage", function ()
       awful.util.spawn(settings.home .. "/bin/powerswitch 1 0", false)
       awful.util.spawn("systemctl suspend", false)
