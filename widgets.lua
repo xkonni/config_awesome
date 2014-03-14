@@ -288,49 +288,46 @@ function widgets.vol()
   vol.notify = nil
 
   function vol.increase()
-    awful.util.spawn(functions.home .."/bin/set_volume increase", false)
     naughty.destroy(vol.notify)
     local info_vol = vicious.widgets.volume(widget, "Master")
+    local cur_vol = awful.util.pread(functions.home .."/bin/set_volume increase")
     local text
     if info_vol[2] == "♫" then
-      text = "["..info_vol[1].."%] [on]"
+      text = "["..cur_vol.."%] [on]"
     else
-      text = "["..info_vol[1].."%] [off]"
+      text = "["..cur_vol.."%] [off]"
     end
-
-    vol.bar:set_value(info_vol[1]/100)
+    vol.bar:set_value(cur_vol/100)
     vol.notify = naughty.notify({screen=screen.count(), title="volume", text=text})
   end
 
   function vol.decrease()
-    awful.util.spawn(functions.home .."/bin/set_volume decrease", false)
     naughty.destroy(vol.notify)
     local info_vol = vicious.widgets.volume(widget, "Master")
+    local cur_vol = awful.util.pread(functions.home .."/bin/set_volume decrease")
     local text
-
     if info_vol[2] == "♫" then
-      text = "["..info_vol[1].."%] [on]"
+      text = "["..cur_vol.."%] [on]"
     else
-      text = "["..info_vol[1].."%] [off]"
+      text = "["..cur_vol.."%] [off]"
     end
-
-    vol.bar:set_value(info_vol[1]/100)
+    vol.bar:set_value(cur_vol/100)
     vol.notify = naughty.notify({screen=screen.count(), title="volume", text=text})
   end
 
   function vol.toggle()
-    awful.util.spawn(functions.home .."/bin/set_volume toggle", false)
     naughty.destroy(vol.notify)
     local info_vol = vicious.widgets.volume(widget, "Master")
+    local cur_vol = awful.util.pread(functions.home .."/bin/set_volume toggle")
     local text
     if info_vol[2] ~= "♫" then
-      text = "["..info_vol[1].."%] [on]"
+      text = "["..cur_vol.."%] [on]"
       vol.bar:set_color(widgets.fg)
     else
-      text = "["..info_vol[1].."%] [off]"
+      text = "["..cur_vol.."%] [off]"
       vol.bar:set_color(widgets.fg .. "40")
     end
-
+    vol.bar:set_value(cur_vol/100)
     vol.notify = naughty.notify({screen=screen.count(), title="volume", text=text})
   end
 
