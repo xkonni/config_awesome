@@ -275,7 +275,7 @@ globalkeys = awful.util.table.join(
 
   -- Power
   awful.key({ settings.modkey, "Control" }, "Pause", function ()
-    awful.util.spawn(settings.bin .. "/lock", false)
+    awful.util.spawn(settings.home .. "/bin/lock", false)
     awful.util.spawn("systemctl suspend", false)
   end),
   awful.key({                            }, "XF86HomePage", function ()
