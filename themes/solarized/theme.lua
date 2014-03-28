@@ -9,7 +9,7 @@
 -- {{{ Main
 config                                          = awful.util.getdir("config")
 theme                                           = {}
-theme.wallpaper                                 = config .. "/themes/solarized/awesome-background.png"
+theme.wallpaper                                 = config .. "/themes/solarized/killing_dream.jpg"
 theme.bat_icon                                  = config .. "/themes/solarized/widgets/bat.png"
 theme.cpu_icon                                  = config .. "/themes/solarized/widgets/cpu.png"
 theme.mem_icon                                  = config .. "/themes/solarized/widgets/mem.png"
