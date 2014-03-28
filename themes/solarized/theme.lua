@@ -67,6 +67,9 @@ theme.taglist_squares                           = "true"
 
 -- tasklist
 theme.tasklist_bg_focus                         = theme.bg_normal
+
+-- gaps
+theme.useless_gap_width = 6
 -- }}} Override
 
 -- {{{ Widgets
@@ -113,6 +116,18 @@ theme.layout_max                                = config .. "/themes/solarized/l
 theme.layout_fullscreen                         = config .. "/themes/solarized/layouts/fullscreen.png"
 theme.layout_magnifier                          = config .. "/themes/solarized/layouts/magnifier.png"
 theme.layout_floating                           = config .. "/themes/solarized/layouts/floating.png"
+-- lain
+theme.layout_cascade                            = config .. "/themes/solarized/layouts/cascade.png"
+--theme.layout_cascadetile                        = config .. "/themes/solarized/layouts/cascadetile.png"
+theme.layout_centerfair                         = config .. "/themes/solarized/layouts/centerfair.png"
+theme.layout_centerwork                         = config .. "/themes/solarized/layouts/centerwork.png"
+theme.layout_termfair                           = config .. "/themes/solarized/layouts/termfair.png"
+theme.layout_uselessfair                        = config .. "/themes/solarized/layouts/uselessfair.png"
+theme.layout_uselesspiral                       = config .. "/themes/solarized/layouts/uselesspiral.png"
+theme.layout_uselesstile                        = config .. "/themes/solarized/layouts/uselesstile.png"
+theme.layout_uselesstileleft                    = config .. "/themes/solarized/layouts/uselesstileleft.png"
+theme.layout_uselesstiletop                    = config .. "/themes/solarized/layouts/uselesstiletop.png"
+theme.layout_uselesstilebottom                    = config .. "/themes/solarized/layouts/uselesstilebottom.png"
 -- }}} Layout
 
 -- {{{ Titlebar
