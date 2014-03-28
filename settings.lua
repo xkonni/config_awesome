@@ -25,13 +25,29 @@ elseif settings.host == "ns3knecht" then
   settings.notify = 0
 end
 
+layouts = require("layouts")
+layouts.termfair.nmaster = 3
+layouts.termfair.ncol = 1
+layouts.centerfair.nmaster = 2
+layouts.centerfair.ncol = 1
 
 settings.layouts      = {
   --awful.layout.suit.floating,
-  awful.layout.suit.tile,
-  awful.layout.suit.tile.left,
-  awful.layout.suit.tile.bottom,
-  awful.layout.suit.tile.top,
+  --layouts.cascade,
+  --layouts.cascadetile,
+  --layouts.centerfair,
+  layouts.centerwork,
+  --layouts.termfair,
+  --layouts.uselessfair,
+  --layouts.uselesspiral,
+  layouts.uselesstile,
+  layouts.uselesstile.left,
+  layouts.uselesstile.bottom,
+  layouts.uselesstile.top,
+  --awful.layout.suit.tile,
+  --awful.layout.suit.tile.left,
+  --awful.layout.suit.tile.bottom,
+  --awful.layout.suit.tile.top,
   --awful.layout.suit.fair,
   --awful.layout.suit.fair.horizontal,
   --awful.layout.suit.spiral,
