@@ -189,7 +189,6 @@ function widgets.mem()
   widget_mem = _stats({
     icon = widgets.mem_icon,
     vicious_module = vicious.widgets.mem,
-    --id = 1,
     string_pre = "",
     string_post = "%"
   })
