@@ -48,10 +48,12 @@ if beautiful.wallpaper then
     gears.wallpaper.maximized(beautiful.wallpaper, s, true)
   end
 end
+
 -- Tags
+awful.layout.layouts = settings.layouts
 tags = {}
 for s = 1, screen.count() do
-  tags[s] = awful.tag(settings.tags, s, settings.layouts[1])
+  tags[s] = awful.tag(settings.tags, s, awful.layout.layouts[1])
 end
 -- {{{ Menu
 mymainmenu = awful.menu({
@@ -139,10 +141,10 @@ for s = 1, screen.count() do
   -- We need one layoutbox per screen.
   mylayoutbox[s] = awful.widget.layoutbox(s)
   mylayoutbox[s]:buttons(awful.util.table.join(
-    awful.button({ }, 1, function () awful.layout.inc(settings.layouts, 1) end),
-    awful.button({ }, 3, function () awful.layout.inc(settings.layouts, -1) end),
-    awful.button({ }, 4, function () awful.layout.inc(settings.layouts, 1) end),
-    awful.button({ }, 5, function () awful.layout.inc(settings.layouts, -1) end)))
+    awful.button({ }, 1, function () awful.layout.inc( 1) end),
+    awful.button({ }, 3, function () awful.layout.inc(-1) end),
+    awful.button({ }, 4, function () awful.layout.inc( 1) end),
+    awful.button({ }, 5, function () awful.layout.inc(-1) end)))
   -- Create a taglist widget
   mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, mytaglist.buttons)
 
@@ -255,8 +257,8 @@ globalkeys = awful.util.table.join(
 
   awful.key({ settings.modkey, "Control" }, "h", function () awful.tag.incnmaster( 1)      end),
   awful.key({ settings.modkey, "Control" }, "l", function () awful.tag.incnmaster(-1)      end),
-  awful.key({ settings.modkey,           }, "space", function () awful.layout.inc(settings.layouts,  1) end),
-  awful.key({ settings.modkey, "Shift"   }, "space", function () awful.layout.inc(settings.layouts, -1) end),
+  awful.key({ settings.modkey,           }, "space", function () awful.layout.inc( 1) end),
+  awful.key({ settings.modkey, "Shift"   }, "space", function () awful.layout.inc(-1) end),
 
   awful.key({ settings.modkey, "Control" }, "n", awful.client.restore),
 
