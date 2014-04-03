@@ -37,9 +37,9 @@ theme.bg_systray                                = theme.bg_normal
 -- }}} Colors
 
 -- {{{ Borders
-theme.border_width                              = "1"
-theme.border_normal                             = "#041015"
-theme.border_focus                              = "#268bd2"
+theme.border_width                              = "2"
+theme.border_normal                             = theme.bg_normal
+theme.border_focus                              = theme.fg_focus
 theme.border_marked                             = "#00ff00"
 -- }}} Borders
 
