@@ -1,16 +1,14 @@
 local naughty = require("naughty")
-local vicious = require("vicious")
 
 functions = {}
 function functions.init(args)
-  functions.home = args.home
+  beautiful       = args.beautiful
+  functions.home  = args.home
 end
 
 function functions.resize(c)
   local n
-  -- TODO
-  --local border = 2*beautiful.border_width
-  local border = 2
+  local border = 2*beautiful.border_width
   if awful.client.floating.get(c) then
     n = naughty.notify({screen=mouse.screen, title="resize floating", timeout=0})
     grabber = awful.keygrabber.run(
@@ -67,9 +65,7 @@ end
 
 function functions.move(c)
   local n
-  -- TODO
-  --local border = 2*beautiful.border_width
-  local border = 2
+  local border = 2*beautiful.border_width
   if awful.client.floating.get(c) then
     n = naughty.notify({screen=mouse.screen, title="move floating", timeout=0})
     grabber = awful.keygrabber.run(

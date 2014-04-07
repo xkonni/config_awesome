@@ -30,7 +30,10 @@ widgets.init({
   timeout   = settings.timeout,
   notify    = settings.notify,
 })
-functions.init({home = settings.home })
+functions.init({
+  beautiful = beautiful,
+  home      = settings.home
+})
 
 -- Wallpaper
 if beautiful.wallpaper then
