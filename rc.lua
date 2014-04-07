@@ -26,19 +26,9 @@ require("error")
 -- Themes define colours, icons, and wallpapers
 beautiful.init(settings.theme)
 widgets.init({
-  fg = beautiful.fg_normal,
-  bg = beautiful.bg_normal,
-  focus = beautiful.fg_focus,
-  border = beautiful.bg_normal,
-  timeout = settings.timeout,
-  notify = settings.notify,
-  bat_icon = beautiful.bat_icon,
-  cpu_icon = beautiful.cpu_icon,
-  mem_icon = beautiful.mem_icon,
-  mpd_icon = beautiful.mpd_icon,
-  msg_icon = beautiful.msg_icon,
-  net_icon = beautiful.net_icon,
-  vol_icon = beautiful.vol_icon
+  beautiful = beautiful,
+  timeout   = settings.timeout,
+  notify    = settings.notify,
 })
 functions.init({home = settings.home })
 
@@ -556,6 +546,3 @@ client.connect_signal("unfocus", function(c)
   c.border_color = beautiful.border_normal
 end)
 -- }}}
--- TODO
-local w = screen[screen.count()].workarea
-naughty.notify({text=w.height})

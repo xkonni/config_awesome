@@ -51,9 +51,9 @@ local function _info(args)
     local widget_info_graph = awful.widget.graph()
     widget_info_graph:set_width(20)
     widget_info_graph:set_height(15)
-    widget_info_graph:set_background_color(widgets.bg)
+    widget_info_graph:set_background_color(beautiful.bg_normal)
     widget_info_graph:set_color(widgets.grad)
-    widget_info_graph:set_border_color(widgets.border)
+    widget_info_graph:set_border_color(beautiful.bg_normal)
     vicious.register(widget_info_graph, args.vicious_module, function(widget, wargs)
       return wargs[id]
     end, widgets.timeout)
@@ -78,19 +78,9 @@ end
 
 -- public functions
 function widgets.init(args)
-  widgets.fg      = args.fg       or "#ffffff"
-  widgets.bg      = args.bg       or "#000000"
-  widgets.focus   = args.focus    or "#ff0000"
-  widgets.border  = args.border   or "#0000ff"
+  beautiful       = args.beautiful
   widgets.notify  = args.notify   or 0
   widgets.timeout = args.timeout  or 5
-  widgets.bat_icon = args.bat_icon
-  widgets.cpu_icon = args.cpu_icon
-  widgets.mem_icon = args.mem_icon
-  widgets.mpd_icon = args.mpd_icon
-  widgets.msg_icon = args.msg_icon
-  widgets.net_icon = args.net_icon
-  widgets.vol_icon = args.vol_icon
 end
 
 function widgets.background(args)
@@ -121,8 +111,8 @@ function widgets.sep(args)
   end
 
   if args.symbol then
-    local fg = args.fg or widgets.focus
-    local bg = args.bg or widgets.bg
+    local fg = args.fg or beautiful.fg_focus
+    local bg = args.bg or beautiful.bg_normal
     widget_fg = wibox.widget.textbox()
     widget_bg = wibox.widget.background()
     widget_fg:set_markup("<span size=\"22000\" color=\"".. fg .. "\">".. args.symbol .."</span>")
@@ -144,7 +134,7 @@ end
 function widgets.bat(bat)
   vicious.cache(vicious.widgets.bat)
   local widget_bat = wibox.layout.fixed.horizontal()
-  local widget_bat_icon = _imagebox({image=widgets.bat_icon})
+  local widget_bat_icon = _imagebox({image=beautiful.bat_icon})
   local widget_bat_info_align = wibox.layout.align.vertical()
 
   -- textbox
@@ -157,9 +147,9 @@ function widgets.bat(bat)
   local widget_bat_info_bar = awful.widget.progressbar()
   widget_bat_info_bar:set_height(6)
   widget_bat_info_bar:set_width(15)
-  widget_bat_info_bar:set_background_color(widgets.bg)
-  widget_bat_info_bar:set_color(widgets.fg)
-  widget_bat_info_bar:set_border_color(widgets.border)
+  widget_bat_info_bar:set_background_color(beautiful.bg_normal)
+  widget_bat_info_bar:set_color(beautiful.fg_normal)
+  widget_bat_info_bar:set_border_color(beautiful.bg_normal)
   widget_bat_info_bar:set_ticks(true)
   widget_bat_info_bar:set_ticks_gap(1)
   widget_bat_info_bar:set_ticks_size(2)
@@ -176,7 +166,7 @@ end
 function widgets.cpu()
   vicious.cache(vicious.widgets.cpu)
   widget_cpu = _stats({
-    icon = widgets.cpu_icon,
+    icon = beautiful.cpu_icon,
     vicious_module = vicious.widgets.cpu,
     string_pre = "",
     string_post = "%"
@@ -187,7 +177,7 @@ end
 function widgets.mem()
   vicious.cache(vicious.widgets.mem)
   widget_mem = _stats({
-    icon = widgets.mem_icon,
+    icon = beautiful.mem_icon,
     vicious_module = vicious.widgets.mem,
     string_pre = "",
     string_post = "%"
@@ -198,7 +188,7 @@ end
 function widgets.net(interface)
   vicious.cache(vicious.widgets.net)
   widget_net = wibox.layout.fixed.horizontal()
-  widget_net_icon = _imagebox({image=widgets.net_icon})
+  widget_net_icon = _imagebox({image=beautiful.net_icon})
   widget_net_up = _info({
     vicious_module = vicious.widgets.net,
     id = "{" .. interface .. " up_kb}",
@@ -221,7 +211,7 @@ end
 function widgets.mpd()
   vicious.cache(vicious.widgets.mpd)
   local widget = wibox.layout.fixed.horizontal()
-  local widget_icon = _imagebox({image=widgets.mpd_icon})
+  local widget_icon = _imagebox({image=beautiful.mpd_icon})
   local widget_info = wibox.layout.align.vertical()
 
   local widget_artist = _textbox()
@@ -248,9 +238,9 @@ function widgets.msg()
   msg = {}
   msg.count = 0
 
-  msg.icon = _imagebox({image=widgets.msg_icon})
+  msg.icon = _imagebox({image=beautiful.msg_icon})
   msg.info = wibox.layout.align.vertical()
-  msg.indicator = _textbox({color=widgets.fg, text="✉ "})
+  msg.indicator = _textbox({color=beautiful.fg_normal, text="✉ "})
   msg.text = _textbox()
   msg.info:set_first(msg.indicator)
   msg.info:set_second(msg.text)
@@ -260,7 +250,7 @@ function widgets.msg()
   function msg.update(args)
     if (args.action == 'reset') then
       msg.count = 0
-      msg.indicator:set_markup("<span color=\"" .. widgets.fg .. "\">✉ </span>")
+      msg.indicator:set_markup("<span color=\"" .. beautiful.fg_normal .. "\">✉ </span>")
       msg.text:set_text("")
     else
       msg.count = msg.count + 1
@@ -282,7 +272,7 @@ function widgets.vol()
   vol.level = 0
 
   vol.widget = wibox.layout.fixed.horizontal()
-  vol.icon = _imagebox({image=widgets.vol_icon})
+  vol.icon = _imagebox({image=beautiful.vol_icon})
   vol.bar = awful.widget.progressbar()
   vol.notify = nil
 
@@ -321,10 +311,10 @@ function widgets.vol()
     local text
     if info_vol[2] ~= "♫" then
       text = "["..cur_vol.."%] [on]"
-      vol.bar:set_color(widgets.fg)
+      vol.bar:set_color(beautiful.fg_normal)
     else
       text = "["..cur_vol.."%] [off]"
-      vol.bar:set_color(widgets.fg .. "40")
+      vol.bar:set_color(beautiful.fg_normal .. "40")
     end
     vol.bar:set_value(cur_vol/100)
     vol.notify = naughty.notify({screen=screen.count(), title="volume", text=text})
@@ -342,18 +332,18 @@ function widgets.vol()
   vol.bar:set_vertical(true)
   vol.bar:set_height(15)
   vol.bar:set_width(6)
-  vol.bar:set_background_color(widgets.bg)
-  vol.bar:set_color(widgets.fg)
-  vol.bar:set_border_color(widgets.border)
+  vol.bar:set_background_color(beautiful.bg_normal)
+  vol.bar:set_color(beautiful.fg_normal)
+  vol.bar:set_border_color(beautiful.bg_normal)
   vol.bar:set_ticks(true)
   vol.bar:set_ticks_gap(1)
   vol.bar:set_ticks_size(2)
   vicious.register(vol.bar, vicious.widgets.volume,
     function(widget, wargs)
       if wargs[2] == "♫" then
-        vol.bar:set_color(widgets.fg)
+        vol.bar:set_color(beautiful.fg_normal)
       else
-        vol.bar:set_color(widgets.fg .. "40")
+        vol.bar:set_color(beautiful.fg_normal .. "40")
       end
       return wargs[1]
     end,
