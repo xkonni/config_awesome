@@ -6,6 +6,7 @@ settings.home         = awful.util.pread("echo $HOME | tr -d '\n'")
 settings.host         = awful.util.pread("hostname | tr -d '\n'")
 settings.terminal     = "urxvt"
 settings.editor       = "vim"
+settings.filemanager  = "pcmanfm"
 settings.terminal_cmd = settings.terminal .. " -e "
 settings.modkey       = "Mod4"
 settings.theme        = settings.config .. "/themes/solarized/theme.lua"

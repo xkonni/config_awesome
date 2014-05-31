@@ -244,6 +244,7 @@ globalkeys = awful.util.table.join(
 
   -- Standard program
   awful.key({ settings.modkey,           }, "Return", function () awful.util.spawn(settings.terminal) end),
+  awful.key({ settings.modkey,           }, "e",      function () awful.util.spawn(settings.filemanager) end),
   awful.key({ settings.modkey, "Control" }, "r", awesome.restart),
   awful.key({ settings.modkey, "Shift"   }, "q", awesome.quit),
 
