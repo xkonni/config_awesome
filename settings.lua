@@ -62,6 +62,7 @@ settings.tags = { 1, 2, 3, 4, 5, 6, 7, 8, 9 }
 settings.myawesomemenu = {
   { "manual",       settings.terminal_cmd .. " man awesome" },
   { "edit config",  settings.terminal_cmd .. settings.editor .. awesome.conffile },
+  { "switch user",  "dm-tool switch-to-greeter"},
   { "restart",      awesome.restart },
   { "quit",         awesome.quit } }
 
