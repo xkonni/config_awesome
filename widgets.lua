@@ -81,6 +81,7 @@ function widgets.init(args)
   beautiful       = args.beautiful
   widgets.notify  = args.notify   or 0
   widgets.timeout = args.timeout  or 5
+  widgets.termcmd = args.termcmd or 'urxvt -e'
 end
 
 function widgets.background(args)
@@ -171,6 +172,10 @@ function widgets.cpu()
     string_pre = "",
     string_post = "%"
   })
+  widget_cpu:buttons(
+    awful.util.table.join(
+      awful.button({ }, 1, function() awful.util.spawn(widgets.termcmd .. ' htop') end)
+  ))
   return widget_cpu
 end
 
@@ -182,6 +187,10 @@ function widgets.mem()
     string_pre = "",
     string_post = "%"
   })
+  widget_mem:buttons(
+    awful.util.table.join(
+      awful.button({ }, 1, function() awful.util.spawn(widgets.termcmd .. ' htop') end)
+  ))
   return widget_mem
 end
 

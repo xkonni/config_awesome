@@ -29,6 +29,7 @@ widgets.init({
   beautiful = beautiful,
   timeout   = settings.timeout,
   notify    = settings.notify,
+  termcmd   = settings.termcmd
 })
 functions.init({
   beautiful = beautiful,
@@ -413,14 +414,12 @@ awful.rules.rules = {
                      keys = clientkeys,
                      buttons = clientbuttons } },
     -- Match all new clients, notify name and class
-    --{ rule = { },
+    -- { rule = { },
     --  properties = { },
     --  callback = function(c)
-    --    local cname=c.name
-    --    local cclass=c.class
-    --    naughty.notify({title="new window", text="name: "..cname.." class: "..cclass})
+    --    naughty.notify({title="new window", text="name: ".. c.name.." class: ".. c.class})
     --  end
-    --},
+    -- },
     -- Struts
     --{ rule = { class = "Pidgin", role="buddy_list" },
     --  properties = {
@@ -438,6 +437,8 @@ awful.rules.rules = {
     --    c:geometry(g)
     --  end
     --},
+    { rule = { name = "htop" },
+      properties = { floating = true } },
     { rule = { class = "MPlayer" },
       properties = { floating = true } },
     { rule = { class = "mpv" },
