@@ -27,13 +27,11 @@ require("error")
 beautiful.init(settings.theme)
 widgets.init({
   beautiful = beautiful,
-  timeout   = settings.timeout,
-  notify    = settings.notify,
-  termcmd   = settings.termcmd
+  settings = settings
 })
 functions.init({
   beautiful = beautiful,
-  home      = settings.home
+  settings = settings
 })
 
 -- Wallpaper

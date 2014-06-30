@@ -46,7 +46,7 @@ local function _info(args)
     local widget_info_text = _textbox()
     vicious.register(widget_info_text, args.vicious_module, function(widget, wargs)
       return string.format("%07s", string_pre .. " " .. math.floor(wargs[id])) .. string_post
-    end, widgets.timeout)
+    end, settings.timeout)
     -- graph
     local widget_info_graph = awful.widget.graph()
     widget_info_graph:set_width(20)
@@ -56,7 +56,7 @@ local function _info(args)
     widget_info_graph:set_border_color(beautiful.bg_normal)
     vicious.register(widget_info_graph, args.vicious_module, function(widget, wargs)
       return wargs[id]
-    end, widgets.timeout)
+    end, settings.timeout)
 
     widget_info_align:set_first(widget_info_text)
     widget_info_align:set_second(widget_info_graph)
@@ -78,10 +78,8 @@ end
 
 -- public functions
 function widgets.init(args)
-  beautiful       = args.beautiful
-  widgets.notify  = args.notify   or 0
-  widgets.timeout = args.timeout  or 5
-  widgets.termcmd = args.termcmd or 'urxvt -e'
+  beautiful = args.beautiful
+  settings  = args.settings
 end
 
 function widgets.background(args)
@@ -142,7 +140,7 @@ function widgets.bat(bat)
   local widget_bat_info_text = _textbox()
   vicious.register(widget_bat_info_text, vicious.widgets.bat, function(widget, wargs)
     return string.format("%10s", wargs[1] .. wargs[2] .. "% " .. wargs[3])
-  end, widgets.timeout, bat)
+  end, settings.timeout, bat)
 
   -- progressbar
   local widget_bat_info_bar = awful.widget.progressbar()
@@ -154,7 +152,7 @@ function widgets.bat(bat)
   widget_bat_info_bar:set_ticks(true)
   widget_bat_info_bar:set_ticks_gap(1)
   widget_bat_info_bar:set_ticks_size(2)
-  vicious.register(widget_bat_info_bar, vicious.widgets.bat, "$2", widgets.timeout, bat)
+  vicious.register(widget_bat_info_bar, vicious.widgets.bat, "$2", settings.timeout, bat)
 
   widget_bat_info_align:set_first (widget_bat_info_text)
   widget_bat_info_align:set_second (widget_bat_info_bar)
@@ -174,7 +172,7 @@ function widgets.cpu()
   })
   widget_cpu:buttons(
     awful.util.table.join(
-      awful.button({ }, 1, function() awful.util.spawn(widgets.termcmd .. ' htop') end)
+      awful.button({ }, 1, function() awful.util.spawn(settings.terminal_cmd .. ' htop') end)
   ))
   return widget_cpu
 end
@@ -189,7 +187,7 @@ function widgets.mem()
   })
   widget_mem:buttons(
     awful.util.table.join(
-      awful.button({ }, 1, function() awful.util.spawn(widgets.termcmd .. ' htop') end)
+      awful.button({ }, 1, function() awful.util.spawn(settings.terminal_cmd .. ' htop') end)
   ))
   return widget_mem
 end
@@ -219,7 +217,7 @@ end
 
 function widgets.mpd()
   vicious.cache(vicious.widgets.mpd)
-  local widget = wibox.layout.fixed.horizontal()
+  local widget_mpd = wibox.layout.fixed.horizontal()
   local widget_icon = _imagebox({image=beautiful.mpd_icon})
   local widget_info = wibox.layout.align.vertical()
 
@@ -234,19 +232,19 @@ function widgets.mpd()
       widget_artist:set_text("★ " .. wargs["{Artist}"] .. " ⚫ " .. wargs["{Album}"])
       return "♫ " .. wargs["{Title}"]
     end
-  end, widgets.timeout)
+  end, settings.timeout)
   widget_info:set_first (widget_artist)
   widget_info:set_second(widget_title)
 
-  widget:add(widget_icon)
-  widget:add(widget_info)
-  widget:buttons(
+  widget_mpd:add(widget_icon)
+  widget_mpd:add(widget_info)
+  widget_mpd:buttons(
     awful.util.table.join(
       awful.button({ }, 1, function()
         awful.util.spawn(settings.terminal_cmd .. settings.home .. "/bin/ncmpcpp" )
       end)
   ))
-  return widget
+  return widget_mpd
 end
 
 function widgets.msg()
@@ -271,7 +269,7 @@ function widgets.msg()
       msg.count = msg.count + 1
       msg.indicator:set_markup("<span color=\"#859900\">✉ </span>")
       msg.text:set_text(msg.count)
-      if ((args.active ~= 1) and (widgets.notify)) then
+      if ((args.active ~= 1) and (settings.notify)) then
         naughty.notify({screen=screen.count(), timeout=args.timeout, title=args.title, text=args.text})
       end
     end
@@ -294,7 +292,7 @@ function widgets.vol()
   function vol.increase()
     naughty.destroy(vol.notify)
     local info_vol = vicious.widgets.volume(widget, "Master")
-    local cur_vol = awful.util.pread(functions.home .."/bin/set_volume increase")
+    local cur_vol = awful.util.pread(settings.home .."/bin/set_volume increase")
     local text
     if info_vol[2] == "♫" then
       text = "["..cur_vol.."%] [on]"
@@ -308,7 +306,7 @@ function widgets.vol()
   function vol.decrease()
     naughty.destroy(vol.notify)
     local info_vol = vicious.widgets.volume(widget, "Master")
-    local cur_vol = awful.util.pread(functions.home .."/bin/set_volume decrease")
+    local cur_vol = awful.util.pread(settings.home .."/bin/set_volume decrease")
     local text
     if info_vol[2] == "♫" then
       text = "["..cur_vol.."%] [on]"
@@ -322,7 +320,7 @@ function widgets.vol()
   function vol.toggle()
     naughty.destroy(vol.notify)
     local info_vol = vicious.widgets.volume(widget, "Master")
-    local cur_vol = awful.util.pread(functions.home .."/bin/set_volume toggle")
+    local cur_vol = awful.util.pread(settings.home .."/bin/set_volume toggle")
     local text
     if info_vol[2] ~= "♫" then
       text = "["..cur_vol.."%] [on]"
@@ -362,7 +360,7 @@ function widgets.vol()
       end
       return wargs[1]
     end,
-  widgets.timeout, "Master")
+  settings.timeout, "Master")
 
   vol.widget:add(vol.icon)
   vol.widget:add(vol.bar)

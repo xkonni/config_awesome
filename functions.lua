@@ -3,7 +3,7 @@ local naughty = require("naughty")
 functions = {}
 function functions.init(args)
   beautiful       = args.beautiful
-  functions.home  = args.home
+  settings       = args.settings
 end
 
 function functions.resize(c)
