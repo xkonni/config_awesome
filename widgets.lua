@@ -240,6 +240,12 @@ function widgets.mpd()
 
   widget:add(widget_icon)
   widget:add(widget_info)
+  widget:buttons(
+    awful.util.table.join(
+      awful.button({ }, 1, function()
+        awful.util.spawn(settings.terminal_cmd .. settings.home .. "/bin/ncmpcpp" )
+      end)
+  ))
   return widget
 end
 

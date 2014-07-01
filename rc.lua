@@ -439,6 +439,8 @@ awful.rules.rules = {
     --},
     { rule = { name = "htop" },
       properties = { floating = true } },
+    { rule = { name = "ncmpcpp"},
+      properties = { floating = true } },
     { rule = { class = "MPlayer" },
       properties = { floating = true } },
     { rule = { class = "mpv" },
