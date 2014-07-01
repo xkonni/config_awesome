@@ -45,9 +45,13 @@ local function _info(args)
     -- textbox
     local widget_info_text = _textbox()
     vicious.register(widget_info_text, args.vicious_module, function(widget, wargs)
-      return string.format("%07s", string_pre .. " " .. math.floor(wargs[id])) .. string_post
-    end, settings.timeout)
-    -- graph
+      if wargs[id] then
+        return string.format("%07s", string_pre .. " " .. math.floor(wargs[id])) .. string_post
+      else
+        return 0
+      end
+    end, widgets.timeout)
+   -- graph
     local widget_info_graph = awful.widget.graph()
     widget_info_graph:set_width(20)
     widget_info_graph:set_height(15)
