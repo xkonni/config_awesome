@@ -15,15 +15,15 @@ settings.notify       = 1
 
 -- host overrides
 if settings.host == "annoyance" then
-  settings.interface    = "eth0"
-  settings.mpd = 1
+  settings.interface  = "eth0"
+  settings.mpd        = 1
 elseif settings.host == "silence" then
-  settings.timeout = 5
-  settings.interface = "wlan0"
-  settings.battery  = "BAT1"
+  settings.timeout    = 5
+  settings.interface  = "wlan0"
+  settings.battery    = "BAT1"
 elseif settings.host == "ns3knecht" then
-  settings.timeout = 1
-  settings.notify = 0
+  settings.timeout    = 1
+  settings.notify     = 0
 end
 
 layouts = require("layouts")
@@ -33,7 +33,6 @@ layouts.centerfair.nmaster = 2
 layouts.centerfair.ncol = 1
 
 settings.layouts      = {
-  --awful.layout.suit.floating,
   --layouts.cascade,
   --layouts.cascadetile,
   --layouts.centerfair,
@@ -45,6 +44,7 @@ settings.layouts      = {
   layouts.uselesstile.bottom,
   layouts.uselesstile.top,
   layouts.centerwork,
+  --awful.layout.suit.floating,
   --awful.layout.suit.tile,
   --awful.layout.suit.tile.left,
   --awful.layout.suit.tile.bottom,
