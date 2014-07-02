@@ -202,7 +202,7 @@ root.buttons(awful.util.table.join(
 globalkeys = awful.util.table.join(
   --awful.key({ settings.modkey,           }, "Left",   awful.tag.viewprev     ),
   --awful.key({ settings.modkey,           }, "Right",  awful.tag.viewnext     ),
-  --awful.key({ settings.modkey,           }, "Escape", awful.tag.history.restore),
+  awful.key({ settings.modkey,           }, "grave", awful.tag.viewnext),
 
   -- focus by direction
   awful.key({ settings.modkey,           }, "h",
