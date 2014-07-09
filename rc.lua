@@ -460,8 +460,12 @@ awful.rules.rules = {
     },
     { rule = { class = "Wine" },
       properties = {
+        full_screen = true,
         floating = true,
-        full_screen = true }
+      },
+        callback = function(c)
+          c.border_width = 0
+        end
     },
     { rule = { class = "VirtualBox" },
       properties = {
