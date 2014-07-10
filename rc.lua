@@ -455,8 +455,11 @@ awful.rules.rules = {
       properties = { floating = true } },
     { rule = { class = "Plugin-container" },
       properties = { floating = true } },
-    { rule = { class = "Gvim"},
-      properties = { opacity = 0.8 }
+    { rule = { class = "gvim"},
+      properties = { opacity = 0.94 }
+    },
+    { rule = { class = "Termite"},
+      properties = { opacity = 0.94 }
     },
     { rule = { class = "Wine" },
       properties = {
