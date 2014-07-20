@@ -307,7 +307,7 @@ globalkeys = awful.util.table.join(
   end),
   -- scratch.pad.drop(prog, vert, horiz, width, height, sticky, screen)
   awful.key({ settings.modkey            }, "c", function ()
-    scratch.drop(settings.terminal, "bottom", "center", 0.7, 0.45, false, 1)
+    scratch.drop(settings.terminal, "bottom", "center", 1000, 500, false, 1)
   end)
 )
 
