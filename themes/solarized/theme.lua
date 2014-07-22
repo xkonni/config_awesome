@@ -9,7 +9,7 @@
 -- {{{ Main
 config                                          = awful.util.getdir("config")
 theme                                           = {}
-theme.wallpaper                                 = config .. "/themes/solarized/awesome-background.png"
+theme.wallpaper                                 = config .. "/themes/solarized/converge.jpg"
 -- }}} Main
 
 -- {{{ Styles
