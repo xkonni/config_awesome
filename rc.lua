@@ -37,7 +37,8 @@ functions.init({
 -- Wallpaper
 if beautiful.wallpaper then
   for s = 1, screen.count() do
-    gears.wallpaper.maximized(beautiful.wallpaper, s, true)
+    gears.wallpaper.maximized(beautiful.wallpaper, s, false)
+    -- gears.wallpaper.fit(beautiful.wallpaper, s, '#000000')
   end
 end
 
