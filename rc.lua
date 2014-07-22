@@ -268,6 +268,9 @@ globalkeys = awful.util.table.join(
   -- Menubar
   awful.key({ settings.modkey            }, "p", function () menubar.show() end),
 
+  -- suspend/resume all notifications
+  awful.key({ settings.modkey,           }, "Pause", function () naughty.toggle() end),
+
   -- Power
   awful.key({ settings.modkey, "Control" }, "Pause", function ()
     awful.util.spawn(settings.home .. "/bin/lock", false)
