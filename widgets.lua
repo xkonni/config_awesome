@@ -340,7 +340,8 @@ function widgets.vol()
   vicious.cache(vicious.widgets.volume)
   vol.widget:buttons(
     awful.util.table.join(
-      awful.button({ }, 1, function() vol.toggle() end),
+      awful.button({ }, 1, function() awful.util.spawn("pavucontrol") end),
+      awful.button({ }, 2, function() vol.toggle() end),
       awful.button({ }, 4, function() vol.increase() end),
       awful.button({ }, 5, function() vol.decrease() end)
   ))
