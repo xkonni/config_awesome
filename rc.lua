@@ -270,7 +270,17 @@ globalkeys = awful.util.table.join(
   awful.key({ settings.modkey            }, "p", function () menubar.show() end),
 
   -- suspend/resume all notifications
-  awful.key({ settings.modkey,           }, "Pause", function () naughty.toggle() end),
+  awful.key({ settings.modkey,           }, "Pause", function ()
+    if settings.quiet == 0 then
+      naughty.notify({text='notifications suspended'})
+      naughty.suspend()
+      settings.quiet = 1
+    else
+      naughty.notify({text='notifications resumed'})
+      settings.quiet = 0
+      naughty.resume()
+    end
+  end),
 
   -- Power
   awful.key({ settings.modkey, "Control" }, "Pause", function ()

@@ -12,6 +12,7 @@ settings.modkey       = "Mod4"
 settings.theme        = settings.config .. "/themes/solarized/theme.lua"
 settings.timeout      = 3
 settings.notify       = 1
+settings.quiet        = 0
 
 -- host overrides
 if settings.host == "annoyance" then
