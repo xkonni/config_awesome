@@ -306,29 +306,18 @@ globalkeys = awful.util.table.join(
   -- Menubar
   awful.key({ settings.mod            }, "p", function () menubar.show() end),
 
-  -- Power
-  awful.key({ settings.mod, "Control" }, "s", function () awful.util.spawn(config .. "/i3lock", false) end),
-  awful.key({                            }, "XF86HomePage", function ()
-      awful.util.spawn(home .. "/bin/powerswitch 1 0", false)
-      awful.util.spawn("systemctl suspend", false)
-    end),
-  awful.key({                            }, "XF86Mail", function ()
-      awful.util.spawn(home .. "/bin/powerswitch 1 0", false)
-      awful.util.spawn("systemctl hibernate", false)
-  end),
-
   -- Media
-  awful.key({                   }, "XF86AudioMute",        function () functions.set_volume("toggle")   end),
-  awful.key({                   }, "XF86AudioLowerVolume", function () functions.set_volume("decrease") end),
-  awful.key({                   }, "XF86AudioRaiseVolume", function () functions.set_volume("increase") end),
+  awful.key({ settings.mod            }, "F3",  function () awful.util.spawn(settings.home .."/bin/notify_mpd switch", false) end),
+  awful.key({ settings.mod            }, "F4",  function () awful.util.spawn(settings.home .."/bin/notify_mpd", false) end),
 
-  awful.key({                   }, "XF86AudioNext", function () awful.util.spawn(home .."/bin/notify_mpd next", false) end),
-  awful.key({                   }, "XF86AudioPlay", function () awful.util.spawn(home .."/bin/notify_mpd toggle", false) end),
-  awful.key({                   }, "XF86AudioStop", function () awful.util.spawn(home .."/bin/notify_mpd stop", false) end),
-  awful.key({                   }, "XF86AudioPrev", function () awful.util.spawn(home .."/bin/notify_mpd prev", false) end),
+  awful.key({ settings.mod            }, "F5",  function () awful.util.spawn(settings.home .."/bin/notify_mpd stop", false) end),
+  awful.key({ settings.mod            }, "F6",  function () awful.util.spawn(settings.home .."/bin/notify_mpd toggle", false) end),
+  awful.key({ settings.mod            }, "F7",  function () awful.util.spawn(settings.home .."/bin/notify_mpd prev", false) end),
+  awful.key({ settings.mod            }, "F8",  function () awful.util.spawn(settings.home .."/bin/notify_mpd next", false) end),
 
-  awful.key({                   }, "XF86Eject", function () awful.util.spawn(home .."/bin/notify_mpd switch", false) end),
-  awful.key({                   }, "XF86Tools", function () awful.util.spawn(home .."/bin/notify_mpd", false) end),
+  awful.key({ settings.mod            }, "F10",  function () awful.util.spawn(settings.home .."/bin/notify_volume toggle", false) end),
+  awful.key({ settings.mod            }, "F11",  function () awful.util.spawn(settings.home .."/bin/notify_volume decrease", false) end),
+  awful.key({ settings.mod            }, "F12",  function () awful.util.spawn(settings.home .."/bin/notify_volume increase", false) end),
 
   -- Scratchpad
   -- scratch.pad.toggle(screen)
@@ -339,7 +328,6 @@ globalkeys = awful.util.table.join(
   awful.key({ settings.mod            }, "c", function ()
     scratch.drop(settings.terminal, "bottom", "center", 1000, 500, false, 1)
   end)
-
 )
 
 clientkeys = awful.util.table.join(
