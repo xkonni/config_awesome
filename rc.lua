@@ -304,7 +304,17 @@ globalkeys = awful.util.table.join(
   awful.key({                   }, "XF86AudioPrev", function () awful.util.spawn(home .."/bin/notify_mpd prev", false) end),
 
   awful.key({                   }, "XF86Eject", function () awful.util.spawn(home .."/bin/notify_mpd switch", false) end),
-  awful.key({                   }, "XF86Tools", function () awful.util.spawn(home .."/bin/notify_mpd", false) end)
+  awful.key({                   }, "XF86Tools", function () awful.util.spawn(home .."/bin/notify_mpd", false) end),
+
+  -- Scratchpad
+  -- scratch.pad.toggle(screen)
+  awful.key({ modkey,           }, "s", function ()
+    scratch.pad.toggle(mouse.screen)
+  end),
+  -- scratch.pad.drop(prog, vert, horiz, width, height, sticky, screen)
+  awful.key({ modkey            }, "c", function ()
+    scratch.drop(terminal, "bottom", "center", 1000, 500, false, 1)
+  end)
 
 )
 
@@ -319,6 +329,11 @@ clientkeys = awful.util.table.join(
   awful.key({ modkey,           }, "m", function (c)
     c.maximized_horizontal = not c.maximized_horizontal
     c.maximized_vertical   = not c.maximized_vertical
+  end),
+  -- Scratchpad
+  -- pad.set(c, width, height, sticky, screen)
+  awful.key({ modkey, "Shift" }, "s", function (c)
+    scratch.pad.set(c, 0.50, 0.50, true)
   end)
 )
 
