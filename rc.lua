@@ -90,8 +90,8 @@ end
 -- {{{ Menu
 -- Create a laucher widget and a main menu
 myawesomemenu = {
-  { "manual", settings.terminal_cmd .. "man awesome" },
-  { "edit config", settings.editor_cmd .. " " .. awesome.conffile },
+  { "manual", settings.terminal_cmd .. "man\\ awesome" },
+  { "edit config", settings.editor_cmd .. "\\ " .. awesome.conffile },
   { "restart", awesome.restart },
   { "quit", awesome.quit } }
 
@@ -283,10 +283,10 @@ globalkeys = awful.util.table.join(
   -- Standard program
   awful.key({ settings.mod,           }, "Return", function () awful.util.spawn(settings.terminal) end),
   awful.key({ settings.mod, "Control" }, "r", awesome.restart),
-  awful.key({ settings.mod, "Shift"   }, "q", awesome.quit),
+  awful.key({ settings.mod, "Control" }, "q", awesome.quit),
 
-  awful.key({ settings.mod, "Control" }, "h", function () awful.tag.incnmaster( 1)      end),
-  awful.key({ settings.mod, "Control" }, "l", function () awful.tag.incnmaster(-1)      end),
+  awful.key({ settings.mod, "Control" }, "h", function () awful.tag.incnmaster( 1) end),
+  awful.key({ settings.mod, "Control" }, "l", function () awful.tag.incnmaster(-1) end),
   awful.key({ settings.mod,           }, "space", function () awful.layout.inc( 1) end),
   awful.key({ settings.mod, "Shift"   }, "space", function () awful.layout.inc(-1) end),
 
