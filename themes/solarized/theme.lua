@@ -13,7 +13,7 @@ theme.wallpaper                                 = config .. "/themes/solarized/c
 -- }}} Main
 
 -- {{{ Styles
-theme.font                                      = "Inconsolata for Powerline 11"
+theme.font                                      = "Inconsolata for Powerline 9"
 -- }}} Styles
 
 -- {{{ Colors
