@@ -49,6 +49,7 @@ settings.editor_cmd = settings.terminal_cmd .. settings.editor
 -- Default modkey
 settings.mod = "Mod4"
 settings.home = awful.util.pread("echo $HOME | tr -d '\n'")
+settings.timeout = 5
 -- Themes define colours, icons, and wallpapers
 beautiful.init(awful.util.getdir("config") .."/themes/solarized/theme.lua")
 
@@ -108,8 +109,32 @@ menubar.utils.terminal = settings.terminal
 -- }}}
 
 -- {{{ Wibox
+-- local helper functions
+local function _textbox(args)
+  local widget = wibox.widget.textbox()
+  widget:set_font("Inconsolata for Powerline 9")
+
+  if args then
+    local text = "<span "
+    if args.color then text = text .. "color=\"" .. args.color .. "\"" end
+    if args.weight then text = text .. "weight=\"" .. args.weight .. "\"" end
+    text = text .. ">"
+    if args.text then text = text .. args.text end
+    text = text .. "</span>"
+    widget:set_markup(text)
+  end
+
+  return widget
+end
 -- Create a textclock widget
-mytextclock = awful.widget.textclock()
+w = {}
+w.textclock = awful.widget.textclock()
+w.load = _textbox()
+w.load_text = "[load <span color=\"" .. beautiful.fg_focus ..  "\">$4 $5 $6</span>] "
+vicious.register(w.load, vicious.widgets.uptime, w.load_text, settings.timeout)
+w.mem = _textbox()
+w.mem_text = "[mem <span color=\"" .. beautiful.fg_focus ..  "\">$1%</span>] "
+vicious.register(w.mem, vicious.widgets.mem, w.mem_text, settings.timeout)
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -186,8 +211,10 @@ for s = 1, screen.count() do
 
   -- Widgets that are aligned to the right
   local right_layout = wibox.layout.fixed.horizontal()
+  right_layout:add(w.load)
+  right_layout:add(w.mem)
   if s == 1 then right_layout:add(wibox.widget.systray()) end
-  right_layout:add(mytextclock)
+  right_layout:add(w.textclock)
   right_layout:add(mylayoutbox[s])
 
   -- Now bring it all together (with the tasklist in the middle)
