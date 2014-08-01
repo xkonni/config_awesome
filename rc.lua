@@ -320,19 +320,18 @@ globalkeys = awful.util.table.join(
   awful.key({ settings.mod            }, "F12",  function () awful.util.spawn(settings.home .."/bin/notify_volume increase", false) end),
 
   -- Scratchpad
-  -- scratch.pad.toggle(screen)
+  -- scratch.pad.toggle({vert, horiz, instance, screen})
   awful.key({ settings.mod,           }, "s", function ()
-    scratch.pad.toggle(mouse.screen)
+    scratch.pad.toggle({screen=mouse.screen})
   end),
-  -- scratch.pad.drop(prog, vert, horiz, width, height, sticky, screen)
   awful.key({ settings.mod            }, "c", function ()
-    scratch.drop(settings.terminal, "bottom", "center", 1000, 500, false, 1)
+    scratch.pad.toggle({vert="bottom", horiz="center", instance=1, screen=0})
   end)
 )
 
 clientkeys = awful.util.table.join(
   awful.key({ settings.mod,           }, "f", function (c) c.fullscreen = not c.fullscreen  end),
-  awful.key({ settings.mod, "Shift"   }, "c", function (c) c:kill()             end),
+  awful.key({ settings.mod, "Shift"   }, "q", function (c) c:kill()             end),
   awful.key({ settings.mod, "Control" }, "space",  awful.client.floating.toggle           ),
   awful.key({ settings.mod, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end),
   awful.key({ settings.mod,           }, "o",    awful.client.movetoscreen            ),
@@ -343,9 +342,14 @@ clientkeys = awful.util.table.join(
     c.maximized_vertical   = not c.maximized_vertical
   end),
   -- Scratchpad
-  -- pad.set(c, width, height, sticky, screen)
+  -- pad.set(c, {vert, horiz, width, height, sticky, instance, screen})
   awful.key({ settings.mod, "Shift" }, "s", function (c)
-    scratch.pad.set(c, 0.50, 0.50, true)
+    scratch.pad.set(c, {vert="center", horiz="center", width=0.5, height=0.5,
+      sticky=true, instance=0, screen=mouse.screen})
+  end),
+  awful.key({ settings.mod, "Shift" }, "c", function (c)
+    scratch.pad.set(c, {vert="bottom", horiz="center", width=1000, height=400,
+      sticky=true, instance=1, screen=0})
   end)
 )
 
