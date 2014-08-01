@@ -12,6 +12,7 @@ local naughty = require("naughty")
 local menubar = require("menubar")
 local scratch = require("scratch")
 local vicious = require("vicious")
+local functions = require("functions")
 
 -- {{{ Error handling
 if awesome.startup_errors then
@@ -52,6 +53,7 @@ settings.home = awful.util.pread("echo $HOME | tr -d '\n'")
 settings.timeout = 5
 -- Themes define colours, icons, and wallpapers
 beautiful.init(awful.util.getdir("config") .."/themes/solarized/theme.lua")
+functions.init({beautiful=beautiful})
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
@@ -109,30 +111,13 @@ menubar.utils.terminal = settings.terminal
 -- }}}
 
 -- {{{ Wibox
--- local helper functions
-local function _textbox(args)
-  local widget = wibox.widget.textbox()
-  widget:set_font("Inconsolata for Powerline 9")
-
-  if args then
-    local text = "<span "
-    if args.color then text = text .. "color=\"" .. args.color .. "\"" end
-    if args.weight then text = text .. "weight=\"" .. args.weight .. "\"" end
-    text = text .. ">"
-    if args.text then text = text .. args.text end
-    text = text .. "</span>"
-    widget:set_markup(text)
-  end
-
-  return widget
-end
 -- Create a textclock widget
 w = {}
 w.textclock = awful.widget.textclock()
-w.load = _textbox()
+w.load = functions.textbox()
 w.load_text = "[load <span color=\"" .. beautiful.fg_focus ..  "\">$4 $5 $6</span>] "
 vicious.register(w.load, vicious.widgets.uptime, w.load_text, settings.timeout)
-w.mem = _textbox()
+w.mem = functions.textbox()
 w.mem_text = "[mem <span color=\"" .. beautiful.fg_focus ..  "\">$1%</span>] "
 vicious.register(w.mem, vicious.widgets.mem, w.mem_text, settings.timeout)
 
@@ -341,6 +326,8 @@ clientkeys = awful.util.table.join(
     c.maximized_horizontal = not c.maximized_horizontal
     c.maximized_vertical   = not c.maximized_vertical
   end),
+  awful.key({ settings.mod, "Shift"   }, "m", function (c) functions.move(c) end),
+  awful.key({ settings.mod, "Shift"   }, "r", function (c) functions.resize(c) end),
   -- Scratchpad
   -- pad.set(c, {vert, horiz, width, height, sticky, instance, screen})
   awful.key({ settings.mod, "Shift" }, "s", function (c)
