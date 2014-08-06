@@ -43,6 +43,7 @@ end
 -- {{{ Variable definitions
 settings = {}
 -- This is used later as the default settings.terminal and settings.editor to run.
+settings.host = awful.util.pread("hostname | tr -d '\n'")
 settings.terminal = "termite"
 settings.editor = "vim"
 settings.terminal_cmd = settings.terminal .. " -e "
@@ -120,6 +121,11 @@ vicious.register(w.load, vicious.widgets.uptime, w.load_text, settings.timeout)
 w.mem = functions.textbox()
 w.mem_text = "[mem <span color=\"" .. beautiful.fg_focus ..  "\">$1%</span>] "
 vicious.register(w.mem, vicious.widgets.mem, w.mem_text, settings.timeout)
+if settings.host == "silence" then
+  w.bat = functions.textbox()
+  w.bat_text = "[bat <span color=\"" .. beautiful.fg_focus ..  "\">$1 $2% $3</span>] "
+  vicious.register(w.bat, vicious.widgets.bat, w.bat_text, settings.timeout, "BAT1")
+end
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -198,6 +204,9 @@ for s = 1, screen.count() do
   local right_layout = wibox.layout.fixed.horizontal()
   right_layout:add(w.load)
   right_layout:add(w.mem)
+  if w.bat then
+    right_layout:add(w.bat)
+  end
   if s == 1 then right_layout:add(wibox.widget.systray()) end
   right_layout:add(w.textclock)
   right_layout:add(mylayoutbox[s])
