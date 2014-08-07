@@ -315,11 +315,17 @@ globalkeys = awful.util.table.join(
 
   -- Scratchpad
   -- scratch.pad.toggle({vert, horiz, instance, screen})
-  awful.key({ settings.mod,           }, "s", function ()
-    scratch.pad.toggle({screen=mouse.screen})
-  end),
   awful.key({ settings.mod            }, "c", function ()
-    scratch.pad.toggle({vert="bottom", horiz="center", instance=1, screen=0})
+    scratch.pad.toggle({vert="bottom", horiz="center", instance=0, screen=0})
+  end),
+  awful.key({ settings.mod,           }, "a", function ()
+    scratch.pad.toggle({horiz="left",  screen=mouse.screen, instance=1})
+  end),
+  awful.key({ settings.mod,           }, "s", function ()
+    scratch.pad.toggle({horiz="center", screen=mouse.screen, instance=2})
+  end),
+  awful.key({ settings.mod,           }, "d", function ()
+    scratch.pad.toggle({horiz="right",  screen=mouse.screen, instance=3})
   end)
 )
 
@@ -352,13 +358,18 @@ clientkeys = awful.util.table.join(
   awful.key({ settings.mod, "Shift"   }, "r", function (c) functions.resize(c) end),
   -- Scratchpad
   -- pad.set(c, {vert, horiz, width, height, sticky, instance, screen})
-  awful.key({ settings.mod, "Shift" }, "s", function (c)
-    scratch.pad.set(c, {vert="center", horiz="center", width=0.5, height=0.5,
-      sticky=true, instance=0, screen=mouse.screen})
-  end),
   awful.key({ settings.mod, "Shift" }, "c", function (c)
     scratch.pad.set(c, {vert="bottom", horiz="center", width=1000, height=400,
-      sticky=true, instance=1, screen=0})
+      sticky=true, instance=0, screen=0})
+  end),
+  awful.key({ settings.mod, "Shift" }, "a", function (c)
+    scratch.pad.set(c, {horiz="left",  width=0.4, sticky=true, instance=1, screen=mouse.screen})
+  end),
+  awful.key({ settings.mod, "Shift" }, "s", function (c)
+    scratch.pad.set(c, {horiz="center", width=0.4, sticky=true, instance=2, screen=mouse.screen})
+  end),
+  awful.key({ settings.mod, "Shift" }, "d", function (c)
+    scratch.pad.set(c, {horiz="right",  width=0.4, sticky=true, instance=3, screen=mouse.screen})
   end)
 )
 
