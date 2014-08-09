@@ -300,18 +300,24 @@ globalkeys = awful.util.table.join(
   -- Menubar
   awful.key({ settings.mod            }, "p", function () menubar.show() end),
 
-  -- Media
-  awful.key({ settings.mod            }, "F3",  function () awful.util.spawn(settings.home .."/bin/notify_mpd switch", false) end),
-  awful.key({ settings.mod            }, "F4",  function () awful.util.spawn(settings.home .."/bin/notify_mpd", false) end),
+  -- Media XF86
+  awful.key({                         }, "XF86AudioMute",        function () awful.util.spawn(settings.home .."/bin/notify_volume toggle", false) end),
+  awful.key({                         }, "XF86AudioLowerVolume", function () awful.util.spawn(settings.home .."/bin/notify_volume decrease", false) end),
+  awful.key({                         }, "XF86AudioRaiseVolume", function () awful.util.spawn(settings.home .."/bin/notify_volume increase", false) end),
+  awful.key({                         }, "XF86AudioStop",  function () awful.util.spawn(settings.home .."/bin/notify_mpd stop", false) end),
+  awful.key({                         }, "XF86AudioPrev", function () awful.util.spawn(settings.home .."/bin/notify_mpd prev", false) end),
+  awful.key({                         }, "XF86AudioPlay", function () awful.util.spawn(settings.home .."/bin/notify_mpd toggle", false) end),
+  awful.key({                         }, "XF86AudioNext", function () awful.util.spawn(settings.home .."/bin/notify_mpd next", false) end),
 
-  awful.key({ settings.mod            }, "F5",  function () awful.util.spawn(settings.home .."/bin/notify_mpd stop", false) end),
-  awful.key({ settings.mod            }, "F6",  function () awful.util.spawn(settings.home .."/bin/notify_mpd toggle", false) end),
-  awful.key({ settings.mod            }, "F7",  function () awful.util.spawn(settings.home .."/bin/notify_mpd prev", false) end),
-  awful.key({ settings.mod            }, "F8",  function () awful.util.spawn(settings.home .."/bin/notify_mpd next", false) end),
-
-  awful.key({ settings.mod            }, "F10",  function () awful.util.spawn(settings.home .."/bin/notify_volume toggle", false) end),
-  awful.key({ settings.mod            }, "F11",  function () awful.util.spawn(settings.home .."/bin/notify_volume decrease", false) end),
-  awful.key({ settings.mod            }, "F12",  function () awful.util.spawn(settings.home .."/bin/notify_volume increase", false) end),
+  -- Power
+  awful.key({ settings.mod,         }, "Scroll_Lock", function () awful.util.spawn(settings.home .."/bin/lock", false) end),
+  awful.key({ settings.mod, "Shift" }, "Scroll_Lock", function ()
+    awful.util.spawn("systemctl suspend -i", false)
+  end),
+  awful.key({ settings.mod, "Control" }, "Scroll_Lock", function ()
+    awful.util.spawn(settings.home .."/bin/lock", false)
+    awful.util.spawn("systemctl suspend -i", false)
+  end),
 
   -- Scratchpad
   -- scratch.pad.toggle({vert, horiz, instance, screen})
