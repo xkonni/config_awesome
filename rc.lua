@@ -95,6 +95,7 @@ end
 myawesomemenu = {
   { "manual", settings.terminal_cmd .. "man\\ awesome" },
   { "edit config", settings.editor_cmd .. "\\ " .. awesome.conffile },
+  { "trixi", "dm-tool switch-to-greeter" },
   { "restart", awesome.restart },
   { "quit", awesome.quit } }
 
