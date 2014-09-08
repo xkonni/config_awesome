@@ -310,6 +310,16 @@ globalkeys = awful.util.table.join(
   awful.key({                         }, "XF86AudioPlay", function () awful.util.spawn(settings.home .."/bin/notify_mpd toggle", false) end),
   awful.key({                         }, "XF86AudioNext", function () awful.util.spawn(settings.home .."/bin/notify_mpd next", false) end),
 
+  -- Media fake WASD
+  awful.key({ settings.mod            }, "Pause",  function () awful.util.spawn(settings.home .."/bin/notify_volume toggle", false) end),
+  awful.key({ settings.mod            }, "Next",  function () awful.util.spawn(settings.home .."/bin/notify_volume decrease", false) end),
+  awful.key({ settings.mod            }, "Prior",  function () awful.util.spawn(settings.home .."/bin/notify_volume increase", false) end),
+
+  awful.key({ settings.mod            }, "Insert", function () awful.util.spawn(settings.home .."/bin/notify_mpd toggle", false) end),
+  awful.key({ settings.mod            }, "Home",  function () awful.util.spawn(settings.home .."/bin/notify_mpd stop", false) end),
+  awful.key({ settings.mod            }, "Delete", function () awful.util.spawn(settings.home .."/bin/notify_mpd prev", false) end),
+  awful.key({ settings.mod            }, "End", function () awful.util.spawn(settings.home .."/bin/notify_mpd next", false) end),
+
   -- Power
   awful.key({ settings.mod,         }, "Scroll_Lock", function () awful.util.spawn(settings.home .."/bin/lock", false) end),
   awful.key({ settings.mod, "Shift" }, "Scroll_Lock", function ()
