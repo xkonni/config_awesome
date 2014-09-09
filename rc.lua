@@ -348,7 +348,7 @@ globalkeys = awful.util.table.join(
 
 clientkeys = awful.util.table.join(
   awful.key({ settings.mod,           }, "f", function (c) c.fullscreen = not c.fullscreen  end),
-  awful.key({ settings.mod, "Shift"   }, "q", function (c) c:kill()             end),
+  awful.key({ settings.mod, "Control" }, "c", function (c) c:kill()             end),
   awful.key({ settings.mod, "Control" }, "space", function(c)
     awful.client.floating.toggle()
     if awful.client.floating.get(c) then
