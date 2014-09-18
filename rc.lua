@@ -97,7 +97,7 @@ myawesomemenu = {
   { "edit config", settings.editor_cmd .. "\\ " .. awesome.conffile },
   { "trixi", "dm-tool switch-to-greeter" },
   { "restart", awesome.restart },
-  { "quit", awesome.quit } }
+  { "quit", functions.quit } }
 
 mymainmenu = awful.menu({
   items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
@@ -278,7 +278,7 @@ globalkeys = awful.util.table.join(
   -- Standard program
   awful.key({ settings.mod,           }, "Return", function () awful.util.spawn(settings.terminal) end),
   awful.key({ settings.mod, "Control" }, "r", awesome.restart),
-  awful.key({ settings.mod, "Control" }, "q", awesome.quit),
+  awful.key({ settings.mod, "Control" }, "q", functions.quit),
 
   awful.key({ settings.mod, "Control" }, "h", function () awful.tag.incnmaster( 1) end),
   awful.key({ settings.mod, "Control" }, "l", function () awful.tag.incnmaster(-1) end),

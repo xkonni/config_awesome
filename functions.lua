@@ -1,5 +1,6 @@
 local naughty = require("naughty")
 local wibox   = require("wibox")
+local awful   = require("awful")
 
 functions = {}
 function functions.init(args)
@@ -122,6 +123,10 @@ function functions.move(c)
         end
       end)
     end
+end
+
+function functions.quit()
+  awful.util.spawn("xfce4-session-logout -lf")
 end
 
 return functions
