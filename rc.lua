@@ -336,13 +336,13 @@ globalkeys = awful.util.table.join(
     scratch.pad.toggle({vert="bottom", horiz="center", instance=0, screen=0})
   end),
   awful.key({ settings.mod,           }, "a", function ()
-    scratch.pad.toggle({horiz="left",  screen=mouse.screen, instance=1})
+    scratch.pad.toggle({horiz="left", instance=1, screen=0})
   end),
   awful.key({ settings.mod,           }, "s", function ()
-    scratch.pad.toggle({horiz="center", screen=mouse.screen, instance=2})
+    scratch.pad.toggle({horiz="center", instance=2, screen=0})
   end),
   awful.key({ settings.mod,           }, "d", function ()
-    scratch.pad.toggle({horiz="right",  screen=mouse.screen, instance=3})
+    scratch.pad.toggle({horiz="right", instance=3, screen=0})
   end)
 )
 
@@ -380,13 +380,13 @@ clientkeys = awful.util.table.join(
       sticky=true, instance=0, screen=0})
   end),
   awful.key({ settings.mod, "Shift" }, "a", function (c)
-    scratch.pad.set(c, {horiz="left",  width=0.4, sticky=true, instance=1, screen=mouse.screen})
+    scratch.pad.set(c, {horiz="left",  width=0.4, sticky=true, instance=1, screen=0})
   end),
   awful.key({ settings.mod, "Shift" }, "s", function (c)
-    scratch.pad.set(c, {horiz="center", width=0.4, sticky=true, instance=2, screen=mouse.screen})
+    scratch.pad.set(c, {horiz="center", width=0.4, sticky=true, instance=2, screen=0})
   end),
   awful.key({ settings.mod, "Shift" }, "d", function (c)
-    scratch.pad.set(c, {horiz="right",  width=0.4, sticky=true, instance=3, screen=mouse.screen})
+    scratch.pad.set(c, {horiz="right",  width=0.4, sticky=true, instance=3, screen=0})
   end)
 )
 
