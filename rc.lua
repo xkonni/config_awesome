@@ -237,6 +237,11 @@ globalkeys = awful.util.table.join(
   --awful.key({ settings.mod,           }, "Escape", awful.tag.history.restore),
 
   -- focus by direction
+  awful.key({ settings.mod,           }, "h",
+ function ()
+      awful.client.focus.global_bydirection("left")
+      if client.focus then client.focus:raise() end
+    end),
   awful.key({ settings.mod,           }, "j",
  function ()
       --awful.client.focus.byidx( 1)
@@ -251,11 +256,6 @@ globalkeys = awful.util.table.join(
     end),
   awful.key({ settings.mod,           }, "l",
  function ()
-      awful.client.focus.global_bydirection("left")
-      if client.focus then client.focus:raise() end
-    end),
-  awful.key({ settings.mod,           }, ";",
- function ()
       awful.client.focus.global_bydirection("right")
       if client.focus then client.focus:raise() end
     end),
@@ -267,10 +267,10 @@ globalkeys = awful.util.table.join(
   end),
 
   -- Layout manipulation
+  awful.key({ settings.mod, "Shift"   }, "h", function () awful.client.swap.global_bydirection("left")   end),
   awful.key({ settings.mod, "Shift"   }, "j", function () awful.client.swap.global_bydirection("down")   end),
   awful.key({ settings.mod, "Shift"   }, "k", function () awful.client.swap.global_bydirection("up")     end),
-  awful.key({ settings.mod, "Shift"   }, "l", function () awful.client.swap.global_bydirection("left")   end),
-  awful.key({ settings.mod, "Shift"   }, ";", function () awful.client.swap.global_bydirection("right")  end),
+  awful.key({ settings.mod, "Shift"   }, "l", function () awful.client.swap.global_bydirection("right")  end),
   awful.key({ settings.mod, "Control" }, "j", function () awful.screen.focus_relative( 1) end),
   awful.key({ settings.mod, "Control" }, "k", function () awful.screen.focus_relative(-1) end),
   awful.key({ settings.mod,           }, "w", function () mymainmenu:toggle() end),
@@ -280,8 +280,8 @@ globalkeys = awful.util.table.join(
   awful.key({ settings.mod, "Control" }, "r", awesome.restart),
   awful.key({ settings.mod, "Control" }, "q", awesome.quit),
 
-  awful.key({ settings.mod, "Control" }, ";", function () awful.tag.incnmaster(-1) end),
-  awful.key({ settings.mod, "Control" }, "l", function () awful.tag.incnmaster( 1) end),
+  awful.key({ settings.mod, "Control" }, "h", function () awful.tag.incnmaster( 1) end),
+  awful.key({ settings.mod, "Control" }, "l", function () awful.tag.incnmaster(-1) end),
   awful.key({ settings.mod,           }, "space", function () awful.layout.inc( 1) end),
   awful.key({ settings.mod, "Shift"   }, "space", function () awful.layout.inc(-1) end),
 
