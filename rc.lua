@@ -122,6 +122,11 @@ vicious.register(w.load, vicious.widgets.uptime, w.load_text, settings.timeout)
 w.mem = functions.textbox()
 w.mem_text = "[mem <span color=\"" .. beautiful.fg_focus ..  "\">$1%</span>] "
 vicious.register(w.mem, vicious.widgets.mem, w.mem_text, settings.timeout)
+if settings.host == "annoyance" or settings.host == "solace" then
+  w.mpd = functions.textbox()
+  w.mpd_text = "[mpd <span color=\"" .. beautiful.fg_focus ..  "\">${Artist} - ${Title}</span>] "
+  vicious.register(w.mpd, vicious.widgets.mpd, w.mpd_text, settings.timeout)
+end
 if settings.host == "silence" then
   w.bat = functions.textbox()
   w.bat_text = "[bat <span color=\"" .. beautiful.fg_focus ..  "\">$1 $2% $3</span>] "
@@ -203,6 +208,9 @@ for s = 1, screen.count() do
 
   -- Widgets that are aligned to the right
   local right_layout = wibox.layout.fixed.horizontal()
+  if w.mpd then
+    right_layout:add(w.mpd)
+  end
   right_layout:add(w.load)
   right_layout:add(w.mem)
   if w.bat then
