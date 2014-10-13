@@ -370,7 +370,8 @@ clientkeys = awful.util.table.join(
     end
   end),
   awful.key({ settings.mod, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end),
-  awful.key({ settings.mod,           }, "o",    awful.client.movetoscreen            ),
+  awful.key({ settings.mod,           }, "o",      function (c) awful.client.movetoscreen(c, mouse.screen +1) end),
+  awful.key({ settings.mod, "Shift"   }, "o",      function (c) awful.client.movetoscreen(c, mouse.screen -1) end),
   awful.key({ settings.mod,           }, "t", function (c) awful.titlebar.toggle(c) end),
   awful.key({ settings.mod, "Shift"   }, "t", function (c) c.ontop = not c.ontop end),
   awful.key({ settings.mod, "Control" }, "t", function (c) c.sticky =  not c.sticky end),
