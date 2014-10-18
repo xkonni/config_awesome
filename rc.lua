@@ -279,8 +279,8 @@ globalkeys = awful.util.table.join(
   awful.key({ settings.mod, "Shift"   }, "j", function () awful.client.swap.global_bydirection("down")   end),
   awful.key({ settings.mod, "Shift"   }, "k", function () awful.client.swap.global_bydirection("up")     end),
   awful.key({ settings.mod, "Shift"   }, "l", function () awful.client.swap.global_bydirection("right")  end),
-  awful.key({ settings.mod, "Control" }, "j", function () awful.screen.focus_relative( 1) end),
-  awful.key({ settings.mod, "Control" }, "k", function () awful.screen.focus_relative(-1) end),
+  awful.key({ settings.mod, "Control" }, "h", function () functions.swaptags(-1)  end),
+  awful.key({ settings.mod, "Control" }, "l", function () functions.swaptags( 1)  end),
   awful.key({ settings.mod,           }, "w", function () mymainmenu:toggle() end),
 
   -- Standard program
@@ -288,8 +288,8 @@ globalkeys = awful.util.table.join(
   awful.key({ settings.mod, "Control" }, "r", awesome.restart),
   awful.key({ settings.mod, "Control" }, "q", functions.quit),
 
-  awful.key({ settings.mod, "Control" }, "h", function () awful.tag.incnmaster( 1) end),
-  awful.key({ settings.mod, "Control" }, "l", function () awful.tag.incnmaster(-1) end),
+  awful.key({ settings.mod, "Control" }, "j", function () awful.tag.incnmaster( 1) end),
+  awful.key({ settings.mod, "Control" }, "k", function () awful.tag.incnmaster(-1) end),
   awful.key({ settings.mod,           }, "space", function () awful.layout.inc( 1) end),
   awful.key({ settings.mod, "Shift"   }, "space", function () awful.layout.inc(-1) end),
 
