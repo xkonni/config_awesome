@@ -461,6 +461,10 @@ awful.rules.rules = {
     properties = { floating = true } },
   { rule = { class = "Plugin-container" },
     properties = { floating = true } },
+  { rule = { class = "Spicy" },
+    properties = { border_width = 0 } },
+  { rule = { class = "Virt-manager" },
+    properties = { border_width = 0 } },
   -- Set Firefox to always map on tags number 2 of screen 1.
   -- { rule = { class = "Firefox" },
   --   properties = { tag = tags[1][2] } },
