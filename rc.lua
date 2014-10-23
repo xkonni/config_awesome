@@ -52,6 +52,10 @@ settings.editor_cmd = settings.terminal_cmd .. settings.editor
 settings.mod = "Mod4"
 settings.home = awful.util.pread("echo $HOME | tr -d '\n'")
 settings.timeout = 5
+settings.bat = "BAT0"
+if settings.host == "silence" then
+  settings.bat = "BAT1"
+end
 -- Themes define colours, icons, and wallpapers
 beautiful.init(awful.util.getdir("config") .."/themes/solarized/theme.lua")
 functions.init({beautiful=beautiful})
@@ -127,10 +131,10 @@ if settings.host == "annoyance" or settings.host == "solace" then
   w.mpd_text = "[mpd <span color=\"" .. beautiful.fg_focus ..  "\">${Artist} - ${Title}</span>] "
   vicious.register(w.mpd, vicious.widgets.mpd, w.mpd_text, settings.timeout)
 end
-if settings.host == "silence" then
+if settings.host == "silence" or settings.host =="solace" then
   w.bat = functions.textbox()
   w.bat_text = "[bat <span color=\"" .. beautiful.fg_focus ..  "\">$1 $2% $3</span>] "
-  vicious.register(w.bat, vicious.widgets.bat, w.bat_text, settings.timeout, "BAT1")
+  vicious.register(w.bat, vicious.widgets.bat, w.bat_text, settings.timeout, settings.bat)
 end
 
 -- Create a wibox for each screen and add it
