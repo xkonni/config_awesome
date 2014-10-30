@@ -469,6 +469,8 @@ awful.rules.rules = {
     properties = { border_width = 0 } },
   { rule = { class = "Virt-manager" },
     properties = { border_width = 0 } },
+  { rule = { class = "VirtualBox" },
+    properties = { border_width = 0 } },
   -- Set Firefox to always map on tags number 2 of screen 1.
   -- { rule = { class = "Firefox" },
   --   properties = { tag = tags[1][2] } },
