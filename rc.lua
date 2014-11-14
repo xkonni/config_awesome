@@ -333,11 +333,16 @@ globalkeys = awful.util.table.join(
   awful.key({ settings.mod            }, "End", function () awful.util.spawn(settings.home .."/bin/notify_mpd next", false) end),
 
   -- Power
-  awful.key({ settings.mod,         }, "Scroll_Lock", function () awful.util.spawn(settings.home .."/bin/lock", false) end),
+  awful.key({ settings.mod,         }, "Scroll_Lock", function ()
+    awful.util.spawn(settings.home .."/bin/mpc stop", false)
+    awful.util.spawn(settings.home .."/bin/lock", false)
+  end),
   awful.key({ settings.mod, "Shift" }, "Scroll_Lock", function ()
+    awful.util.spawn(settings.home .."/bin/mpc stop", false)
     awful.util.spawn("systemctl suspend -i", false)
   end),
   awful.key({ settings.mod, "Control" }, "Scroll_Lock", function ()
+    awful.util.spawn(settings.home .."/bin/mpc stop", false)
     awful.util.spawn(settings.home .."/bin/lock", false)
     awful.util.spawn("systemctl suspend -i", false)
   end),
