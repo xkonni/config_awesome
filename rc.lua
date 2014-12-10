@@ -394,17 +394,17 @@ clientkeys = awful.util.table.join(
   -- Scratchpad
   -- pad.set(c, {vert, horiz, width, height, sticky, instance, screen})
   awful.key({ settings.mod, "Shift" }, "c", function (c)
-    scratch.pad.set(c, {vert="bottom", horiz="center", width=1000, height=400,
+    scratch.pad.set(c, {vert="bottom", horiz="center", width=1000, height=500,
       sticky=true, instance=0, screen=0})
   end),
   awful.key({ settings.mod, "Shift" }, "a", function (c)
-    scratch.pad.set(c, {horiz="left",  width=0.4, sticky=true, instance=1, screen=0})
+    scratch.pad.set(c, {horiz="left",  width=0.5, sticky=true, instance=1, screen=0})
   end),
   awful.key({ settings.mod, "Shift" }, "s", function (c)
-    scratch.pad.set(c, {horiz="center", width=0.4, sticky=true, instance=2, screen=0})
+    scratch.pad.set(c, {horiz="center", width=0.5, sticky=true, instance=2, screen=0})
   end),
   awful.key({ settings.mod, "Shift" }, "d", function (c)
-    scratch.pad.set(c, {horiz="right",  width=0.4, sticky=true, instance=3, screen=0})
+    scratch.pad.set(c, {horiz="right",  width=0.5, sticky=true, instance=3, screen=0})
   end)
 )
 
