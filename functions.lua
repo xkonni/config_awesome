@@ -9,7 +9,6 @@ end
 
 function functions.textbox(args)
   local widget = wibox.widget.textbox()
-  widget:set_font("Inconsolata for Powerline 9")
 
   if args then
     local text = "<span "
