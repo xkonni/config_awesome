@@ -335,15 +335,10 @@ globalkeys = awful.util.table.join(
   -- Power
   awful.key({ settings.mod,         }, "Scroll_Lock", function ()
     awful.util.spawn(settings.home .."/bin/mpc stop", false)
-    awful.util.spawn(settings.home .."/bin/lock", false)
-  end),
-  awful.key({ settings.mod, "Shift" }, "Scroll_Lock", function ()
-    awful.util.spawn(settings.home .."/bin/mpc stop", false)
-    awful.util.spawn("systemctl suspend -i", false)
+    awful.util.spawn("light-locker-command -l", false)
   end),
   awful.key({ settings.mod, "Control" }, "Scroll_Lock", function ()
     awful.util.spawn(settings.home .."/bin/mpc stop", false)
-    awful.util.spawn(settings.home .."/bin/lock", false)
     awful.util.spawn("systemctl suspend -i", false)
   end),
 
