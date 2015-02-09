@@ -1,6 +1,7 @@
 local naughty = require("naughty")
 local wibox   = require("wibox")
 local awful   = require("awful")
+-- local gears   = require("gears")
 
 functions = {}
 function functions.init(args)
@@ -34,30 +35,37 @@ function functions.resize(c)
 
         local g = c:geometry()
         local w = screen[c.screen].workarea
-        m = 100
-        local step = {}
+        local m = 100
+        local min = 100
         local step_max = {
-          w.x + w.width - (g.x + g.width) - border,
-          w.y + w.height - (g.y + g.height) - border,
-          g.width - 4*m,
-          g.height - 2*m
+          x0 = g.x - w.x,
+          x1 = w.x + w.width - (g.x + g.width + border),
+          y0 = g.y - w.y,
+          y1 = w.y + w.height - (g.y + g.height + border)
         }
-        for i=1, 2 do
-          if step_max[i] > m then
-            step[i] = m
-          else
-            step[i] = step_max[i]
-          end
-        end
+        local step_min = {
+          w = g.width - min,
+          h = g.height - min
+        }
+        local step_inc = {
+          x0 = (m < step_max.x0) and m or step_max.x0,
+          x1 = (m < step_max.x1) and m or step_max.x1,
+          y0 = (m < step_max.y0) and m or step_max.y0,
+          y1 = (m < step_max.y1) and m or step_max.y1
+        }
+        local step_dec = {
+          x = (m < step_min.w) and m or step_min.w,
+          y = (m < step_min.h) and m or step_min.h
+        }
 
-        if     key == 'h'       then awful.client.moveresize(0, 0, -m, 0, c)
-        elseif key == 'j'       then awful.client.moveresize(0, 0, 0, step[2], c)
-        elseif key == 'k'       then awful.client.moveresize(0, 0, 0, -m, c)
-        elseif key == 'l'       then awful.client.moveresize(0, 0, step[1], 0, c)
-        elseif key == 'H'       then awful.client.moveresize(0, 0, -step_max[3], 0, c)
-        elseif key == 'J'       then awful.client.moveresize(0, 0, 0, step_max[2], c)
-        elseif key == 'K'       then awful.client.moveresize(0, 0, 0, -step_max[4], c)
-        elseif key == 'L'       then awful.client.moveresize(0, 0, step_max[1], 0, c)
+        if     key == 'h'       then awful.client.moveresize(-step_inc.x0, 0, step_inc.x0, 0, c)
+        elseif key == 'j'       then awful.client.moveresize(0, 0, 0, step_inc.y1, c)
+        elseif key == 'k'       then awful.client.moveresize(0, -step_inc.y0, 0, step_inc.y0, c)
+        elseif key == 'l'       then awful.client.moveresize(0, 0, step_inc.x1, 0, c)
+        elseif key == 'H'       then awful.client.moveresize(step_dec.x, 0, -step_dec.x, 0, c)
+        elseif key == 'J'       then awful.client.moveresize(0, 0, 0, -step_dec.y, c)
+        elseif key == 'K'       then awful.client.moveresize(0, step_dec.y, 0, -step_dec.y, c)
+        elseif key == 'L'       then awful.client.moveresize(0, 0, -step_dec.x, 0, c)
         elseif key == 'Shift_L' then return
         else                         awful.keygrabber.stop(grabber)
                                      naughty.destroy(n)
