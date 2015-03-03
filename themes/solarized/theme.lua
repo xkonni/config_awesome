@@ -30,7 +30,7 @@ theme.bg_systray                                = theme.bg_normal
 -- }}} Colors
 
 -- {{{ Borders
-theme.border_width                              = "2"
+theme.border_width                              = 2
 theme.border_normal                             = theme.bg_normal
 theme.border_focus                              = theme.fg_focus
 theme.border_marked                             = "#00ff00"
@@ -79,8 +79,8 @@ theme.mouse_finder_color                        = "#CC9393"
 -- Variables set for theming the menu:
 -- menu_[bg|fg]_[normal|focus]
 -- menu_[border_color|border_width]
-theme.menu_height                               = "15"
-theme.menu_width                                = "100"
+theme.menu_height                               = 15
+theme.menu_width                                = 100
 -- }}} Menu
 
 -- {{{ Icons
