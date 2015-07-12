@@ -107,6 +107,10 @@ theme.layout_max                                = config .. "/themes/solarized/l
 theme.layout_fullscreen                         = config .. "/themes/solarized/layouts/fullscreen.png"
 theme.layout_magnifier                          = config .. "/themes/solarized/layouts/magnifier.png"
 theme.layout_floating                           = config .. "/themes/solarized/layouts/floating.png"
+theme.layout_cornernw                           = config .. "/themes/solarized/layouts/cornernw.png"
+theme.layout_cornerne                           = config .. "/themes/solarized/layouts/cornerne.png"
+theme.layout_cornersw                           = config .. "/themes/solarized/layouts/cornersw.png"
+theme.layout_cornerse                           = config .. "/themes/solarized/layouts/cornerse.png"
 -- }}} Layout
 
 -- {{{ Titlebar
