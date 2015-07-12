@@ -67,13 +67,17 @@ awful.layout.layouts = {
   awful.layout.suit.tile.left,
   awful.layout.suit.tile.bottom,
   awful.layout.suit.tile.top,
+  awful.layout.suit.corner.nw,
+  awful.layout.suit.corner.ne,
+  awful.layout.suit.corner.sw,
+  awful.layout.suit.corner.se
   -- awful.layout.suit.fair,
   -- awful.layout.suit.fair.horizontal,
   -- awful.layout.suit.spiral,
   -- awful.layout.suit.spiral.dwindle,
   -- awful.layout.suit.max,
   -- awful.layout.suit.max.fullscreen,
-  -- awful.layout.suit.magnifier
+  -- awful.layout.suit.magnifier,
 }
 -- }}}
 
@@ -297,7 +301,14 @@ globalkeys = awful.util.table.join(
   awful.key({ settings.mod,           }, "space", function () awful.layout.inc( 1) end),
   awful.key({ settings.mod, "Shift"   }, "space", function () awful.layout.inc(-1) end),
 
-  awful.key({ settings.mod, "Control" }, "n", awful.client.restore),
+  awful.key({ settings.mod, "Control" }, "n", function ()
+    c = awful.client.restore()
+    -- Focus restored client
+    if c then
+        client.focus = c
+        c:raise()
+    end
+  end),
 
   -- Prompt
   awful.key({ settings.mod            }, "r", function () mypromptbox[mouse.screen]:run() end),
@@ -359,7 +370,10 @@ globalkeys = awful.util.table.join(
 )
 
 clientkeys = awful.util.table.join(
-  awful.key({ settings.mod,           }, "f", function (c) c.fullscreen = not c.fullscreen  end),
+  awful.key({ settings.mod,           }, "f", function (c)
+    c.fullscreen = not c.fullscreen
+    c:raise()
+  end),
   awful.key({ settings.mod, "Control" }, "c", function (c) c:kill()             end),
   awful.key({ settings.mod, "Control" }, "space", function(c)
     awful.client.floating.toggle()
@@ -381,8 +395,8 @@ clientkeys = awful.util.table.join(
   awful.key({ settings.mod, "Control" }, "t", function (c) c.sticky =  not c.sticky end),
   awful.key({ settings.mod,           }, "n", function (c) c.minimized = true end),
   awful.key({ settings.mod,           }, "m", function (c)
-    c.maximized_horizontal = not c.maximized_horizontal
-    c.maximized_vertical   = not c.maximized_vertical
+    c.maximized= not c.maximized
+    c:raise()
   end),
   awful.key({ settings.mod, "Shift"   }, "m", function (c) functions.move(c) end),
   awful.key({ settings.mod, "Shift"   }, "r", function (c) functions.resize(c) end),
