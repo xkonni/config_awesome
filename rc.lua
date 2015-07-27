@@ -353,6 +353,11 @@ globalkeys = awful.util.table.join(
     awful.util.spawn(settings.home .."/bin/mpc stop", false)
     awful.util.spawn("systemctl suspend -i", false)
   end),
+  -- Screen
+  awful.key({ modkey, "Control" }, "F8", function ()
+    awful.util.spawn("xrandr --output DP1-1 --off --output DP1-2 --off --output DP1-3 --off", false)
+    awful.util.spawn("autorandr -c", false)
+  end),
 
   -- Scratchpad
   -- scratch.pad.toggle({vert, horiz, instance, screen})
