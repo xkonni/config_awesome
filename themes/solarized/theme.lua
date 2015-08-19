@@ -23,8 +23,8 @@ theme.fg_urgent                                 = "#268BD2"
 theme.fg_minimize                               = "#8A8A8A"
 
 theme.bg_normal                                 = "#3F3F3F"
-theme.bg_focus                                  = "#1C1C1C"
-theme.bg_urgent                                 = "#3F3F3F"
+theme.bg_focus                                  = "#303030"
+theme.bg_urgent                                 = "#202020"
 theme.bg_minimize                               = theme.bg_normal
 theme.bg_systray                                = theme.bg_normal
 -- }}} Colors
