@@ -124,21 +124,51 @@ menubar.utils.terminal = settings.terminal
 -- {{{ Wibox
 -- Create a textclock widget
 w = {}
-w.textclock = awful.widget.textclock()
+-- clock
+w.clock_text =  "<span font_size=\"x-large\" color=\"" .. beautiful.bg_focus .. "\">⮂</span>"
+w.clock_text = w.clock_text .. "<span bgcolor=\"" .. beautiful.bg_focus .. "\">"
+w.clock_text = w.clock_text .. "<span>%d %b %Y %H:%M </span>"
+w.clock_text = w.clock_text .. "</span> "
+w.textclock = awful.widget.textclock(w.clock_text)
+-- load
 w.load = functions.textbox()
-w.load_text = "[load <span color=\"" .. beautiful.fg_focus ..  "\">$4 $5 $6</span>] "
+w.load_text =  "<span font_size=\"x-large\" color=\"" .. beautiful.bg_focus .. "\">⮂</span>"
+w.load_text = w.load_text .. "<span bgcolor=\"" .. beautiful.bg_focus .. "\">"
+  w.load_text = w.load_text .. "<span color=\"" .. beautiful.fg_focus ..  "\" font_weight=\"bold\">load </span>"
+  w.load_text = w.load_text .. "<span>$4 $5 $6</span>"
+  w.load_text = w.load_text .. "<span font_size=\"x-large\" color=\"" .. beautiful.bg_normal .. "\"> ⮂</span>"
+w.load_text = w.load_text .. "</span>"
 vicious.register(w.load, vicious.widgets.uptime, w.load_text, settings.timeout)
+-- mem
 w.mem = functions.textbox()
-w.mem_text = "[mem <span color=\"" .. beautiful.fg_focus ..  "\">$1%</span>] "
+w.mem_text =  "<span font_size=\"x-large\" color=\"" .. beautiful.bg_focus .. "\">⮂</span>"
+w.mem_text = w.mem_text .. "<span bgcolor=\"" .. beautiful.bg_focus .. "\">"
+  w.mem_text = w.mem_text .. "<span color=\"" .. beautiful.fg_focus ..  "\" font_weight=\"bold\">mem </span>"
+  w.mem_text = w.mem_text .. "<span>$1%</span>"
+  w.mem_text = w.mem_text .. "<span font_size=\"x-large\" color=\"" .. beautiful.bg_normal .. "\"> ⮂</span>"
+w.mem_text = w.mem_text .. "</span>"
 vicious.register(w.mem, vicious.widgets.mem, w.mem_text, settings.timeout)
+-- mpd
 if settings.host == "annoyance" or settings.host == "solace" then
   w.mpd = functions.textbox()
-  w.mpd_text = "[mpd <span color=\"" .. beautiful.fg_focus ..  "\">${Artist} - ${Title}</span>] "
+  w.mpd_text =  "<span font_size=\"x-large\" color=\"" .. beautiful.bg_focus .. "\">⮂</span>"
+  w.mpd_text = w.mpd_text .. "<span bgcolor=\"" .. beautiful.bg_focus .. "\">"
+    w.mpd_text = w.mpd_text .. "<span color=\"" .. beautiful.fg_focus ..  "\" font_weight=\"bold\">mpd </span>"
+    w.mpd_text = w.mpd_text .. "<span>${Artist} - ${Title}</span>"
+    w.mpd_text = w.mpd_text .. "<span font_size=\"x-large\" color=\"" .. beautiful.bg_normal .. "\"> ⮂</span>"
+  w.mpd_text = w.mpd_text .. "</span>"
+
   vicious.register(w.mpd, vicious.widgets.mpd, w.mpd_text, settings.timeout)
 end
+-- battery
 if settings.host == "silence" or settings.host =="solace" then
   w.bat = functions.textbox()
-  w.bat_text = "[bat <span color=\"" .. beautiful.fg_focus ..  "\">$1 $2% $3</span>] "
+  w.bat_text =  "<span font_size=\"x-large\" color=\"" .. beautiful.bg_focus .. "\">⮂</span>"
+  w.bat_text = w.bat_text .. "<span bgcolor=\"" .. beautiful.bg_focus .. "\">"
+    w.bat_text = w.bat_text .. "<span  color=\"" .. beautiful.fg_focus ..  "\"font_weight=\"bold\">bat </span>"
+    w.bat_text = w.bat_text .. "<span>$1 $2% $3</span>"
+    w.bat_text = w.bat_text .. "<span font_size=\"x-large\" color=\"" .. beautiful.bg_normal .. "\"> ⮂</span>"
+  w.bat_text = w.bat_text .. "</span>"
   vicious.register(w.bat, vicious.widgets.bat, w.bat_text, settings.timeout, settings.bat)
 end
 
@@ -225,8 +255,8 @@ for s = 1, screen.count() do
   if w.bat then
     right_layout:add(w.bat)
   end
-  if s == 1 then right_layout:add(wibox.widget.systray()) end
   right_layout:add(w.textclock)
+  if s == 1 then right_layout:add(wibox.widget.systray()) end
   right_layout:add(mylayoutbox[s])
 
   -- Now bring it all together (with the tasklist in the middle)
