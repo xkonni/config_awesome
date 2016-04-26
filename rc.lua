@@ -62,16 +62,16 @@ beautiful.init(awful.util.getdir("config") .."/themes/solarized/theme.lua")
 functions.init({beautiful=beautiful})
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
-awful.layout.layouts = {
+local layouts = {
   -- awful.layout.suit.floating,
   awful.layout.suit.tile,
   awful.layout.suit.tile.left,
   awful.layout.suit.tile.bottom,
-  awful.layout.suit.tile.top,
-  awful.layout.suit.corner.nw,
-  awful.layout.suit.corner.ne,
-  awful.layout.suit.corner.sw,
-  awful.layout.suit.corner.se
+  awful.layout.suit.tile.top
+  -- awful.layout.suit.corner.nw,
+  -- awful.layout.suit.corner.ne,
+  -- awful.layout.suit.corner.sw,
+  -- awful.layout.suit.corner.se
   -- awful.layout.suit.fair,
   -- awful.layout.suit.fair.horizontal,
   -- awful.layout.suit.spiral,
@@ -95,7 +95,7 @@ end
 tags = {}
 for s = 1, screen.count() do
   -- Each screen has its own tag table.
-  tags[s] = awful.tag({ 1, 2, 3, 4, 5, 6, 7, 8, 9 }, s, awful.layout.layouts[1])
+  tags[s] = awful.tag({ 1, 2, 3, 4, 5, 6, 7, 8, 9 }, s, layouts[1])
 end
 -- }}}
 
@@ -226,10 +226,10 @@ for s = 1, screen.count() do
   -- We need one layoutbox per screen.
   mylayoutbox[s] = awful.widget.layoutbox(s)
   mylayoutbox[s]:buttons(awful.util.table.join(
-    awful.button({ }, 1, function () awful.layout.inc( 1) end),
-    awful.button({ }, 3, function () awful.layout.inc(-1) end),
-    awful.button({ }, 4, function () awful.layout.inc( 1) end),
-    awful.button({ }, 5, function () awful.layout.inc(-1) end)))
+    awful.button({ }, 1, function () awful.layout.inc(layouts, 1) end),
+    awful.button({ }, 3, function () awful.layout.inc(layouts,-1) end),
+    awful.button({ }, 4, function () awful.layout.inc(layouts, 1) end),
+    awful.button({ }, 5, function () awful.layout.inc(layouts,-1) end)))
   -- Create a taglist widget
   mytaglist[s] = awful.widget.taglist(s, awful.widget.taglist.filter.all, mytaglist.buttons)
 
@@ -329,8 +329,8 @@ globalkeys = awful.util.table.join(
 
   awful.key({ modkey, "Control" }, "j", function () awful.tag.incnmaster( 1) end),
   awful.key({ modkey, "Control" }, "k", function () awful.tag.incnmaster(-1) end),
-  awful.key({ modkey,           }, "space", function () awful.layout.inc( 1) end),
-  awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(-1) end),
+  awful.key({ modkey,           }, "space", function () awful.layout.inc(layouts, 1) end),
+  awful.key({ modkey, "Shift"   }, "space", function () awful.layout.inc(layouts,-1) end),
 
   awful.key({ modkey, "Control" }, "n", function ()
     c = awful.client.restore()
@@ -368,7 +368,6 @@ globalkeys = awful.util.table.join(
   awful.key({ modkey            }, "Pause",  function () awful.util.spawn(settings.home .."/bin/notify_volume toggle", false) end),
   awful.key({ modkey            }, "Next",  function () awful.util.spawn(settings.home .."/bin/notify_volume decrease", false) end),
   awful.key({ modkey            }, "Prior",  function () awful.util.spawn(settings.home .."/bin/notify_volume increase", false) end),
-
   awful.key({ modkey            }, "Insert", function () awful.util.spawn(settings.home .."/bin/notify_mpd toggle", false) end),
   awful.key({ modkey            }, "Home",  function () awful.util.spawn(settings.home .."/bin/notify_mpd stop", false) end),
   awful.key({ modkey            }, "Delete", function () awful.util.spawn(settings.home .."/bin/notify_mpd prev", false) end),
