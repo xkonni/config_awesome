@@ -104,8 +104,9 @@ end
 myawesomemenu = {
   { "manual", settings.terminal_cmd .. "man\\ awesome" },
   { "edit config", settings.editor_cmd .. "\\ " .. awesome.conffile },
-  { "trixi", "dm-tool switch-to-greeter" },
+  { "switch user", "dm-tool switch-to-greeter" },
   { "restart", awesome.restart },
+  { "suspend", function() awful.util.spawn("systemctl suspend -i", false) end},
   { "quit", functions.quit } }
 
 mymainmenu = awful.menu({
@@ -320,7 +321,6 @@ globalkeys = awful.util.table.join(
   awful.key({ modkey, "Shift"   }, "l", function () awful.client.swap.global_bydirection("right")  end),
   awful.key({ modkey, "Control" }, "h", function () functions.swaptags(-1)  end),
   awful.key({ modkey, "Control" }, "l", function () functions.swaptags( 1)  end),
-  awful.key({ modkey,           }, "w", function () mymainmenu:toggle() end),
 
   -- Standard program
   awful.key({ modkey,           }, "Return", function () awful.util.spawn(settings.terminal) end),
