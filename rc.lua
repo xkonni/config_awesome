@@ -11,6 +11,7 @@ local naughty = require("naughty")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 local functions = require("functions")
+local scratch = require("scratch")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -243,7 +244,7 @@ mytasklist.buttons = awful.util.table.join(
 
     -- {{{ Key bindings
     globalkeys = awful.util.table.join(
-      awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
+      awful.key({ modkey,           }, "i",      hotkeys_popup.show_help,
         {description="show help", group="awesome"}),
       awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
         {description = "go back", group = "tag"}),
@@ -389,7 +390,22 @@ mytasklist.buttons = awful.util.table.join(
         {description = "mpd previous", group = "media"}),
       awful.key({ modkey }, "End",    function ()
         awful.util.spawn(settings.home .."/bin/notify_mpd next", false) end,
-        {description = "mpd next", group = "media"})
+        {description = "mpd next", group = "media"}),
+      -- Scratchpad
+
+      -- scratch.pad.toggle({vert, horiz, instance, screen})
+      awful.key({ modkey            }, "c", function ()
+        scratch.pad.toggle({vert="bottom", horiz="center", instance=0, screen=0}) end,
+        {description = "toggle C", group = "scratch"}),
+      awful.key({ modkey,           }, "a", function ()
+        scratch.pad.toggle({horiz="left", instance=1, screen=0}) end,
+        {description = "toggle A", group = "scratch"}),
+      awful.key({ modkey,           }, "s", function ()
+        scratch.pad.toggle({horiz="center", instance=2, screen=0}) end,
+        {description = "toggle S", group = "scratch"}),
+      awful.key({ modkey,           }, "d", function ()
+        scratch.pad.toggle({horiz="right", instance=3, screen=0}) end,
+        {description = "toggle D", group = "scratch"})
     )
 
     clientkeys = awful.util.table.join(
@@ -399,7 +415,7 @@ mytasklist.buttons = awful.util.table.join(
           c:raise()
         end,
         {description = "toggle fullscreen", group = "client"}),
-      awful.key({ modkey, "Shift"   }, "c",      function (c) c:kill()                         end,
+      awful.key({ modkey, "Control"   }, "c",      function (c) c:kill()                         end,
         {description = "close", group = "client"}),
       awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ,
         {description = "toggle floating", group = "client"}),
@@ -424,7 +440,23 @@ mytasklist.buttons = awful.util.table.join(
         {description = "maximize", group = "client"}),
       -- resize
       awful.key({ modkey, "Shift"   }, "m", function (c) functions.move(c) end),
-      awful.key({ modkey, "Shift"   }, "r", function (c) functions.resize(c) end)
+      awful.key({ modkey, "Shift"   }, "r", function (c) functions.resize(c) end),
+      -- Scratchpad
+      -- pad.set(c, {vert, horiz, width, height, sticky, instance, screen})
+      awful.key({ modkey, "Shift" }, "c", function (c)
+        scratch.pad.set(c, {vert="bottom", horiz="center", width=1000, height=500,
+          sticky=true, instance=0, screen=0}) end,
+        {description = "set C", group = "scratch"}),
+      awful.key({ modkey, "Shift" }, "a", function (c)
+        scratch.pad.set(c, {horiz="left",  width=0.5, sticky=true, instance=1, screen=0}) end,
+        {description = "set A", group = "scratch"}),
+      awful.key({ modkey, "Shift" }, "s", function (c)
+        scratch.pad.set(c, {horiz="center", width=0.5, sticky=true, instance=2, screen=0}) end,
+        {description = "set S", group = "scratch"}),
+      awful.key({ modkey, "Shift" }, "d", function (c)
+        scratch.pad.set(c, {horiz="right",  width=0.5, sticky=true, instance=3, screen=0}) end,
+        {description = "set D", group = "scratch"})
+
       )
 
     -- Bind all key numbers to tags.
