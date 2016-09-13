@@ -231,37 +231,47 @@ mytasklist.buttons = awful.util.table.join(
     globalkeys = awful.util.table.join(
       awful.key({ modkey,           }, "s",      hotkeys_popup.show_help,
         {description="show help", group="awesome"}),
-      awful.key({ modkey,           }, "Left",   awful.tag.viewprev,
-        {description = "view previous", group = "tag"}),
-      awful.key({ modkey,           }, "Right",  awful.tag.viewnext,
-        {description = "view next", group = "tag"}),
       awful.key({ modkey,           }, "Escape", awful.tag.history.restore,
         {description = "go back", group = "tag"}),
 
+      -- Focus
+      awful.key({ modkey,           }, "h",
+        function ()
+          awful.client.focus.global_bydirection("left")
+        end,
+        {description = "focus client to the left", group = "client"}
+        ),
       awful.key({ modkey,           }, "j",
         function ()
-          awful.client.focus.byidx( 1)
+          awful.client.focus.global_bydirection("down")
         end,
-        {description = "focus next by index", group = "client"}
+        {description = "focus client below", group = "client"}
         ),
       awful.key({ modkey,           }, "k",
         function ()
-          awful.client.focus.byidx(-1)
+          awful.client.focus.global_bydirection("up")
         end,
-        {description = "focus previous by index", group = "client"}
+        {description = "focus client above", group = "client"}
+        ),
+      awful.key({ modkey,           }, "l",
+        function ()
+          awful.client.focus.global_bydirection("right")
+        end,
+        {description = "focus client to the right", group = "client"}
         ),
       awful.key({ modkey,           }, "w", function () mymainmenu:show() end,
         {description = "show main menu", group = "awesome"}),
 
       -- Layout manipulation
-      awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.byidx(  1)    end,
-        {description = "swap with next client by index", group = "client"}),
-      awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.byidx( -1)    end,
-        {description = "swap with previous client by index", group = "client"}),
-      awful.key({ modkey, "Control" }, "j", function () awful.screen.focus_relative( 1) end,
-        {description = "focus the next screen", group = "screen"}),
-      awful.key({ modkey, "Control" }, "k", function () awful.screen.focus_relative(-1) end,
-        {description = "focus the previous screen", group = "screen"}),
+      awful.key({ modkey, "Shift"   }, "h", function () awful.client.swap.global_bydirection("left")    end,
+        {description = "swap with client to the left", group = "client"}),
+      awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.global_bydirection("down")    end,
+        {description = "swap with client below", group = "client"}),
+      awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.global_bydirection("up")    end,
+        {description = "swap with client above", group = "client"}),
+      awful.key({ modkey, "Shift"   }, "l", function () awful.client.swap.global_bydirection("right")    end,
+        {description = "swap with client to the right", group = "client"}),
+
       awful.key({ modkey,           }, "u", awful.client.urgent.jumpto,
         {description = "jump to urgent client", group = "client"}),
       awful.key({ modkey,           }, "Tab",
@@ -281,13 +291,9 @@ mytasklist.buttons = awful.util.table.join(
       awful.key({ modkey, "Shift"   }, "q", awesome.quit,
         {description = "quit awesome", group = "awesome"}),
 
-      awful.key({ modkey,           }, "l",     function () awful.tag.incmwfact( 0.05)          end,
-        {description = "increase master width factor", group = "layout"}),
-      awful.key({ modkey,           }, "h",     function () awful.tag.incmwfact(-0.05)          end,
-        {description = "decrease master width factor", group = "layout"}),
-      awful.key({ modkey, "Shift"   }, "h",     function () awful.tag.incnmaster( 1, nil, true) end,
+      awful.key({ modkey, "Control"   }, "j",     function () awful.tag.incnmaster( 1, nil, true) end,
         {description = "increase the number of master clients", group = "layout"}),
-      awful.key({ modkey, "Shift"   }, "l",     function () awful.tag.incnmaster(-1, nil, true) end,
+      awful.key({ modkey, "Control"   }, "k",     function () awful.tag.incnmaster(-1, nil, true) end,
         {description = "decrease the number of master clients", group = "layout"}),
       awful.key({ modkey, "Control" }, "h",     function () awful.tag.incncol( 1, nil, true)    end,
         {description = "increase the number of columns", group = "layout"}),
@@ -323,8 +329,54 @@ mytasklist.buttons = awful.util.table.join(
         {description = "lua execute prompt", group = "awesome"}),
       -- Menubar
       awful.key({ modkey }, "p", function() menubar.show() end,
-        {description = "show the menubar", group = "launcher"})
-      )
+        {description = "show the menubar", group = "launcher"}),
+
+      -- Media XF86
+      awful.key({        }, "XF86AudioMute",        function ()
+        awful.util.spawn(settings.home .."/bin/notify_volume toggle", false) end,
+        {description = "mute audio", group = "media"}),
+      awful.key({        }, "XF86AudioLowerVolume", function ()
+        awful.util.spawn(settings.home .."/bin/notify_volume decrease", false) end,
+        {description = "decrease volume", group = "media"}),
+      awful.key({        }, "XF86AudioRaiseVolume", function ()
+        awful.util.spawn(settings.home .."/bin/notify_volume increase", false) end,
+        {description = "increase volume", group = "media"}),
+      awful.key({        }, "XF86AudioStop",        function ()
+        awful.util.spawn(settings.home .."/bin/notify_mpd stop", false) end,
+        {description = "mpd stop", group = "media"}),
+      awful.key({        }, "XF86AudioPrev",        function ()
+        awful.util.spawn(settings.home .."/bin/notify_mpd prev", false) end,
+        {description = "mpd previous", group = "media"}),
+      awful.key({        }, "XF86AudioPlay",        function ()
+        awful.util.spawn(settings.home .."/bin/notify_mpd toggle", false) end,
+        {description = "mpd play/pause", group = "media"}),
+      awful.key({        }, "XF86AudioNext",        function ()
+        awful.util.spawn(settings.home .."/bin/notify_mpd next", false) end,
+        {description = "mpd next", group = "media"}),
+
+      -- Media fake WASD
+      awful.key({ modkey }, "Pause",  function ()
+        awful.util.spawn(settings.home .."/bin/notify_volume toggle", false) end,
+        {description = "mute audio", group = "media"}),
+      awful.key({ modkey }, "Next",   function ()
+        awful.util.spawn(settings.home .."/bin/notify_volume decrease", false) end,
+        {description = "decrease volume", group = "media"}),
+      awful.key({ modkey }, "Prior",  function ()
+        awful.util.spawn(settings.home .."/bin/notify_volume increase", false) end,
+        {description = "increase volume", group = "media"}),
+      awful.key({ modkey }, "Insert", function ()
+        awful.util.spawn(settings.home .."/bin/notify_mpd toggle", false) end,
+        {description = "mpd next", group = "media"}),
+      awful.key({ modkey }, "Home",   function ()
+        awful.util.spawn(settings.home .."/bin/notify_mpd stop", false) end,
+        {description = "mpd stop", group = "media"}),
+      awful.key({ modkey }, "Delete", function ()
+        awful.util.spawn(settings.home .."/bin/notify_mpd prev", false) end,
+        {description = "mpd previous", group = "media"}),
+      awful.key({ modkey }, "End",    function ()
+        awful.util.spawn(settings.home .."/bin/notify_mpd next", false) end,
+        {description = "mpd next", group = "media"})
+    )
 
     clientkeys = awful.util.table.join(
       awful.key({ modkey,           }, "f",
