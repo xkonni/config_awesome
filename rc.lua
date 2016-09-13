@@ -158,6 +158,7 @@ if settings.host == "annoyance" or settings.host == "solace" then
     w.mpd_text = w.mpd_text .. "<span>${Artist} - ${Title}</span>"
     w.mpd_text = w.mpd_text .. "<span font_size=\"x-large\" color=\"" .. beautiful.bg_normal .. "\"> ⮂</span>"
   w.mpd_text = w.mpd_text .. "</span>"
+  -- w.mpd_text = string.gsub(w.mpd_text, '%%', '')
 
   vicious.register(w.mpd, vicious.widgets.mpd, w.mpd_text, settings.timeout)
 end
@@ -319,8 +320,8 @@ globalkeys = awful.util.table.join(
   awful.key({ modkey, "Shift"   }, "j", function () awful.client.swap.global_bydirection("down")   end),
   awful.key({ modkey, "Shift"   }, "k", function () awful.client.swap.global_bydirection("up")     end),
   awful.key({ modkey, "Shift"   }, "l", function () awful.client.swap.global_bydirection("right")  end),
-  awful.key({ modkey, "Control" }, "h", function () functions.swaptags(-1)  end),
-  awful.key({ modkey, "Control" }, "l", function () functions.swaptags( 1)  end),
+  awful.key({ modkey, "Control" }, "h", function () functions.swaptags()  end),
+  awful.key({ modkey, "Control" }, "l", function () functions.swaptags()  end),
 
   -- Standard program
   awful.key({ modkey,           }, "Return", function () awful.util.spawn(settings.terminal) end),

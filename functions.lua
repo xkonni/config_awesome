@@ -132,25 +132,14 @@ function functions.move(c)
     end
 end
 
-function functions.swaptags(dir)
-  dir = dir or 1
-
-  -- screen
-  scr1 = mouse.screen
-  if dir == 1 then
-    if scr1 < screen.count() then
-      scr2 = scr1+1
-    else
-      scr2 = 1
-    end
-  else
-    if scr1 > 1 then
-      scr2 = scr1-1
-    else
-      scr2 = screen.count()
-    end
+function functions.swaptags()
+  if screen.count() ~= 2 then
+    return
   end
 
+  -- screen
+  scr1 = 1
+  scr2 = 2
   -- current tags
   tag1 = awful.tag.selected(scr1)
   tag2 = awful.tag.selected(scr2)
@@ -159,13 +148,18 @@ function functions.swaptags(dir)
   name2 = tag2.name
 
   -- swap tags
-  awful.tag.swap(tag1,tag2)
-  -- swap names
-  tag1.name = name2
-  tag2.name = name1
-  -- view tags
-  awful.tag.viewonly(tag1)
-  awful.tag.viewonly(tag2)
+  if tag1 and tag2 then
+    -- awful.tag.swap(tag1, tag2)
+    tag1:swap(tag2)
+    -- swap names
+    tag1.name = name2
+    tag2.name = name1
+    -- view tags
+    awful.tag.viewonly(tag1)
+    awful.tag.viewonly(tag2)
+  else
+    naughty.notify({screen=mouse.screen, title="tag is nil"})
+  end
 end
 
 function functions.quit()
