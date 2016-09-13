@@ -1,6 +1,6 @@
 -- Standard awesome library
 local gears = require("gears")
-local awful = require("awful")
+awful = require("awful")
 require("awful.autofocus")
 -- Widget and layout library
 local wibox = require("wibox")
@@ -38,7 +38,7 @@ end
 
 -- {{{ Variable definitions
 -- Themes define colours, icons, font and wallpapers.
-beautiful.init(awful.util.get_themes_dir() .. "default/theme.lua")
+beautiful.init(awful.util.getdir("config") .. "/themes/solarized/theme.lua")
 
 -- This is used later as the default terminal and editor to run.
 terminal = "xterm"
