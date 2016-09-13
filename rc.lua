@@ -37,13 +37,25 @@ end
 -- }}}
 
 -- {{{ Variable definitions
+settings = {}
+-- This is used later as the default settings.terminal and settings.editor to run.
+-- tmp = io.popen("hostname | tr -d '\n'")
+tmp = io.popen("hostname")
+settings.host = tmp:read()
+settings.terminal = "termite"
+settings.editor = "vim"
+settings.terminal_cmd = settings.terminal .. " -e "
+settings.editor_cmd = settings.terminal_cmd .. settings.editor
+tmp = io.popen("echo $HOME")
+settings.home = tmp:read()
+settings.timeout = 5
+settings.bat = "BAT0"
+if settings.host == "silence" then
+  settings.bat = "BAT1"
+end
+
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(awful.util.getdir("config") .. "/themes/solarized/theme.lua")
-
--- This is used later as the default terminal and editor to run.
-terminal = "xterm"
-editor = os.getenv("EDITOR") or "nano"
-editor_cmd = terminal .. " -e " .. editor
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -92,14 +104,14 @@ end
 -- Create a launcher widget and a main menu
 myawesomemenu = {
   { "hotkeys", function() return false, hotkeys_popup.show_help end},
-  { "manual", terminal .. " -e man awesome" },
-  { "edit config", editor_cmd .. " " .. awesome.conffile },
+  { "manual", settings.terminal_cmd .. " man awesome" },
+  { "edit config", settings.editor_cmd .. " " .. awesome.conffile },
   { "restart", awesome.restart },
   { "quit", awesome.quit }
 }
 
 mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
-      { "open terminal", terminal }
+      { "open terminal", settings.terminal }
     }
   })
 
@@ -107,7 +119,7 @@ mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
   menu = mymainmenu })
 
 -- Menubar configuration
-menubar.utils.terminal = terminal -- Set the terminal for applications that require it
+menubar.utils.terminal = settings.terminal -- Set the terminal for applications that require it
 -- }}}
 
 -- Keyboard map indicator and switcher
@@ -284,7 +296,7 @@ mytasklist.buttons = awful.util.table.join(
         {description = "go back", group = "client"}),
 
       -- Standard program
-      awful.key({ modkey,           }, "Return", function () awful.spawn(terminal) end,
+      awful.key({ modkey,           }, "Return", function () awful.spawn(settings.terminal) end,
         {description = "open a terminal", group = "launcher"}),
       awful.key({ modkey, "Control" }, "r", awesome.restart,
         {description = "reload awesome", group = "awesome"}),
