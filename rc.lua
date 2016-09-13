@@ -10,6 +10,7 @@ local beautiful = require("beautiful")
 local naughty = require("naughty")
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
+local functions = require("functions")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -56,6 +57,7 @@ end
 
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(awful.util.getdir("config") .. "/themes/solarized/theme.lua")
+functions.init({beautiful=beautiful})
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
@@ -107,7 +109,7 @@ myawesomemenu = {
   { "manual", settings.terminal_cmd .. " man awesome" },
   { "edit config", settings.editor_cmd .. " " .. awesome.conffile },
   { "restart", awesome.restart },
-  { "quit", awesome.quit }
+  { "quit", functions.quit }
 }
 
 mymainmenu = awful.menu({ items = { { "awesome", myawesomemenu, beautiful.awesome_icon },
@@ -419,7 +421,10 @@ mytasklist.buttons = awful.util.table.join(
           c.maximized = not c.maximized
           c:raise()
         end ,
-        {description = "maximize", group = "client"})
+        {description = "maximize", group = "client"}),
+      -- resize
+      awful.key({ modkey, "Shift"   }, "m", function (c) functions.move(c) end),
+      awful.key({ modkey, "Shift"   }, "r", function (c) functions.resize(c) end)
       )
 
     -- Bind all key numbers to tags.
