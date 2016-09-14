@@ -560,7 +560,12 @@ mytasklist.buttons = awful.util.table.join(
       }, properties = { floating = true }},
 
       -- Add titlebars to normal clients and dialogs
-      { rule_any = {type = { "normal", "dialog" }
+      -- { rule_any = {type = { "normal", "dialog" }
+      --   }, properties = { titlebars_enabled = true }
+      -- },
+
+      -- Add titlebars to dialogs
+      { rule_any = {type = { "dialog" }
         }, properties = { titlebars_enabled = true }
       },
 
