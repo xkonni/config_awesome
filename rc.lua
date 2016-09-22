@@ -531,7 +531,7 @@ mytasklist.buttons = awful.util.table.join(
           raise = true,
           keys = clientkeys,
           buttons = clientbuttons,
-          screen = function (c) return awesome.startup and c.screen or awful.screen.focused() end,
+          screen = awful.screen.preferred,
           placement = awful.placement.no_overlap+awful.placement.no_offscreen
         }
         -- }, callback = function ()
