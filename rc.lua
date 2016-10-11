@@ -342,7 +342,7 @@ mytasklist.buttons = awful.util.table.join(
       awful.key({ modkey },            "r",     function () mypromptbox[awful.screen.focused()]:run() end,
         {description = "run prompt", group = "launcher"}),
 
-      awful.key({ modkey }, "x",
+      awful.key({ modkey, "Shift" }, "r",
         function ()
           awful.prompt.run({ prompt = "Run Lua code: " },
             mypromptbox[awful.screen.focused()].widget,
@@ -402,18 +402,24 @@ mytasklist.buttons = awful.util.table.join(
       -- Scratchpad
 
       -- scratch.pad.toggle({vert, horiz, instance, screen})
-      awful.key({ modkey            }, "c", function ()
-        scratch.pad.toggle({vert="bottom", horiz="center", instance=0, screen=0}) end,
-        {description = "toggle C", group = "scratch"}),
       awful.key({ modkey,           }, "a", function ()
-        scratch.pad.toggle({horiz="left", instance=1, screen=0}) end,
+        scratch.pad.toggle({horiz="left", instance=0, screen=0}) end,
         {description = "toggle A", group = "scratch"}),
       awful.key({ modkey,           }, "s", function ()
-        scratch.pad.toggle({horiz="center", instance=2, screen=0}) end,
+        scratch.pad.toggle({horiz="center", instance=1, screen=0}) end,
         {description = "toggle S", group = "scratch"}),
       awful.key({ modkey,           }, "d", function ()
-        scratch.pad.toggle({horiz="right", instance=3, screen=0}) end,
-        {description = "toggle D", group = "scratch"})
+        scratch.pad.toggle({horiz="right", instance=2, screen=0}) end,
+        {description = "toggle D", group = "scratch"}),
+      awful.key({ modkey            }, "z", function ()
+        scratch.pad.toggle({vert="bottom", horiz="left", instance=3, screen=0}) end,
+        {description = "toggle Z", group = "scratch"}),
+      awful.key({ modkey            }, "x", function ()
+        scratch.pad.toggle({vert="bottom", horiz="center", instance=4, screen=0}) end,
+        {description = "toggle X", group = "scratch"}),
+      awful.key({ modkey            }, "c", function ()
+        scratch.pad.toggle({vert="bottom", horiz="right", instance=5, screen=0}) end,
+        {description = "toggle C", group = "scratch"})
     )
 
     clientkeys = awful.util.table.join(
@@ -455,20 +461,27 @@ mytasklist.buttons = awful.util.table.join(
       awful.key({ modkey, "Shift"   }, "r", function (c) functions.resize(c) end),
       -- Scratchpad
       -- pad.set(c, {vert, horiz, width, height, sticky, instance, screen})
-      awful.key({ modkey, "Shift" }, "c", function (c)
-        scratch.pad.set(c, {vert="bottom", horiz="center", width=1000, height=500,
-          sticky=true, instance=0, screen=0}) end,
-        {description = "set C", group = "scratch"}),
       awful.key({ modkey, "Shift" }, "a", function (c)
-        scratch.pad.set(c, {horiz="left",  width=0.5, sticky=true, instance=1, screen=0}) end,
+        scratch.pad.set(c, {horiz="left",  width=0.5, sticky=true, instance=0, screen=0}) end,
         {description = "set A", group = "scratch"}),
       awful.key({ modkey, "Shift" }, "s", function (c)
-        scratch.pad.set(c, {horiz="center", width=0.5, sticky=true, instance=2, screen=0}) end,
+        scratch.pad.set(c, {horiz="center", width=0.5, sticky=true, instance=1, screen=0}) end,
         {description = "set S", group = "scratch"}),
       awful.key({ modkey, "Shift" }, "d", function (c)
-        scratch.pad.set(c, {horiz="right",  width=0.5, sticky=true, instance=3, screen=0}) end,
-        {description = "set D", group = "scratch"})
-
+        scratch.pad.set(c, {horiz="right",  width=0.5, sticky=true, instance=2, screen=0}) end,
+        {description = "set D", group = "scratch"}),
+      awful.key({ modkey, "Shift" }, "z", function (c)
+        scratch.pad.set(c, {vert="bottom", horiz="left", width=1000, height=500,
+          sticky=true, instance=3, screen=0}) end,
+        {description = "set Z", group = "scratch"}),
+      awful.key({ modkey, "Shift" }, "x", function (c)
+        scratch.pad.set(c, {vert="bottom", horiz="center", width=1000, height=500,
+          sticky=true, instance=4, screen=0}) end,
+        {description = "set X", group = "scratch"}),
+      awful.key({ modkey, "Shift" }, "c", function (c)
+        scratch.pad.set(c, {vert="bottom", horiz="right", width=1000, height=500,
+          sticky=true, instance=5, screen=0}) end,
+        {description = "set C", group = "scratch"})
       )
 
     -- Bind all key numbers to tags.
