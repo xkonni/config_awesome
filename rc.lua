@@ -342,7 +342,7 @@ mytasklist.buttons = awful.util.table.join(
       awful.key({ modkey },            "r",     function () mypromptbox[awful.screen.focused()]:run() end,
         {description = "run prompt", group = "launcher"}),
 
-      awful.key({ modkey, "Shift" }, "r",
+      awful.key({ modkey, "Shift" }, "u",
         function ()
           awful.prompt.run({ prompt = "Run Lua code: " },
             mypromptbox[awful.screen.focused()].widget,
@@ -462,24 +462,27 @@ mytasklist.buttons = awful.util.table.join(
       -- Scratchpad
       -- pad.set(c, {vert, horiz, width, height, sticky, instance, screen})
       awful.key({ modkey, "Shift" }, "a", function (c)
-        scratch.pad.set(c, {horiz="left",  width=0.5, sticky=true, instance=0, screen=0}) end,
+        scratch.pad.set(c, {horiz="left", width=1000, height=600,
+          sticky=true, instance=0, screen=0}) end,
         {description = "set A", group = "scratch"}),
       awful.key({ modkey, "Shift" }, "s", function (c)
-        scratch.pad.set(c, {horiz="center", width=0.5, sticky=true, instance=1, screen=0}) end,
+        scratch.pad.set(c, {horiz="center", width=1000, height=600,
+          sticky=true, instance=1, screen=0}) end,
         {description = "set S", group = "scratch"}),
       awful.key({ modkey, "Shift" }, "d", function (c)
-        scratch.pad.set(c, {horiz="right",  width=0.5, sticky=true, instance=2, screen=0}) end,
+        scratch.pad.set(c, {horiz="right", width=1000, height=600,
+        sticky=true, instance=2, screen=0}) end,
         {description = "set D", group = "scratch"}),
       awful.key({ modkey, "Shift" }, "z", function (c)
-        scratch.pad.set(c, {vert="bottom", horiz="left", width=1000, height=500,
+        scratch.pad.set(c, {vert="bottom", horiz="left", width=1000, height=600,
           sticky=true, instance=3, screen=0}) end,
         {description = "set Z", group = "scratch"}),
       awful.key({ modkey, "Shift" }, "x", function (c)
-        scratch.pad.set(c, {vert="bottom", horiz="center", width=1000, height=500,
+        scratch.pad.set(c, {vert="bottom", horiz="center", width=1000, height=600,
           sticky=true, instance=4, screen=0}) end,
         {description = "set X", group = "scratch"}),
       awful.key({ modkey, "Shift" }, "c", function (c)
-        scratch.pad.set(c, {vert="bottom", horiz="right", width=1000, height=500,
+        scratch.pad.set(c, {vert="bottom", horiz="right", width=1000, height=600,
           sticky=true, instance=5, screen=0}) end,
         {description = "set C", group = "scratch"})
       )
