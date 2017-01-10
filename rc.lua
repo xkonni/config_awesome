@@ -431,7 +431,10 @@ mytasklist.buttons = awful.util.table.join(
         {description = "toggle fullscreen", group = "client"}),
       awful.key({ modkey, "Control"   }, "c",      function (c) c:kill()                       end,
         {description = "close", group = "client"}),
-      awful.key({ modkey, "Control" }, "space",  awful.client.floating.toggle                     ,
+      awful.key({ modkey, "Control" }, "space",  function (c)
+        awful.client.floating.toggle(c)
+        awful.placement.no_offscreen(c)
+      end,
         {description = "toggle floating", group = "client"}),
       awful.key({ modkey, "Control" }, "Return", function (c) c:swap(awful.client.getmaster()) end,
         {description = "move to master", group = "client"}),
