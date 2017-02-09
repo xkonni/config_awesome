@@ -12,6 +12,7 @@ local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 local functions = require("functions")
 local scratch = require("scratch")
+local vicious = require("vicious")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -125,12 +126,40 @@ mylauncher = awful.widget.launcher({ image = beautiful.awesome_icon,
 menubar.utils.terminal = settings.terminal -- Set the terminal for applications that require it
 -- }}}
 
--- Keyboard map indicator and switcher
-mykeyboardlayout = awful.widget.keyboardlayout()
-
 -- {{{ Wibox
 -- Create a textclock widget
 mytextclock = wibox.widget.textclock()
+
+-- RAM usage widget
+memwidget = wibox.widget {
+  {
+    id = "membar",
+    color             = "linear:0,0:100,0:0,#268bd2:0.5,#8000cc:1,#cc0000",
+    background_color  = beautiful.bg_focus,
+    border_color      = beautiful.fg_focus,
+    border_width      = 1,
+    value = 0.3,
+    max_value         = 1,
+    shape             = gears.shape.octogon,
+    bar_shape         = gears.shape.octogon,
+    widget            = wibox.widget.progressbar,
+  },
+  {
+    id = "memtext",
+    text = "memory",
+    widget = wibox.widget.textbox,
+  },
+  layout = wibox.layout.stack,
+  forced_width      = 100,
+  forced_height     = 16,
+}
+
+vicious.cache(vicious.widgets.mem)
+vicious.register(memwidget.membar, vicious.widgets.mem,
+  function (widget, args)
+    memwidget.memtext:set_text(" M: " .. args[2] .. " / " .. args[3])
+    return args[1]
+end, 7)
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -233,7 +262,7 @@ mytasklist.buttons = awful.util.table.join(
         mytasklist[s], -- Middle widget
         { -- Right widgets
           layout = wibox.layout.fixed.horizontal,
-          mykeyboardlayout,
+          memwidget,
           wibox.widget.systray(),
           mytextclock,
           mylayoutbox[s],
