@@ -5,7 +5,7 @@ local awful   = require("awful")
 
 functions = {}
 function functions.init(args)
-  beautiful = args.beautiful
+  theme = args.theme
 end
 
 function functions.textbox(args)
@@ -26,7 +26,7 @@ end
 
 function functions.resize(c)
   local n
-  local border = 2*beautiful.border_width
+  local border = 2*theme.border_width
   if awful.client.floating.get(c) then
     n = naughty.notify({screen=mouse.screen, title="resize floating", timeout=0})
     grabber = awful.keygrabber.run(
@@ -90,7 +90,7 @@ end
 
 function functions.move(c)
   local n
-  local border = 2*beautiful.border_width
+  local border = 2*theme.border_width
   if awful.client.floating.get(c) then
     n = naughty.notify({screen=mouse.screen, title="move floating", timeout=0})
     grabber = awful.keygrabber.run(

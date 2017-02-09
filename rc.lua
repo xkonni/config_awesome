@@ -58,7 +58,7 @@ end
 
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(awful.util.getdir("config") .. "/themes/solarized/theme.lua")
-functions.init({beautiful=beautiful})
+functions.init({theme=beautiful})
 
 -- Default modkey.
 -- Usually, Mod4 is the key with a logo between Control and Alt.
