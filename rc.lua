@@ -130,16 +130,40 @@ menubar.utils.terminal = settings.terminal -- Set the terminal for applications 
 -- Create a textclock widget
 mytextclock = wibox.widget.textclock()
 
+-- CPU usage widget
+cpuwidget = wibox.widget {
+  {
+    id = "cpubar",
+    color             = "linear:0,0:100,0:0,#268bd2:0.5,#8000cc:1,#cc0000",
+    background_color  = beautiful.bg_urgent,
+    border_color      = beautiful.bg_focus,
+    border_width      = 2,
+    max_value         = 1,
+    paddings          = 2,
+    shape             = gears.shape.octogon,
+    bar_shape         = gears.shape.octogon,
+    widget            = wibox.widget.progressbar,
+  },
+  {
+    id = "cputext",
+    text = "cpu",
+    widget = wibox.widget.textbox,
+  },
+  layout = wibox.layout.stack,
+  forced_width      = 90,
+  forced_height     = 12,
+}
+
 -- RAM usage widget
 memwidget = wibox.widget {
   {
     id = "membar",
     color             = "linear:0,0:100,0:0,#268bd2:0.5,#8000cc:1,#cc0000",
-    background_color  = beautiful.bg_focus,
-    border_color      = beautiful.fg_focus,
-    border_width      = 1,
-    value = 0.3,
+    background_color  = beautiful.bg_urgent,
+    border_color      = beautiful.bg_focus,
+    border_width      = 2,
     max_value         = 1,
+    paddings          = 2,
     shape             = gears.shape.octogon,
     bar_shape         = gears.shape.octogon,
     widget            = wibox.widget.progressbar,
@@ -150,16 +174,57 @@ memwidget = wibox.widget {
     widget = wibox.widget.textbox,
   },
   layout = wibox.layout.stack,
-  forced_width      = 100,
-  forced_height     = 16,
+  forced_width      = 90,
+  forced_height     = 12,
 }
 
+-- SWAP usage widget
+swapwidget = wibox.widget {
+  {
+    id = "swapbar",
+    color             = "linear:0,0:100,0:0,#268bd2:0.5,#8000cc:1,#cc0000",
+    background_color  = beautiful.bg_urgent,
+    border_color      = beautiful.bg_focus,
+    border_width      = 2,
+    max_value         = 100,
+    paddings          = 2,
+    shape             = gears.shape.octogon,
+    bar_shape         = gears.shape.octogon,
+    widget            = wibox.widget.progressbar,
+  },
+  {
+    id = "swaptext",
+    text = "swap",
+    widget = wibox.widget.textbox,
+  },
+  layout = wibox.layout.stack,
+  forced_width      = 90,
+  forced_height     = 12,
+  margins = {
+    top     = 2,
+    bottom  = 2,
+    left    = 5,
+    right   = 5
+  }
+}
+
+-- update CPU
+vicious.cache(vicious.widgets.cpu)
+vicious.register(cpuwidget.cpubar, vicious.widgets.cpu,
+  function (widget, args)
+    cpuwidget.cputext:set_text(" C " .. args[1] .. "%")
+    return args[1]
+end, 3)
+
+-- update RAM/SWAP
 vicious.cache(vicious.widgets.mem)
 vicious.register(memwidget.membar, vicious.widgets.mem,
   function (widget, args)
-    memwidget.memtext:set_text(" M: " .. args[2] .. " / " .. args[3])
+    memwidget.memtext:set_text(" M " .. args[2] .. " / " .. args[3])
+    swapwidget.swapbar:set_value(args[5])
+    swapwidget.swaptext:set_text(" S " .. args[6] .. " / " .. args[7])
     return args[1]
-end, 7)
+end, 3)
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -262,7 +327,9 @@ mytasklist.buttons = awful.util.table.join(
         mytasklist[s], -- Middle widget
         { -- Right widgets
           layout = wibox.layout.fixed.horizontal,
+          cpuwidget,
           memwidget,
+          swapwidget,
           wibox.widget.systray(),
           mytextclock,
           mylayoutbox[s],
