@@ -138,15 +138,18 @@ cpuwidget = wibox.widget {
     background_color  = beautiful.bg_urgent,
     border_color      = beautiful.bg_focus,
     border_width      = 2,
-    max_value         = 1,
     paddings          = 2,
+    max_value         = 1,
     shape             = gears.shape.octogon,
     bar_shape         = gears.shape.octogon,
     widget            = wibox.widget.progressbar,
   },
   {
     id = "cputext",
-    text = "cpu",
+    widget = wibox.widget.textbox,
+  },
+  {
+    id = "cputemp",
     widget = wibox.widget.textbox,
   },
   layout = wibox.layout.stack,
@@ -162,15 +165,14 @@ memwidget = wibox.widget {
     background_color  = beautiful.bg_urgent,
     border_color      = beautiful.bg_focus,
     border_width      = 2,
-    max_value         = 1,
     paddings          = 2,
+    max_value         = 1,
     shape             = gears.shape.octogon,
     bar_shape         = gears.shape.octogon,
     widget            = wibox.widget.progressbar,
   },
   {
     id = "memtext",
-    text = "memory",
     widget = wibox.widget.textbox,
   },
   layout = wibox.layout.stack,
@@ -186,33 +188,33 @@ swapwidget = wibox.widget {
     background_color  = beautiful.bg_urgent,
     border_color      = beautiful.bg_focus,
     border_width      = 2,
-    max_value         = 100,
     paddings          = 2,
+    max_value         = 100,
     shape             = gears.shape.octogon,
     bar_shape         = gears.shape.octogon,
     widget            = wibox.widget.progressbar,
   },
   {
     id = "swaptext",
-    text = "swap",
     widget = wibox.widget.textbox,
   },
   layout = wibox.layout.stack,
   forced_width      = 90,
   forced_height     = 12,
-  margins = {
-    top     = 2,
-    bottom  = 2,
-    left    = 5,
-    right   = 5
-  }
 }
+
+-- update temperature
+vicious.cache(vicious.widgets.thermal)
+vicious.register(cpuwidget.cputemp, vicious.widgets.thermal,
+  function(widget, args)
+    return string.format("        %2.1f°C", args[1])
+end, 3, { "coretemp.0/hwmon/hwmon2", "core"} )
 
 -- update CPU
 vicious.cache(vicious.widgets.cpu)
 vicious.register(cpuwidget.cpubar, vicious.widgets.cpu,
   function (widget, args)
-    cpuwidget.cputext:set_text(" C " .. args[1] .. "%")
+    cpuwidget.cputext:set_text(string.format(" C %3d%%", args[1]))
     return args[1]
 end, 3)
 
@@ -220,9 +222,9 @@ end, 3)
 vicious.cache(vicious.widgets.mem)
 vicious.register(memwidget.membar, vicious.widgets.mem,
   function (widget, args)
-    memwidget.memtext:set_text(" M " .. args[2] .. " / " .. args[3])
+    memwidget.memtext:set_text(string.format(" M %4d / %4d", args[2], args[3]))
     swapwidget.swapbar:set_value(args[5])
-    swapwidget.swaptext:set_text(" S " .. args[6] .. " / " .. args[7])
+    swapwidget.swaptext:set_text(string.format(" S %4d / %4d", args[6], args[7]))
     return args[1]
 end, 3)
 
