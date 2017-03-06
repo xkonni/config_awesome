@@ -176,7 +176,7 @@ memwidget = wibox.widget {
     widget = wibox.widget.textbox,
   },
   layout = wibox.layout.stack,
-  forced_width      = 90,
+  forced_width      = 60,
   forced_height     = 12,
 }
 
@@ -199,7 +199,7 @@ swapwidget = wibox.widget {
     widget = wibox.widget.textbox,
   },
   layout = wibox.layout.stack,
-  forced_width      = 90,
+  forced_width      = 60,
   forced_height     = 12,
 }
 
@@ -208,7 +208,7 @@ vicious.cache(vicious.widgets.thermal)
 vicious.register(cpuwidget.cputemp, vicious.widgets.thermal,
   function(widget, args)
     return string.format("        %2.1f°C", args[1])
-end, 3, { "coretemp.0/hwmon/hwmon2", "core"} )
+end, 3, { "coretemp.0/hwmon/hwmon1", "core"} )
 
 -- update CPU
 vicious.cache(vicious.widgets.cpu)
@@ -222,9 +222,9 @@ end, 3)
 vicious.cache(vicious.widgets.mem)
 vicious.register(memwidget.membar, vicious.widgets.mem,
   function (widget, args)
-    memwidget.memtext:set_text(string.format(" M %4d / %4d", args[2], args[3]))
+    memwidget.memtext:set_text(string.format(" M  %3d%%", args[1]))
     swapwidget.swapbar:set_value(args[5])
-    swapwidget.swaptext:set_text(string.format(" S %4d / %4d", args[6], args[7]))
+    swapwidget.swaptext:set_text(string.format(" S  %3d%%", args[5]))
     return args[1]
 end, 3)
 
