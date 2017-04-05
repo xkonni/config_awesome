@@ -59,6 +59,7 @@ end
 
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(awful.util.getdir("config") .. "/themes/solarized/theme.lua")
+-- beautiful.init("/usr/share/awesome/themes/zenburn/theme.lua")
 functions.init({theme=beautiful})
 
 -- Default modkey.
@@ -245,9 +246,7 @@ mytaglist.buttons = awful.util.table.join(
     if client.focus then
       client.focus:toggle_tag(t)
     end
-  end),
-  awful.button({ }, 4, function(t) awful.tag.viewnext(t.screen) end),
-  awful.button({ }, 5, function(t) awful.tag.viewprev(t.screen) end)
+  end)
   )
 
 mytasklist = {}
@@ -539,7 +538,7 @@ mytasklist.buttons = awful.util.table.join(
       awful.key({ modkey,           }, "o",      function (c) c:move_to_screen()               end,
         {description = "move to screen", group = "client"}),
       awful.key({ modkey, "Shift"   }, "o",      function (c) functions.swaptags()             end,
-        {description = "move to screen", group = "client"}),
+        {description = "swap screens", group = "client"}),
       awful.key({ modkey,           }, "t",      function (c) awful.titlebar.toggle(c)         end,
         {description = "toggle titlebar", group = "client"}),
       awful.key({ modkey, "Shift"   }, "t",      function (c) c.ontop = not c.ontop            end,
