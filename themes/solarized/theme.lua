@@ -19,26 +19,25 @@ theme.font                                      = "Inconsolata for Powerline 9"
 -- {{{ Colors
 theme.fg_normal                                 = "#EEE8D5"
 theme.fg_focus                                  = "#268BD2"
-theme.fg_urgent                                 = "#268BD2"
-theme.fg_minimize                               = "#8A8A8A"
+theme.fg_urgent                                 = "#30A6F8"
 
 theme.bg_normal                                 = "#3F3F3F"
-theme.bg_focus                                  = "#303030"
-theme.bg_urgent                                 = "#202020"
-theme.bg_minimize                               = theme.bg_normal
+theme.bg_focus                                  = "#4F4F4F"
+theme.bg_urgent                                 = "#2F2F2F"
 theme.bg_systray                                = theme.bg_normal
 -- }}} Colors
 
 -- {{{ Borders
+theme.useless_gap                               = 1
 theme.border_width                              = 2
-theme.border_normal                             = theme.bg_normal
-theme.border_focus                              = theme.fg_focus
-theme.border_marked                             = "#00ff00"
+theme.border_normal                             = "#3F3F3F"
+theme.border_focus                              = "#268BD2"
+theme.border_marked                             = "#00FF00"
 -- }}} Borders
 
 -- {{{ Titlebars
---theme.titlebar_bg_focus  = "#3F3F3F"
---theme.titlebar_bg_normal = "#3F3F3F"
+theme.titlebar_bg_focus                         = "#3F3F3F"
+theme.titlebar_bg_normal                        = "#3F3F3F"
 -- }}}
 
 -- {{{ Override
