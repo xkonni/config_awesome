@@ -133,13 +133,17 @@ function functions.move(c)
 end
 
 function functions.swaptags()
-  if screen.count() ~= 2 then
+  if screen.count() <= 2 then
     return
   end
 
   -- screen
-  scr1 = 1
-  scr2 = 2
+  scr1 = mouse.screen.index
+  scr2 = scr1 + 1
+  if scr2 > screen.count() then
+    scr2 = 1
+  end
+
   -- current tags
   tag1 = awful.tag.selected(scr1)
   tag2 = awful.tag.selected(scr2)
