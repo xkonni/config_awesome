@@ -204,6 +204,29 @@ swapwidget = wibox.widget {
   forced_height     = 12,
 }
 
+-- battery widget
+batwidget = wibox.widget {
+  {
+    id = "batbar",
+    color             = "linear:0,0:100,0:0,#268bd2:0.5,#8000cc:1,#cc0000",
+    background_color  = beautiful.bg_urgent,
+    border_color      = beautiful.bg_focus,
+    border_width      = 2,
+    paddings          = 2,
+    max_value         = 100,
+    shape             = gears.shape.octogon,
+    bar_shape         = gears.shape.octogon,
+    widget            = wibox.widget.progressbar,
+  },
+  {
+    id = "battext",
+    widget = wibox.widget.textbox,
+  },
+  layout = wibox.layout.stack,
+  forced_width      = 60,
+  forced_height     = 12,
+}
+
 -- update temperature
 vicious.cache(vicious.widgets.thermal)
 vicious.register(cpuwidget.cputemp, vicious.widgets.thermal,
@@ -228,6 +251,15 @@ vicious.register(memwidget.membar, vicious.widgets.mem,
     swapwidget.swaptext:set_text(string.format(" S  %3d%%", args[5]))
     return args[1]
 end, 3)
+
+-- update battery
+vicious.cache(vicious.widgets.bat)
+vicious.register(batwidget.batbar, vicious.widgets.bat,
+  function (widget, args)
+    batwidget.battext:set_text(string.format(" B  %3d%%", args[2]))
+    -- return string.format("%d", args[2])
+    return string.format("%d", args[2]*100)
+end, 3, settings.bat)
 
 -- Create a wibox for each screen and add it
 mywibox = {}
@@ -331,6 +363,7 @@ mytasklist.buttons = awful.util.table.join(
           cpuwidget,
           memwidget,
           swapwidget,
+          batwidget,
           wibox.widget.systray(),
           mytextclock,
           mylayoutbox[s],
