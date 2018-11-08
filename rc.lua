@@ -256,7 +256,7 @@ end, 3)
 vicious.cache(vicious.widgets.bat)
 vicious.register(batwidget.batbar, vicious.widgets.bat,
   function (widget, args)
-    batwidget.battext:set_text(string.format(" B  %3d%%", args[2]))
+    batwidget.battext:set_text(string.format(" B  %s%3d%%", args[1], args[2]))
     -- return string.format("%d", args[2])
     return string.format("%d", args[2]*100)
 end, 3, settings.bat)
