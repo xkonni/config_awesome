@@ -13,6 +13,7 @@ local hotkeys_popup = require("awful.hotkeys_popup").widget
 local functions = require("functions")
 local scratch = require("scratch")
 local vicious = require("vicious")
+local centerwork = require("layouts.centerwork")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -71,6 +72,8 @@ modkey = "Mod4"
 
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
+  centerwork,
+  -- centerwork.horizontal,
   -- awful.layout.suit.floating,
   awful.layout.suit.tile,
   awful.layout.suit.tile.left,
@@ -248,7 +251,7 @@ vicious.register(memwidget.membar, vicious.widgets.mem,
   function (widget, args)
     memwidget.memtext:set_text(string.format(" M  %3d%%", args[1]))
     swapwidget.swapbar:set_value(args[5])
-    swapwidget.swaptext:set_text(string.format(" S  %3d%%", args[5]))
+    swapwidget.swaptext:set_text(string.format(" S  %3s%%", args[5]))
     return args[1]
 end, 3)
 
