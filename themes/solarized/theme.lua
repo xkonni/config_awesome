@@ -110,6 +110,8 @@ theme.layout_cornernw                           = config .. "/themes/solarized/l
 theme.layout_cornerne                           = config .. "/themes/solarized/layouts/cornerne.png"
 theme.layout_cornersw                           = config .. "/themes/solarized/layouts/cornersw.png"
 theme.layout_cornerse                           = config .. "/themes/solarized/layouts/cornerse.png"
+theme.layout_centerwork                         = config .. "/themes/solarized/layouts/centerwork.png"
+theme.layout_centerworkh                        = config .. "/themes/solarized/layouts/centerworkh.png"
 -- }}} Layout
 
 -- {{{ Titlebar
