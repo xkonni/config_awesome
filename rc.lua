@@ -7,7 +7,12 @@ local wibox = require("wibox")
 -- Theme handling library
 local beautiful = require("beautiful")
 -- Notification library
+-- workaround for using other notification daemons
+local _dbus = dbus
+dbus = nil
 local naughty = require("naughty")
+dbus = _dbus
+--
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 local functions = require("functions")
