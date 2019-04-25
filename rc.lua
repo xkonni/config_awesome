@@ -382,9 +382,7 @@ mytasklist.buttons = awful.util.table.join(
 
     -- {{{ Mouse bindings
     root.buttons(awful.util.table.join(
-        awful.button({ }, 3, function () mymainmenu:toggle() end),
-        awful.button({ }, 4, awful.tag.viewnext),
-        awful.button({ }, 5, awful.tag.viewprev)
+        awful.button({ }, 3, function () mymainmenu:toggle() end)
       ))
     -- }}}
 
@@ -446,7 +444,7 @@ mytasklist.buttons = awful.util.table.join(
         {description = "open a terminal", group = "launcher"}),
       awful.key({ modkey, "Control" }, "r", awesome.restart,
         {description = "reload awesome", group = "awesome"}),
-      awful.key({ modkey, "Shift"   }, "q", awesome.quit,
+      awful.key({ modkey, "Shift"   }, "q", functions.quit,
         {description = "quit awesome", group = "awesome"}),
 
       awful.key({ modkey, "Control"   }, "j",     function () awful.tag.incnmaster( 1, nil, true) end,
@@ -489,53 +487,7 @@ mytasklist.buttons = awful.util.table.join(
       awful.key({ modkey }, "p", function() menubar.show() end,
         {description = "show the menubar", group = "launcher"}),
 
-      -- Media XF86
-      awful.key({        }, "XF86AudioMute",        function ()
-        awful.util.spawn(settings.home .."/bin/notify_volume toggle", false) end,
-        {description = "mute audio", group = "media"}),
-      awful.key({        }, "XF86AudioLowerVolume", function ()
-        awful.util.spawn(settings.home .."/bin/notify_volume decrease", false) end,
-        {description = "decrease volume", group = "media"}),
-      awful.key({        }, "XF86AudioRaiseVolume", function ()
-        awful.util.spawn(settings.home .."/bin/notify_volume increase", false) end,
-        {description = "increase volume", group = "media"}),
-      awful.key({        }, "XF86AudioStop",        function ()
-        awful.util.spawn(settings.home .."/bin/notify_mpd stop", false) end,
-        {description = "mpd stop", group = "media"}),
-      awful.key({        }, "XF86AudioPrev",        function ()
-        awful.util.spawn(settings.home .."/bin/notify_mpd prev", false) end,
-        {description = "mpd previous", group = "media"}),
-      awful.key({        }, "XF86AudioPlay",        function ()
-        awful.util.spawn(settings.home .."/bin/notify_mpd toggle", false) end,
-        {description = "mpd play/pause", group = "media"}),
-      awful.key({        }, "XF86AudioNext",        function ()
-        awful.util.spawn(settings.home .."/bin/notify_mpd next", false) end,
-        {description = "mpd next", group = "media"}),
-
-      -- Media fake WASD
-      awful.key({ modkey }, "Pause",  function ()
-        awful.util.spawn(settings.home .."/bin/notify_volume toggle", false) end,
-        {description = "mute audio", group = "media"}),
-      awful.key({ modkey }, "Next",   function ()
-        awful.util.spawn(settings.home .."/bin/notify_volume decrease", false) end,
-        {description = "decrease volume", group = "media"}),
-      awful.key({ modkey }, "Prior",  function ()
-        awful.util.spawn(settings.home .."/bin/notify_volume increase", false) end,
-        {description = "increase volume", group = "media"}),
-      awful.key({ modkey }, "Insert", function ()
-        awful.util.spawn(settings.home .."/bin/notify_mpd toggle", false) end,
-        {description = "mpd next", group = "media"}),
-      awful.key({ modkey }, "Home",   function ()
-        awful.util.spawn(settings.home .."/bin/notify_mpd stop", false) end,
-        {description = "mpd stop", group = "media"}),
-      awful.key({ modkey }, "Delete", function ()
-        awful.util.spawn(settings.home .."/bin/notify_mpd prev", false) end,
-        {description = "mpd previous", group = "media"}),
-      awful.key({ modkey }, "End",    function ()
-        awful.util.spawn(settings.home .."/bin/notify_mpd next", false) end,
-        {description = "mpd next", group = "media"}),
       -- Scratchpad
-
       -- scratch.pad.toggle({vert, horiz, instance, screen})
       awful.key({ modkey,           }, "a", function ()
         scratch.pad.toggle({horiz="left", instance=0, screen=0}) end,

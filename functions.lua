@@ -167,7 +167,7 @@ function functions.swaptags()
 end
 
 function functions.quit()
-  awful.util.spawn("xfce4-session-logout -lf")
+  awful.util.spawn("lxsession-logout")
 end
 
 return functions
