@@ -487,6 +487,12 @@ mytasklist.buttons = awful.util.table.join(
       awful.key({ modkey }, "p", function() menubar.show() end,
         {description = "show the menubar", group = "launcher"}),
 
+      -- Screenshots
+      awful.key({ "Mod1", "Shift"}, "3", function() awful.spawn.with_shell(settings.home .. "/bin/aw_scrot.sh") end,
+        {description = "take screenshot of whole screen", group = "launcher"}),
+      awful.key({ "Mod1", "Shift"}, "4", function() awful.spawn.with_shell("sleep 1; " .. settings.home .. "/bin/aw_scrot.sh -s") end,
+        {description = "take screenshot of selection", group = "launcher"}),
+
       -- Scratchpad
       -- scratch.pad.toggle({vert, horiz, instance, screen})
       awful.key({ modkey,           }, "a", function ()
