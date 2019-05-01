@@ -7,12 +7,10 @@ local wibox = require("wibox")
 -- Theme handling library
 local beautiful = require("beautiful")
 -- Notification library
--- workaround for using other notification daemons
-local _dbus = dbus
-dbus = nil
+-- skip overriding system-wide notification daemon
+local _dbus = dbus; dbus = nil
 local naughty = require("naughty")
 dbus = _dbus
---
 local menubar = require("menubar")
 local hotkeys_popup = require("awful.hotkeys_popup").widget
 local functions = require("functions")
@@ -240,7 +238,7 @@ vicious.cache(vicious.widgets.thermal)
 vicious.register(cpuwidget.cputemp, vicious.widgets.thermal,
   function(widget, args)
     return string.format("        %2.1f°C", args[1])
-end, 3, { "coretemp.0/hwmon/hwmon1", "core"} )
+end, 3, { "coretemp.0/hwmon/hwmon3", "core"} )
 
 -- update CPU
 vicious.cache(vicious.widgets.cpu)
@@ -488,9 +486,13 @@ mytasklist.buttons = awful.util.table.join(
         {description = "show the menubar", group = "launcher"}),
 
       -- Screenshots
-      awful.key({ "Mod1", "Shift"}, "3", function() awful.spawn.with_shell(settings.home .. "/bin/aw_scrot.sh") end,
+      awful.key({ "Mod1", "Shift"}, "3", function()
+        -- naughty.notify({title="scrot", text="whole screen"})
+        awful.spawn.with_shell(settings.home .. "/bin/aw_scrot.sh") end,
         {description = "take screenshot of whole screen", group = "launcher"}),
-      awful.key({ "Mod1", "Shift"}, "4", function() awful.spawn.with_shell("sleep 1; " .. settings.home .. "/bin/aw_scrot.sh -s") end,
+      awful.key({ "Mod1", "Shift"}, "4", function()
+        naughty.notify({title="scrot", text="selection"})
+        awful.spawn.with_shell("sleep 1; " .. settings.home .. "/bin/aw_scrot.sh -s") end,
         {description = "take screenshot of selection", group = "launcher"}),
 
       -- Scratchpad
