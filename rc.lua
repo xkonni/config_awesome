@@ -17,6 +17,7 @@ local functions = require("functions")
 local scratch = require("scratch")
 local vicious = require("vicious")
 local centerwork = require("layouts.centerwork")
+local termfair = require("layouts.termfair")
 
 -- {{{ Error handling
 -- Check if awesome encountered an error during startup and fell back to
@@ -76,6 +77,8 @@ modkey = "Mod4"
 -- Table of layouts to cover with awful.layout.inc, order matters.
 awful.layout.layouts = {
   centerwork,
+  -- termfair,
+  termfair.center,
   -- centerwork.horizontal,
   -- awful.layout.suit.floating,
   awful.layout.suit.tile,
