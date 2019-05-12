@@ -63,6 +63,8 @@ if settings.host == "silence" then
   settings.scale=1.25
 --   settings.bat = "BAT1"
 end
+settings.sc_width=1000*settings.scale
+settings.sc_height=600*settings.scale
 
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(awful.util.getdir("config") .. "/themes/solarized/theme.lua")
@@ -588,27 +590,27 @@ awful.screen.connect_for_each_screen(function(s)
     -- Scratchpad
     -- pad.set(c, {vert, horiz, width, height, sticky, instance, screen})
     awful.key({ modkey, "Shift" }, "a", function (c)
-      scratch.pad.set(c, {horiz="left", width=1000, height=600,
+      scratch.pad.set(c, {horiz="left", width=settings.sc_width, height=settings.sc_height,
         sticky=true, instance=0, screen=0}) end,
       {description = "set A", group = "scratch"}),
     awful.key({ modkey, "Shift" }, "s", function (c)
-      scratch.pad.set(c, {horiz="center", width=1000, height=600,
+      scratch.pad.set(c, {horiz="center", width=settings.sc_width, height=settings.sc_height,
         sticky=true, instance=1, screen=0}) end,
       {description = "set S", group = "scratch"}),
     awful.key({ modkey, "Shift" }, "d", function (c)
-      scratch.pad.set(c, {horiz="right", width=1000, height=600,
+      scratch.pad.set(c, {horiz="right", width=settings.sc_width, height=settings.sc_height,
       sticky=true, instance=2, screen=0}) end,
       {description = "set D", group = "scratch"}),
     awful.key({ modkey, "Shift" }, "z", function (c)
-      scratch.pad.set(c, {vert="bottom", horiz="left", width=1000, height=600,
+      scratch.pad.set(c, {vert="bottom", horiz="left", width=settings.sc_width, height=settings.sc_height,
         sticky=true, instance=3, screen=0}) end,
       {description = "set Z", group = "scratch"}),
     awful.key({ modkey, "Shift" }, "x", function (c)
-      scratch.pad.set(c, {vert="bottom", horiz="center", width=1000, height=600,
+      scratch.pad.set(c, {vert="bottom", horiz="center", width=settings.sc_width, height=settings.sc_height,
         sticky=true, instance=4, screen=0}) end,
       {description = "set X", group = "scratch"}),
     awful.key({ modkey, "Shift" }, "c", function (c)
-      scratch.pad.set(c, {vert="bottom", horiz="right", width=1000, height=600,
+      scratch.pad.set(c, {vert="bottom", horiz="right", width=settings.sc_width, height=settings.sc_height,
         sticky=true, instance=5, screen=0}) end,
       {description = "set C", group = "scratch"})
     )
