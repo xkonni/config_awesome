@@ -57,10 +57,12 @@ settings.editor_cmd = settings.terminal_cmd .. settings.editor
 tmp = io.popen("echo $HOME")
 settings.home = tmp:read()
 settings.timeout = 5
+settings.scale=1
 settings.bat = "BAT0"
--- if settings.host == "silence" then
+if settings.host == "silence" then
+  settings.scale=1.25
 --   settings.bat = "BAT1"
--- end
+end
 
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(awful.util.getdir("config") .. "/themes/solarized/theme.lua")
@@ -163,7 +165,7 @@ cpuwidget = wibox.widget {
     widget = wibox.widget.textbox,
   },
   layout = wibox.layout.stack,
-  forced_width      = 120,
+  forced_width      = 100*settings.scale,
   forced_height     = 12,
 }
 
@@ -186,12 +188,12 @@ memwidget = wibox.widget {
     widget = wibox.widget.textbox,
   },
   layout = wibox.layout.stack,
-  forced_width      = 90,
+  forced_width      = 60*settings.scale,
   forced_height     = 12,
 }
 
 -- SWAP usage widget
-if not settings.host == "silence" then
+if (settings.host ~= "silence" and settings.host ~= "annoyance") then
   swapwidget = wibox.widget {
     {
       id = "swapbar",
@@ -210,7 +212,7 @@ if not settings.host == "silence" then
       widget = wibox.widget.textbox,
     },
     layout = wibox.layout.stack,
-    forced_width      = 60,
+    forced_width      = 60*settings.scale,
     forced_height     = 12,
   }
 else
@@ -222,27 +224,34 @@ end
 
 
 -- battery widget
-batwidget = wibox.widget {
-  {
-    id = "batbar",
-    color             = "linear:0,0:100,0:0,#268bd2:0.5,#8000cc:1,#cc0000",
-    background_color  = beautiful.bg_urgent,
-    border_color      = beautiful.bg_focus,
-    border_width      = 2,
-    paddings          = 2,
-    max_value         = 100,
-    shape             = gears.shape.octogon,
-    bar_shape         = gears.shape.octogon,
-    widget            = wibox.widget.progressbar,
-  },
-  {
-    id = "battext",
-    widget = wibox.widget.textbox,
-  },
-  layout = wibox.layout.stack,
-  forced_width      = 80,
-  forced_height     = 12,
-}
+if settings.host ~= "annoyance" then
+  batwidget = wibox.widget {
+    {
+      id = "batbar",
+      color             = "linear:0,0:100,0:0,#268bd2:0.5,#8000cc:1,#cc0000",
+      background_color  = beautiful.bg_urgent,
+      border_color      = beautiful.bg_focus,
+      border_width      = 2,
+      paddings          = 2,
+      max_value         = 100,
+      shape             = gears.shape.octogon,
+      bar_shape         = gears.shape.octogon,
+      widget            = wibox.widget.progressbar,
+    },
+    {
+      id = "battext",
+      widget = wibox.widget.textbox,
+    },
+    layout = wibox.layout.stack,
+    forced_width      = 60*settings.scale,
+    forced_height     = 12,
+  }
+else
+  batwidget = wibox.widget {
+    forced_width      = 0,
+    forced_height     = 0,
+  }
+end
 
 -- update temperature
 vicious.cache(vicious.widgets.thermal)
@@ -264,7 +273,7 @@ vicious.cache(vicious.widgets.mem)
 vicious.register(memwidget.membar, vicious.widgets.mem,
   function (widget, args)
     memwidget.memtext:set_text(string.format(" M  %3d%%", args[1]))
-    if not settings.host == "silence" then
+    if (settings.host ~= "silence" and settings.host ~= "annoyance") then
       swapwidget.swapbar:set_value(args[5])
       swapwidget.swaptext:set_text(string.format(" S  %3s%%", args[5]))
     end
@@ -272,13 +281,15 @@ vicious.register(memwidget.membar, vicious.widgets.mem,
 end, 3)
 
 -- update battery
-vicious.cache(vicious.widgets.bat)
-vicious.register(batwidget.batbar, vicious.widgets.bat,
-  function (widget, args)
-    batwidget.battext:set_text(string.format(" B  %s%3d%%", args[1], args[2]))
-    -- return string.format("%d", args[2])
-    return string.format("%d", args[2]*100)
-end, 3, settings.bat)
+if settings.host ~= "annoyance" then
+  vicious.cache(vicious.widgets.bat)
+  vicious.register(batwidget.batbar, vicious.widgets.bat,
+    function (widget, args)
+      batwidget.battext:set_text(string.format(" B  %s%3d%%", args[1], args[2]))
+      -- return string.format("%d", args[2])
+      return string.format("%d", args[2]*100)
+  end, 3, settings.bat)
+end
 
 -- Create a wibox for each screen and add it
 mywibox = {}
