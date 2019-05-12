@@ -58,9 +58,9 @@ tmp = io.popen("echo $HOME")
 settings.home = tmp:read()
 settings.timeout = 5
 settings.bat = "BAT0"
-if settings.host == "silence" then
-  settings.bat = "BAT1"
-end
+-- if settings.host == "silence" then
+--   settings.bat = "BAT1"
+-- end
 
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(awful.util.getdir("config") .. "/themes/solarized/theme.lua")
@@ -163,7 +163,7 @@ cpuwidget = wibox.widget {
     widget = wibox.widget.textbox,
   },
   layout = wibox.layout.stack,
-  forced_width      = 90,
+  forced_width      = 120,
   forced_height     = 12,
 }
 
@@ -186,32 +186,40 @@ memwidget = wibox.widget {
     widget = wibox.widget.textbox,
   },
   layout = wibox.layout.stack,
-  forced_width      = 60,
+  forced_width      = 90,
   forced_height     = 12,
 }
 
 -- SWAP usage widget
-swapwidget = wibox.widget {
-  {
-    id = "swapbar",
-    color             = "linear:0,0:100,0:0,#268bd2:0.5,#8000cc:1,#cc0000",
-    background_color  = beautiful.bg_urgent,
-    border_color      = beautiful.bg_focus,
-    border_width      = 2,
-    paddings          = 2,
-    max_value         = 100,
-    shape             = gears.shape.octogon,
-    bar_shape         = gears.shape.octogon,
-    widget            = wibox.widget.progressbar,
-  },
-  {
-    id = "swaptext",
-    widget = wibox.widget.textbox,
-  },
-  layout = wibox.layout.stack,
-  forced_width      = 60,
-  forced_height     = 12,
-}
+if not settings.host == "silence" then
+  swapwidget = wibox.widget {
+    {
+      id = "swapbar",
+      color             = "linear:0,0:100,0:0,#268bd2:0.5,#8000cc:1,#cc0000",
+      background_color  = beautiful.bg_urgent,
+      border_color      = beautiful.bg_focus,
+      border_width      = 2,
+      paddings          = 2,
+      max_value         = 100,
+      shape             = gears.shape.octogon,
+      bar_shape         = gears.shape.octogon,
+      widget            = wibox.widget.progressbar,
+    },
+    {
+      id = "swaptext",
+      widget = wibox.widget.textbox,
+    },
+    layout = wibox.layout.stack,
+    forced_width      = 60,
+    forced_height     = 12,
+  }
+else
+  swapwidget = wibox.widget {
+    forced_width      = 0,
+    forced_height     = 0,
+  }
+end
+
 
 -- battery widget
 batwidget = wibox.widget {
@@ -232,7 +240,7 @@ batwidget = wibox.widget {
     widget = wibox.widget.textbox,
   },
   layout = wibox.layout.stack,
-  forced_width      = 60,
+  forced_width      = 80,
   forced_height     = 12,
 }
 
@@ -256,8 +264,10 @@ vicious.cache(vicious.widgets.mem)
 vicious.register(memwidget.membar, vicious.widgets.mem,
   function (widget, args)
     memwidget.memtext:set_text(string.format(" M  %3d%%", args[1]))
-    swapwidget.swapbar:set_value(args[5])
-    swapwidget.swaptext:set_text(string.format(" S  %3s%%", args[5]))
+    if not settings.host == "silence" then
+      swapwidget.swapbar:set_value(args[5])
+      swapwidget.swaptext:set_text(string.format(" S  %3s%%", args[5]))
+    end
     return args[1]
 end, 3)
 
