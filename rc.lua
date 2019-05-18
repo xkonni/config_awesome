@@ -474,6 +474,8 @@ awful.screen.connect_for_each_screen(function(s)
       {description = "reload awesome", group = "awesome"}),
     awful.key({ modkey, "Shift"   }, "q", functions.quit,
       {description = "quit awesome", group = "awesome"}),
+    awful.key({ modkey, "Control"   }, "Escape", function () awful.spawn(settings.home .. "/bin/lock.sh") end,
+      {description = "lock screen", group = "awesome"}),
 
     awful.key({ modkey, "Control"   }, "j",     function () awful.tag.incnmaster( 1, nil, true) end,
       {description = "increase the number of master clients", group = "layout"}),
