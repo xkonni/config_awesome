@@ -57,14 +57,25 @@ settings.editor_cmd = settings.terminal_cmd .. settings.editor
 tmp = io.popen("echo $HOME")
 settings.home = tmp:read()
 settings.timeout = 5
-settings.scale=1
-settings.bat = "BAT0"
-if settings.host == "silence" then
-  settings.scale=1.25
---   settings.bat = "BAT1"
+-- defaults
+settings.swap = true
+settings.scale = 1.0
+settings.bat = false
+settings.coretemp = "coretemp.0/hwmon/hwmon2"
+-- host specific
+if settings.host == "annoyance" then
+  settings.scale = 1.15
+elseif settings.host == "silence" then
+  settings.scale = 1.25
+  settings.swap = false
+  settings.bat = "BAT0"
+  settings.coretemp = "coretemp.0/hwmon/hwmon3"
+elseif settings.host == "CHJYRN2" then
+  settings.bat = "BAT0"
+  settings.coretemp = "coretemp.0/hwmon/hwmon4"
 end
-settings.sc_width=1000*settings.scale
-settings.sc_height=600*settings.scale
+settings.sc_width = 960*settings.scale
+settings.sc_height = 540*settings.scale
 
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(awful.util.getdir("config") .. "/themes/solarized/theme.lua")
@@ -195,7 +206,7 @@ memwidget = wibox.widget {
 }
 
 -- SWAP usage widget
-if (settings.host ~= "silence" and settings.host ~= "annoyance") then
+if (settings.swap) then
   swapwidget = wibox.widget {
     {
       id = "swapbar",
@@ -224,9 +235,8 @@ else
   }
 end
 
-
 -- battery widget
-if settings.host ~= "annoyance" then
+if settings.bat then
   batwidget = wibox.widget {
     {
       id = "batbar",
@@ -260,7 +270,7 @@ vicious.cache(vicious.widgets.thermal)
 vicious.register(cpuwidget.cputemp, vicious.widgets.thermal,
   function(widget, args)
     return string.format("        %2.1f°C", args[1])
-end, 3, { "coretemp.0/hwmon/hwmon3", "core"} )
+end, 3, { settings.coretemp, "core"} )
 
 -- update CPU
 vicious.cache(vicious.widgets.cpu)
@@ -275,7 +285,7 @@ vicious.cache(vicious.widgets.mem)
 vicious.register(memwidget.membar, vicious.widgets.mem,
   function (widget, args)
     memwidget.memtext:set_text(string.format(" M  %3d%%", args[1]))
-    if (settings.host ~= "silence" and settings.host ~= "annoyance") then
+    if (settings.swap) then
       swapwidget.swapbar:set_value(args[5])
       swapwidget.swaptext:set_text(string.format(" S  %3s%%", args[5]))
     end
@@ -283,7 +293,7 @@ vicious.register(memwidget.membar, vicious.widgets.mem,
 end, 3)
 
 -- update battery
-if settings.host ~= "annoyance" then
+if settings.bat then
   vicious.cache(vicious.widgets.bat)
   vicious.register(batwidget.batbar, vicious.widgets.bat,
     function (widget, args)
@@ -730,6 +740,7 @@ awful.rules.rules = {
       }
       -- Only show titlebars for dialogs
       if c.type ~=  "dialog" then
+        awful.titlebar.toggle(c)
         awful.titlebar.hide(c)
       end
 
