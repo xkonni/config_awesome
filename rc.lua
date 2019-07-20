@@ -64,9 +64,8 @@ settings.bat = false
 settings.coretemp = "coretemp.0/hwmon/hwmon2"
 -- host specific
 if settings.host == "annoyance" then
-  settings.scale = 1.15
 elseif settings.host == "silence" then
-  settings.scale = 1.25
+  settings.scale = 1.2
   settings.swap = false
   settings.bat = "BAT0"
   settings.coretemp = "coretemp.0/hwmon/hwmon3"
@@ -74,8 +73,8 @@ elseif settings.host == "CHJYRN2" then
   settings.bat = "BAT0"
   settings.coretemp = "coretemp.0/hwmon/hwmon4"
 end
-settings.sc_width = 960*settings.scale
-settings.sc_height = 540*settings.scale
+settings.sc_width = 1200*settings.scale
+settings.sc_height = 600*settings.scale
 
 -- Themes define colours, icons, font and wallpapers.
 beautiful.init(awful.util.getdir("config") .. "/themes/solarized/theme.lua")
