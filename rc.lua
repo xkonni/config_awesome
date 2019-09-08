@@ -65,7 +65,7 @@ settings.coretemp = "coretemp.0/hwmon/hwmon2"
 -- host specific
 if settings.host == "annoyance" then
 elseif settings.host == "silence" then
-  settings.scale = 1.2
+  settings.scale = 1.4
   settings.swap = false
   settings.bat = "BAT0"
   settings.coretemp = "coretemp.0/hwmon/hwmon3"
@@ -239,7 +239,7 @@ if settings.bat then
   batwidget = wibox.widget {
     {
       id = "batbar",
-      color             = "linear:0,0:100,0:0,#268bd2:0.5,#8000cc:1,#cc0000",
+      color             = "linear:0,0:100,0:0,#cc0000:0.2,#8000cc:1,#268bd2",
       background_color  = beautiful.bg_urgent,
       border_color      = beautiful.bg_focus,
       border_width      = 2,
@@ -254,7 +254,7 @@ if settings.bat then
       widget = wibox.widget.textbox,
     },
     layout = wibox.layout.stack,
-    forced_width      = 60*settings.scale,
+    forced_width      = 125*settings.scale,
     forced_height     = 12,
   }
 else
@@ -296,7 +296,7 @@ if settings.bat then
   vicious.cache(vicious.widgets.bat)
   vicious.register(batwidget.batbar, vicious.widgets.bat,
     function (widget, args)
-      batwidget.battext:set_text(string.format(" B  %s%3d%%", args[1], args[2]))
+      batwidget.battext:set_text(string.format(" B  %s%3d%% (%s)", args[1], args[2], args[3]))
       -- return string.format("%d", args[2])
       return string.format("%d", args[2]*100)
   end, 3, settings.bat)
